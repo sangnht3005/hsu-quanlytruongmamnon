@@ -64,7 +64,23 @@ public class StudentManagementViewModel : ViewModelBase
     public Student? SelectedStudent
     {
         get => _selectedStudent;
-        set => SetProperty(ref _selectedStudent, value);
+        set
+        {
+            SetProperty(ref _selectedStudent, value);
+            // Nếu bỏ chọn (click ra ngoài), clear form
+            if (value == null)
+            {
+                _selectedStudent = new Student
+                {
+                    Id = Guid.Empty,
+                    FullName = string.Empty,
+                    DateOfBirth = DateTime.Now.AddYears(-3),
+                    Gender = string.Empty,
+                    Address = string.Empty
+                };
+                OnPropertyChanged(nameof(SelectedStudent));
+            }
+        }
     }
 
     public bool IsLoading
@@ -285,7 +301,22 @@ public class ClassManagementViewModel : ViewModelBase
     public Class? SelectedClass
     {
         get => _selectedClass;
-        set => SetProperty(ref _selectedClass, value);
+        set
+        {
+            SetProperty(ref _selectedClass, value);
+            // Nếu bỏ chọn (click ra ngoài), clear form
+            if (value == null)
+            {
+                _selectedClass = new Class
+                {
+                    Id = Guid.Empty,
+                    Name = string.Empty,
+                    GradeId = Guid.Empty,
+                    TeacherId = Guid.Empty
+                };
+                OnPropertyChanged(nameof(SelectedClass));
+            }
+        }
     }
 
     public ICommand LoadDataCommand { get; }

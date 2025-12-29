@@ -22,6 +22,8 @@ public class KindergartenDbContext : DbContext
     public DbSet<MealTicket> MealTickets { get; set; } = null!;
     public DbSet<Invoice> Invoices { get; set; } = null!;
     public DbSet<StaffLeave> StaffLeaves { get; set; } = null!;
+    public DbSet<Vaccine> Vaccines { get; set; } = null!;
+    public DbSet<VaccinationRecord> VaccinationRecords { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -93,6 +95,23 @@ public class KindergartenDbContext : DbContext
             .HasOne(sl => sl.User)
             .WithMany(u => u.StaffLeaves)
             .HasForeignKey(sl => sl.UserId);
+
+        // VaccinationRecord-Student relationship
+        modelBuilder.Entity<VaccinationRecord>()
+            .HasOne(vr => vr.Student)
+            .WithMany()
+            .HasForeignKey(vr => vr.StudentId);
+
+        // VaccinationRecord-Vaccine relationship
+        modelBuilder.Entity<VaccinationRecord>()
+            .HasOne(vr => vr.Vaccine)
+            .WithMany(v => v.VaccinationRecords)
+            .HasForeignKey(vr => vr.VaccineId);
+
+        // HealthRecord unique constraint (Student + Month + Year)
+        modelBuilder.Entity<HealthRecord>()
+            .HasIndex(hr => new { hr.StudentId, hr.Month, hr.Year })
+            .IsUnique();
 
         base.OnModelCreating(modelBuilder);
     }

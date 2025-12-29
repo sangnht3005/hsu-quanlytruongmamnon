@@ -266,6 +266,7 @@ public class AttendanceBlo : IAttendanceBlo
 public interface IHealthRecordBlo
 {
     Task<HealthRecord?> GetByIdAsync(Guid id);
+    Task<IEnumerable<HealthRecord>> GetAllAsync();
     Task<IEnumerable<HealthRecord>> GetByStudentIdAsync(Guid studentId);
     Task<HealthRecord> CreateAsync(HealthRecord healthRecord);
     Task<HealthRecord> UpdateAsync(HealthRecord healthRecord);
@@ -288,6 +289,11 @@ public class HealthRecordBlo : IHealthRecordBlo
         return await _healthRecordDao.GetByIdAsync(id);
     }
 
+    public async Task<IEnumerable<HealthRecord>> GetAllAsync()
+    {
+        return await _healthRecordDao.GetAllAsync();
+    }
+
     public async Task<IEnumerable<HealthRecord>> GetByStudentIdAsync(Guid studentId)
     {
         return await _healthRecordDao.GetByStudentIdAsync(studentId);
@@ -295,10 +301,38 @@ public class HealthRecordBlo : IHealthRecordBlo
 
     public async Task<HealthRecord> CreateAsync(HealthRecord healthRecord)
     {
+        // Business validation
         var student = await _studentDao.GetByIdAsync(healthRecord.StudentId);
         if (student == null)
         {
-            throw new ArgumentException("Student not found");
+            throw new ArgumentException("Học sinh không tồn tại");
+        }
+
+        if (healthRecord.Month < 1 || healthRecord.Month > 12)
+        {
+            throw new ArgumentException("Tháng phải từ 1 đến 12");
+        }
+
+        if (healthRecord.Year < 2000 || healthRecord.Year > DateTime.Now.Year)
+        {
+            throw new ArgumentException($"Năm phải từ 2000 đến {DateTime.Now.Year}");
+        }
+
+        // Check for duplicate monthly record
+        var existing = await _healthRecordDao.GetByStudentAndMonthAsync(healthRecord.StudentId, healthRecord.Month, healthRecord.Year);
+        if (existing != null)
+        {
+            throw new InvalidOperationException($"Học sinh đã có hồ sơ sức khỏe cho tháng {healthRecord.Month}/{healthRecord.Year}");
+        }
+
+        if (healthRecord.Height.HasValue && healthRecord.Height.Value <= 0)
+        {
+            throw new ArgumentException("Chiều cao phải lớn hơn 0");
+        }
+
+        if (healthRecord.Weight.HasValue && healthRecord.Weight.Value <= 0)
+        {
+            throw new ArgumentException("Cân nặng phải lớn hơn 0");
         }
 
         return await _healthRecordDao.CreateAsync(healthRecord);
@@ -311,11 +345,43 @@ public class HealthRecordBlo : IHealthRecordBlo
             throw new ArgumentNullException(nameof(healthRecord));
         }
 
+        var existing = await _healthRecordDao.GetByIdAsync(healthRecord.Id);
+        if (existing == null)
+        {
+            throw new InvalidOperationException("Hồ sơ sức khỏe không tồn tại");
+        }
+
+        if (healthRecord.Month < 1 || healthRecord.Month > 12)
+        {
+            throw new ArgumentException("Tháng phải từ 1 đến 12");
+        }
+
+        if (healthRecord.Year < 2000 || healthRecord.Year > DateTime.Now.Year)
+        {
+            throw new ArgumentException($"Năm phải từ 2000 đến {DateTime.Now.Year}");
+        }
+
+        if (healthRecord.Height.HasValue && healthRecord.Height.Value <= 0)
+        {
+            throw new ArgumentException("Chiều cao phải lớn hơn 0");
+        }
+
+        if (healthRecord.Weight.HasValue && healthRecord.Weight.Value <= 0)
+        {
+            throw new ArgumentException("Cân nặng phải lớn hơn 0");
+        }
+
         return await _healthRecordDao.UpdateAsync(healthRecord);
     }
 
     public async Task DeleteAsync(Guid id)
     {
+        var healthRecord = await _healthRecordDao.GetByIdAsync(id);
+        if (healthRecord == null)
+        {
+            throw new InvalidOperationException("Hồ sơ sức khỏe không tồn tại");
+        }
+
         await _healthRecordDao.DeleteAsync(id);
     }
 }

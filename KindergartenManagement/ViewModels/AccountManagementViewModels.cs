@@ -951,6 +951,21 @@ public class StaffLeaveManagementViewModel : ViewModelBase
                 {
                     TempStatus = _selectedLeave.Status;
                 }
+                else
+                {
+                    // Nếu bỏ chọn (click ra ngoài), clear form
+                    _selectedLeave = new StaffLeave
+                    {
+                        Id = Guid.Empty,
+                        UserId = Guid.Empty,
+                        LeaveType = "Vacation",
+                        Status = "Pending",
+                        StartDate = DateTime.Today,
+                        EndDate = DateTime.Today
+                    };
+                    TempStatus = "Pending";
+                    OnPropertyChanged(nameof(SelectedLeave));
+                }
             }
         }
     }

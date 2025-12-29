@@ -122,7 +122,28 @@
                                Foreground="White"
                                Margin="0,0,0,5"/>
                         
-                        <Button Content="📅 Đơn nghỉ nhân viên"
+                        <Button Content="� Quản lý Vaccine"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="Vaccines"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,5"/>
+                        
+                        <Button Content="📋 Hồ sơ tiêm chủng"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="VaccinationRecords"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,5"/>
+                        
+                        <Button Content="🏥 Hồ sơ sức khỏe tháng"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="HealthRecords"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,5"/>
+                        
+                        <Button Content="�📅 Đơn nghỉ nhân viên"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="StaffLeave"
                                Style="{StaticResource MenuButton}"
@@ -277,7 +298,7 @@
                     <DataTemplate DataType="{x:Type vm:StudentManagementViewModel}">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*" MinWidth="300"/>
                                 <ColumnDefinition Width="*" MinWidth="350"/>
                             </Grid.ColumnDefinitions>
 
@@ -288,61 +309,63 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
-                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
                                     <Grid>
-                                        <TextBlock Text="Danh sách học sinh" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
-                                        <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="Danh sách học sinh" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                        <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="10,5" FontSize="12"/>
                                     </Grid>
                                 </Border>
 
-                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
-                                    <DataGrid ItemsSource="{Binding Students}" SelectedItem="{Binding SelectedStudent}" AutoGenerateColumns="False" IsReadOnly="True">
+                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
+                                    <DataGrid ItemsSource="{Binding Students}" SelectedItem="{Binding SelectedStudent}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="12">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Họ và tên" Binding="{Binding FullName}" Width="*"/>
-                                            <DataGridTextColumn Header="Ngày sinh" Binding="{Binding DateOfBirth, StringFormat={}{0:dd/MM/yyyy}}" Width="100"/>
-                                            <DataGridTextColumn Header="Lớp" Binding="{Binding Class.Name}" Width="120"/>
+                                            <DataGridTextColumn Header="Họ và tên" Binding="{Binding FullName}" Width="*" MinWidth="100"/>
+                                            <DataGridTextColumn Header="Ngày sinh" Binding="{Binding DateOfBirth, StringFormat={}{0:dd/MM/yyyy}}" Width="90" MinWidth="90"/>
+                                            <DataGridTextColumn Header="Lớp" Binding="{Binding Class.Name}" Width="100" MinWidth="80"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Border>
                             </Grid>
 
                             <!-- Right: Student Form -->
-                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <StackPanel>
-                                        <TextBlock Text="Thông tin học sinh" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" Margin="0,0,0,20"/>
+                                        <Grid Margin="0,0,0,15">
+                                            <TextBlock Text="Thông tin học sinh" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddStudentCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập học sinh mới"/>
+                                        </Grid>
 
-                                        <TextBlock Text="Họ và tên *" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedStudent.FullName, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Họ và tên *" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStudent.FullName, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Ngày sinh *" Margin="0,0,0,5"/>
-                                        <DatePicker SelectedDate="{Binding SelectedStudent.DateOfBirth}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Ngày sinh *" Margin="0,0,0,5" FontSize="12"/>
+                                        <DatePicker SelectedDate="{Binding SelectedStudent.DateOfBirth}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Giới tính *" Margin="0,0,0,5"/>
-                                        <ComboBox Text="{Binding SelectedStudent.Gender}" IsEditable="True" Padding="8" Margin="0,0,0,15">
+                                        <TextBlock Text="Giới tính *" Margin="0,0,0,5" FontSize="12"/>
+                                        <ComboBox Text="{Binding SelectedStudent.Gender}" IsEditable="True" Padding="6" Margin="0,0,0,12" FontSize="12">
                                             <ComboBoxItem Content="Nam"/>
                                             <ComboBoxItem Content="Nữ"/>
                                         </ComboBox>
 
-                                        <TextBlock Text="Địa chỉ" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedStudent.Address}" Padding="8" Margin="0,0,0,15" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
+                                        <TextBlock Text="Địa chỉ" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStudent.Address}" Padding="6" Margin="0,0,0,12" Height="50" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
 
-                                        <TextBlock Text="Ghi chú y tế" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedStudent.MedicalNotes, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
+                                        <TextBlock Text="Ghi chú y tế" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStudent.MedicalNotes, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="50" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
 
-                                        <TextBlock Text="Mã thực phẩm dị ứng" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedStudent.AllergyIngredientCodes, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15" ToolTip="Nhập các mã thực phẩm gây dị ứng, phân cách bằng dấu phẩy"/>
+                                        <TextBlock Text="Mã thực phẩm dị ứng" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStudent.AllergyIngredientCodes, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" ToolTip="Nhập các mã thực phẩm gây dị ứng, phân cách bằng dấu phẩy" FontSize="12"/>
 
-                                        <TextBlock Text="Phụ huynh *" Margin="0,0,0,5"/>
-                                        <ComboBox ItemsSource="{Binding Parents}" SelectedValue="{Binding SelectedStudent.ParentId}" SelectedValuePath="Id" DisplayMemberPath="FullName" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Phụ huynh *" Margin="0,0,0,5" FontSize="12"/>
+                                        <ComboBox ItemsSource="{Binding Parents}" SelectedValue="{Binding SelectedStudent.ParentId}" SelectedValuePath="Id" DisplayMemberPath="FullName" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Lớp" Margin="0,0,0,5"/>
-                                        <ComboBox ItemsSource="{Binding Classes}" SelectedValue="{Binding SelectedStudent.ClassId}" SelectedValuePath="Id" DisplayMemberPath="Name" Padding="8" Margin="0,0,0,20"/>
+                                        <TextBlock Text="Lớp" Margin="0,0,0,5" FontSize="12"/>
+                                        <ComboBox ItemsSource="{Binding Classes}" SelectedValue="{Binding SelectedStudent.ClassId}" SelectedValuePath="Id" DisplayMemberPath="Name" Padding="6" Margin="0,0,0,15" FontSize="12"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddStudentCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" ToolTip="Tạo form trống để nhập học sinh mới"/>
-                                            <Button Content="💾 Lưu" Command="{Binding SaveStudentCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" ToolTip="Lưu thông tin học sinh vào cơ sở dữ liệu"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteStudentCommand}" Style="{StaticResource DangerButton}" ToolTip="Xóa học sinh đã chọn"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveStudentCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin học sinh vào cơ sở dữ liệu"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteStudentCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa học sinh đã chọn"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -417,7 +440,7 @@
                     <DataTemplate DataType="{x:Type vm:ClassManagementViewModel}">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*" MinWidth="300"/>
                                 <ColumnDefinition Width="*" MinWidth="350"/>
                             </Grid.ColumnDefinitions>
 
@@ -428,46 +451,48 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
-                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
                                     <Grid>
-                                        <TextBlock Text="Danh sách lớp học" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
-                                        <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="Danh sách lớp học" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                        <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="10,5" FontSize="12"/>
                                     </Grid>
                                 </Border>
 
-                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
-                                    <DataGrid ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass}" AutoGenerateColumns="False" IsReadOnly="True">
+                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
+                                    <DataGrid ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="12">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Tên lớp" Binding="{Binding Name}" Width="*"/>
-                                            <DataGridTextColumn Header="Khối" Binding="{Binding Grade.Name}" Width="120"/>
-                                            <DataGridTextColumn Header="Sĩ số tối đa" Binding="{Binding Capacity}" Width="100"/>
+                                            <DataGridTextColumn Header="Tên lớp" Binding="{Binding Name}" Width="*" MinWidth="100"/>
+                                            <DataGridTextColumn Header="Khối" Binding="{Binding Grade.Name}" Width="100" MinWidth="80"/>
+                                            <DataGridTextColumn Header="Sĩ số max" Binding="{Binding Capacity}" Width="80" MinWidth="70"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Border>
                             </Grid>
 
                             <!-- Right: Class Form -->
-                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <StackPanel>
-                                        <TextBlock Text="Thông tin lớp học" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" Margin="0,0,0,20"/>
+                                        <Grid Margin="0,0,0,15">
+                                            <TextBlock Text="Thông tin lớp học" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddClassCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập lớp học mới"/>
+                                        </Grid>
 
-                                        <TextBlock Text="Tên lớp *" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedClass.Name, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Tên lớp *" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedClass.Name, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Khối *" Margin="0,0,0,5"/>
-                                        <ComboBox ItemsSource="{Binding Grades}" SelectedValue="{Binding SelectedClass.GradeId}" SelectedValuePath="Id" DisplayMemberPath="Name" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Khối *" Margin="0,0,0,5" FontSize="12"/>
+                                        <ComboBox ItemsSource="{Binding Grades}" SelectedValue="{Binding SelectedClass.GradeId}" SelectedValuePath="Id" DisplayMemberPath="Name" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Giáo viên chủ nhiệm" Margin="0,0,0,5"/>
-                                        <ComboBox ItemsSource="{Binding Teachers}" SelectedValue="{Binding SelectedClass.TeacherId}" SelectedValuePath="Id" DisplayMemberPath="FullName" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Giáo viên chủ nhiệm" Margin="0,0,0,5" FontSize="12"/>
+                                        <ComboBox ItemsSource="{Binding Teachers}" SelectedValue="{Binding SelectedClass.TeacherId}" SelectedValuePath="Id" DisplayMemberPath="FullName" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Số học sinh tối đa *" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedClass.Capacity}" Padding="8" Margin="0,0,0,20"/>
+                                        <TextBlock Text="Số học sinh tối đa *" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedClass.Capacity}" Padding="6" Margin="0,0,0,15" FontSize="12"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddClassCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" ToolTip="Tạo form trống để nhập lớp học mới"/>
-                                            <Button Content="💾 Lưu" Command="{Binding SaveClassCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" ToolTip="Lưu thông tin lớp học vào cơ sở dữ liệu"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteClassCommand}" Style="{StaticResource DangerButton}" ToolTip="Xóa lớp học đã chọn"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveClassCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin lớp học vào cơ sở dữ liệu"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteClassCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa lớp học đã chọn"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -655,7 +680,7 @@
                     <DataTemplate DataType="{x:Type vm:StaffManagementViewModel}">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*" MinWidth="300"/>
                                 <ColumnDefinition Width="*" MinWidth="350"/>
                             </Grid.ColumnDefinitions>
 
@@ -666,41 +691,44 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
-                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
                                     <Grid>
-                                        <TextBlock Text="Danh sách nhân viên" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
-                                        <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="Danh sách nhân viên" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                        <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="10,5" FontSize="12"/>
                                     </Grid>
                                 </Border>
 
-                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
-                                    <DataGrid ItemsSource="{Binding Staff}" SelectedItem="{Binding SelectedStaff}" AutoGenerateColumns="False" IsReadOnly="True">
+                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
+                                    <DataGrid ItemsSource="{Binding Staff}" SelectedItem="{Binding SelectedStaff}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="12">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Họ và tên" Binding="{Binding FullName}" Width="*"/>
-                                            <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"/>
-                                            <DataGridTextColumn Header="Chức vụ" Binding="{Binding Position}" Width="120"/>
+                                            <DataGridTextColumn Header="Họ và tên" Binding="{Binding FullName}" Width="*" MinWidth="100"/>
+                                            <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*" MinWidth="120"/>
+                                            <DataGridTextColumn Header="Chức vụ" Binding="{Binding Position}" Width="100" MinWidth="80"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Border>
                             </Grid>
 
                             <!-- Right: Staff Form -->
-                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <StackPanel>
-                                        <TextBlock Text="Thông tin nhân viên" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" Margin="0,0,0,20"/>
+                                        <Grid Margin="0,0,0,15">
+                                            <TextBlock Text="Thông tin nhân viên" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddStaffCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập nhân viên mới"/>
+                                        </Grid>
 
-                                        <TextBlock Text="Họ và tên *" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedStaff.FullName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Họ và tên *" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStaff.FullName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Email *" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedStaff.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Email *" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStaff.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Số điện thoại" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedStaff.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Số điện thoại" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStaff.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Chức vụ *" Margin="0,0,0,5"/>
-                                        <ComboBox Text="{Binding SelectedStaff.Position, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" Padding="8" Margin="0,0,0,15">
+                                        <TextBlock Text="Chức vụ *" Margin="0,0,0,5" FontSize="12"/>
+                                        <ComboBox Text="{Binding SelectedStaff.Position, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" Padding="6" Margin="0,0,0,12" FontSize="12">
                                             <ComboBoxItem Content="Giáo viên"/>
                                             <ComboBoxItem Content="Hiệu trưởng"/>
                                             <ComboBoxItem Content="Phó hiệu trưởng"/>
@@ -708,19 +736,18 @@
                                             <ComboBoxItem Content="Y tá"/>
                                         </ComboBox>
 
-                                        <TextBlock Text="Lương cơ bản" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedStaff.Salary, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Lương cơ bản" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStaff.Salary, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Phụ cấp" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedStaff.Allowance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Phụ cấp" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStaff.Allowance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Chuyên môn" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedStaff.Specialization, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,20"/>
+                                        <TextBlock Text="Chuyên môn" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStaff.Specialization, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,15" FontSize="12"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddStaffCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" ToolTip="Tạo form trống để nhập nhân viên mới"/>
-                                            <Button Content="💾 Lưu" Command="{Binding SaveStaffCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" ToolTip="Lưu thông tin nhân viên vào cơ sở dữ liệu"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteStaffCommand}" Style="{StaticResource DangerButton}" ToolTip="Xóa nhân viên đã chọn"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveStaffCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin nhân viên vào cơ sở dữ liệu"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteStaffCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa nhân viên đã chọn"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -732,7 +759,7 @@
                     <DataTemplate DataType="{x:Type vm:ParentManagementViewModel}">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*" MinWidth="300"/>
                                 <ColumnDefinition Width="*" MinWidth="350"/>
                             </Grid.ColumnDefinitions>
 
@@ -743,49 +770,51 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
-                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
                                     <Grid>
-                                        <TextBlock Text="Danh sách phụ huynh" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
-                                        <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="Danh sách phụ huynh" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                        <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="10,5" FontSize="12"/>
                                     </Grid>
                                 </Border>
 
-                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
-                                    <DataGrid ItemsSource="{Binding Parents}" SelectedItem="{Binding SelectedParent}" AutoGenerateColumns="False" IsReadOnly="True">
+                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
+                                    <DataGrid ItemsSource="{Binding Parents}" SelectedItem="{Binding SelectedParent}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="12">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Họ và tên" Binding="{Binding FullName}" Width="*"/>
-                                            <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"/>
-                                            <DataGridTextColumn Header="Số điện thoại" Binding="{Binding PhoneNumber}" Width="120"/>
+                                            <DataGridTextColumn Header="Họ và tên" Binding="{Binding FullName}" Width="*" MinWidth="100"/>
+                                            <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*" MinWidth="120"/>
+                                            <DataGridTextColumn Header="ĐT" Binding="{Binding PhoneNumber}" Width="100" MinWidth="90"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Border>
                             </Grid>
 
                             <!-- Right: Parent Form -->
-                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <StackPanel>
-                                        <TextBlock Text="Thông tin phụ huynh" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" Margin="0,0,0,20"/>
+                                        <Grid Margin="0,0,0,15">
+                                            <TextBlock Text="Thông tin phụ huynh" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddParentCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập phụ huynh mới"/>
+                                        </Grid>
 
-                                        <TextBlock Text="Họ và tên *" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedParent.FullName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Họ và tên *" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedParent.FullName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Email *" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedParent.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Email *" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedParent.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Số điện thoại *" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedParent.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Số điện thoại *" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedParent.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Nghề nghiệp" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedParent.Occupation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBlock Text="Nghề nghiệp" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedParent.Occupation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Địa chỉ" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedParent.Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,20" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
+                                        <TextBlock Text="Địa chỉ" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedParent.Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,15" Height="50" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddParentCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" ToolTip="Tạo form trống để nhập phụ huynh mới"/>
-                                            <Button Content="💾 Lưu" Command="{Binding SaveParentCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" ToolTip="Lưu thông tin phụ huynh vào cơ sở dữ liệu"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteParentCommand}" Style="{StaticResource DangerButton}" ToolTip="Xóa phụ huynh đã chọn"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveParentCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin phụ huynh vào cơ sở dữ liệu"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteParentCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa phụ huynh đã chọn"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -797,8 +826,8 @@
                     <DataTemplate DataType="{x:Type vm:StaffLeaveManagementViewModel}">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*" MinWidth="350"/>
+                                <ColumnDefinition Width="2*" MinWidth="300"/>
+                                <ColumnDefinition Width="*" MinWidth="400"/>
                             </Grid.ColumnDefinitions>
 
                             <!-- Left: Staff Leave List -->
@@ -808,80 +837,430 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
-                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
                                     <Grid>
-                                        <TextBlock Text="Danh sách đơn nghỉ nhân viên" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
-                                        <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="Danh sách đơn nghỉ nhân viên" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                        <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="10,5" FontSize="12"/>
                                     </Grid>
                                 </Border>
 
-                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
-                                    <DataGrid ItemsSource="{Binding StaffLeaves}" SelectedItem="{Binding SelectedLeave, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" IsReadOnly="True">
+                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
+                                    <DataGrid ItemsSource="{Binding StaffLeaves}" SelectedItem="{Binding SelectedLeave, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="12">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Nhân viên" Binding="{Binding User.FullName}" Width="*"/>
-                                            <DataGridTextColumn Header="Từ ngày" Binding="{Binding StartDate, StringFormat={}{0:dd/MM/yyyy}}" Width="100"/>
-                                            <DataGridTextColumn Header="Đến ngày" Binding="{Binding EndDate, StringFormat={}{0:dd/MM/yyyy}}" Width="100"/>
-                                            <DataGridTextColumn Header="Loại nghỉ" Binding="{Binding LeaveType, Converter={StaticResource StatusToVietnameseConverter}}" Width="120"/>
-                                            <DataGridTextColumn Header="Trạng thái" Binding="{Binding Status, Converter={StaticResource StatusToVietnameseConverter}}" Width="100"/>
+                                            <DataGridTextColumn Header="Nhân viên" Binding="{Binding User.FullName}" Width="*" MinWidth="100"/>
+                                            <DataGridTextColumn Header="Từ" Binding="{Binding StartDate, StringFormat={}{0:dd/MM/yyyy}}" Width="80" MinWidth="70"/>
+                                            <DataGridTextColumn Header="Đến" Binding="{Binding EndDate, StringFormat={}{0:dd/MM/yyyy}}" Width="80" MinWidth="70"/>
+                                            <DataGridTextColumn Header="Loại" Binding="{Binding LeaveType, Converter={StaticResource StatusToVietnameseConverter}}" Width="100" MinWidth="90"/>
+                                            <DataGridTextColumn Header="TT" Binding="{Binding Status, Converter={StaticResource StatusToVietnameseConverter}}" Width="90" MinWidth="80"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Border>
                             </Grid>
 
                             <!-- Right: Staff Leave Form -->
-                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <StackPanel>
-                                        <TextBlock Text="Thông tin đơn nghỉ" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" Margin="0,0,0,20"/>
+                                        <Grid Margin="0,0,0,15">
+                                            <TextBlock Text="Thông tin đơn nghỉ" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddLeaveCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập đơn nghỉ mới"/>
+                                        </Grid>
 
-                                        <TextBlock Text="Nhân viên *" Margin="0,0,0,5"/>
+                                        <TextBlock Text="Nhân viên *" Margin="0,0,0,5" FontSize="12"/>
                                         <ComboBox ItemsSource="{Binding Users}" 
                                                   SelectedValue="{Binding SelectedLeave.UserId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                   SelectedValuePath="Id" 
                                                   DisplayMemberPath="FullName"
                                                   IsEnabled="{Binding CanSelectUser}"
-                                                  Padding="8" Margin="0,0,0,15"/>
+                                                  Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Từ ngày *" Margin="0,0,0,5"/>
+                                        <TextBlock Text="Từ ngày *" Margin="0,0,0,5" FontSize="12"/>
                                         <DatePicker SelectedDate="{Binding SelectedLeave.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                    Padding="8" Margin="0,0,0,15"/>
+                                                    Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Đến ngày *" Margin="0,0,0,5"/>
+                                        <TextBlock Text="Đến ngày *" Margin="0,0,0,5" FontSize="12"/>
                                         <DatePicker SelectedDate="{Binding SelectedLeave.EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                    Padding="8" Margin="0,0,0,15"/>
+                                                    Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
-                                        <TextBlock Text="Loại nghỉ *" Margin="0,0,0,5"/>
+                                        <TextBlock Text="Loại nghỉ *" Margin="0,0,0,5" FontSize="12"/>
                                         <ComboBox SelectedValue="{Binding SelectedLeave.LeaveType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                   SelectedValuePath="Tag" 
-                                                  Padding="8" Margin="0,0,0,15">
+                                                  Padding="6" Margin="0,0,0,12" FontSize="12">
                                             <ComboBoxItem Content="Nghỉ phép" Tag="Vacation"/>
                                             <ComboBoxItem Content="Nghỉ ốm" Tag="Sick"/>
                                             <ComboBoxItem Content="Nghỉ cá nhân" Tag="Personal"/>
                                             <ComboBoxItem Content="Nghỉ không lương" Tag="Unpaid"/>
                                         </ComboBox>
 
-                                        <TextBlock Text="Lý do *" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedLeave.Reason, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
+                                        <TextBlock Text="Lý do *" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedLeave.Reason, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="50" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
 
-                                        <TextBlock Text="Trạng thái" Margin="0,0,0,5"/>
+                                        <TextBlock Text="Trạng thái" Margin="0,0,0,5" FontSize="12"/>
                                         <ComboBox SelectedValue="{Binding TempStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                   SelectedValuePath="Tag"
                                                   IsEnabled="{Binding CanEditStatus}"
-                                                  Padding="8" Margin="0,0,0,15">
+                                                  Padding="6" Margin="0,0,0,12" FontSize="12">
                                             <ComboBoxItem Content="Chờ duyệt" Tag="Pending"/>
                                             <ComboBoxItem Content="Đã duyệt" Tag="Approved"/>
                                             <ComboBoxItem Content="Từ chối" Tag="Rejected"/>
                                         </ComboBox>
 
-                                        <TextBlock Text="Ghi chú duyệt" Margin="0,0,0,5"/>
+                                        <TextBlock Text="Ghi chú duyệt" Margin="0,0,0,5" FontSize="12"/>
                                         <TextBox Text="{Binding SelectedLeave.ApprovalNotes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                 Padding="8" Margin="0,0,0,20" Height="60" TextWrapping="Wrap" AcceptsReturn="True" 
+                                                 Padding="6" Margin="0,0,0,15" Height="50" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"
                                                  IsReadOnly="{Binding CanEditApprovalNotes, Converter={StaticResource InverseBooleanConverter}}"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddLeaveCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" ToolTip="Tạo form trống để nhập đơn nghỉ mới"/>
-                                            <Button Content="💾 Lưu" Command="{Binding SaveLeaveCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" ToolTip="Lưu thông tin đơn nghỉ vào cơ sở dữ liệu"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteLeaveCommand}" Style="{StaticResource DangerButton}" ToolTip="Xóa đơn nghỉ đã chọn"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveLeaveCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin đơn nghỉ vào cơ sở dữ liệu"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteLeaveCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa đơn nghỉ đã chọn"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- Vaccine Management View -->
+                    <DataTemplate DataType="{x:Type vm:VaccineManagementViewModel}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" MinWidth="300"/>
+                                <ColumnDefinition Width="3*" MinWidth="400"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Left: Vaccine List -->
+                            <Grid Grid.Column="0" Margin="0,0,10,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                                    <Grid>
+                                        <TextBlock Text="Danh sách Vaccine" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                        <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="10,5" FontSize="12"/>
+                                    </Grid>
+                                </Border>
+
+                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
+                                    <DataGrid ItemsSource="{Binding Vaccines}" SelectedItem="{Binding SelectedVaccine, Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="12">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Tên Vaccine" Binding="{Binding Name}" Width="*" MinWidth="120"/>
+                                            <DataGridTextColumn Header="Tuổi (th)" Binding="{Binding RequiredAgeMonths}" Width="80" MinWidth="70"/>
+                                            <DataGridCheckBoxColumn Header="BB" Binding="{Binding IsMandatory}" Width="60" MinWidth="50"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Border>
+                            </Grid>
+
+                            <!-- Right: Vaccine Form -->
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,15">
+                                            <TextBlock Text="Thông tin Vaccine" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddVaccineCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12"/>
+                                        </Grid>
+
+                                        <TextBlock Text="Tên Vaccine *" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedVaccine.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+
+                                        <TextBlock Text="Mô tả" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedVaccine.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="60" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
+
+                                        <TextBlock Text="Tuổi yêu cầu (tháng) *" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedVaccine.RequiredAgeMonths, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+
+                                        <TextBlock Text="Bệnh phòng ngừa" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedVaccine.DiseasesPrevented, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+
+                                        <CheckBox Content="Vaccine bắt buộc" IsChecked="{Binding SelectedVaccine.IsMandatory, Mode=TwoWay}" Margin="0,0,0,15" FontSize="12"/>
+
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button Content="💾 Lưu" Command="{Binding SaveVaccineCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteVaccineCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- Vaccination Record Management View -->
+                    <DataTemplate DataType="{x:Type vm:VaccinationRecordManagementViewModel}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Left: Record List -->
+                            <Grid Grid.Column="0" Margin="0,0,10,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,15">
+                                            <TextBlock Text="Hồ sơ tiêm chủng" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                            <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                        </Grid>
+
+                                        <!-- Filter Section -->
+                                        <TextBlock Text="🔍 Lọc theo:" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="Học sinh" Margin="0,0,0,5" FontSize="12"/>
+                                                <ComboBox ItemsSource="{Binding Students}" 
+                                                          SelectedValue="{Binding FilterStudentId, Mode=TwoWay}" 
+                                                          SelectedValuePath="Id" 
+                                                          DisplayMemberPath="FullName" 
+                                                          Padding="6" 
+                                                          FontSize="12">
+                                                    <ComboBox.ItemContainerStyle>
+                                                        <Style TargetType="ComboBoxItem">
+                                                            <Setter Property="Padding" Value="5"/>
+                                                        </Style>
+                                                    </ComboBox.ItemContainerStyle>
+                                                </ComboBox>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="Vaccine" Margin="0,0,0,5" FontSize="12"/>
+                                                <ComboBox ItemsSource="{Binding Vaccines}" 
+                                                          SelectedValue="{Binding FilterVaccineId, Mode=TwoWay}" 
+                                                          SelectedValuePath="Id" 
+                                                          DisplayMemberPath="Name" 
+                                                          Padding="6" 
+                                                          FontSize="12">
+                                                    <ComboBox.ItemContainerStyle>
+                                                        <Style TargetType="ComboBoxItem">
+                                                            <Setter Property="Padding" Value="5"/>
+                                                        </Style>
+                                                    </ComboBox.ItemContainerStyle>
+                                                </ComboBox>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                                            <Button Content="🔍 Lọc" Command="{Binding ApplyFilterCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" Padding="15,5"/>
+                                            <Button Content="🔄 Xóa lọc" Command="{Binding ClearFilterCommand}" Style="{StaticResource SecondaryButton}" Padding="15,5"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
+                                    <DataGrid ItemsSource="{Binding FilteredRecords}" SelectedItem="{Binding SelectedRecord, Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Học sinh" Binding="{Binding Student.FullName}" Width="*"/>
+                                            <DataGridTextColumn Header="Vaccine" Binding="{Binding Vaccine.Name}" Width="*"/>
+                                            <DataGridTextColumn Header="Trạng thái" Binding="{Binding Status}" Width="100"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Border>
+                            </Grid>
+
+                            <!-- Right: Record Form -->
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,15">
+                                            <TextBlock Text="Thông tin tiêm chủng" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddRecordCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12"/>
+                                        </Grid>
+
+                                        <TextBlock Text="Học sinh *" Margin="0,0,0,5" FontSize="12"/>
+                                        <ComboBox ItemsSource="{Binding Students}" SelectedValue="{Binding SelectedRecord.StudentId, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="FullName" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+
+                                        <TextBlock Text="Vaccine *" Margin="0,0,0,5" FontSize="12"/>
+                                        <ComboBox ItemsSource="{Binding Vaccines}" SelectedValue="{Binding SelectedRecord.VaccineId, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="Name" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+
+                                        <TextBlock Text="Trạng thái" Margin="0,0,0,5" FontSize="12"/>
+                                        <ComboBox SelectedValue="{Binding SelectedRecord.Status, Mode=TwoWay}" SelectedValuePath="Tag" Padding="6" Margin="0,0,0,12" FontSize="12">
+                                            <ComboBoxItem Content="Chưa tiêm" Tag="Not Done"/>
+                                            <ComboBoxItem Content="Đã tiêm" Tag="Done"/>
+                                            <ComboBoxItem Content="Đã lên lịch" Tag="Scheduled"/>
+                                        </ComboBox>
+
+                                        <TextBlock Text="Ngày tiêm" Margin="0,0,0,5" FontSize="12"/>
+                                        <DatePicker SelectedDate="{Binding SelectedRecord.VaccinationDate, Mode=TwoWay}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+
+                                        <TextBlock Text="Đơn vị y tế" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedRecord.MedicalUnit, Mode=TwoWay}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+
+                                        <TextBlock Text="Số lô" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedRecord.LotNumber, Mode=TwoWay}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+
+                                        <TextBlock Text="Ghi chú" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedRecord.Notes, Mode=TwoWay}" Padding="6" Margin="0,0,0,15" Height="60" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
+
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button Content="💾 Lưu" Command="{Binding SaveRecordCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteRecordCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- Health Record Management View -->
+                    <DataTemplate DataType="{x:Type vm:HealthRecordManagementViewModel}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" MinWidth="300"/>
+                                <ColumnDefinition Width="3*" MinWidth="400"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Left: Health Record List -->
+                            <Grid Grid.Column="0" Margin="0,0,10,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,15">
+                                            <TextBlock Text="Hồ sơ sức khỏe hàng tháng" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                            <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="10,5"/>
+                                        </Grid>
+
+                                        <!-- Filter Section -->
+                                        <TextBlock Text="🔍 Lọc theo lớp học:" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                        
+                                        <ComboBox ItemsSource="{Binding Classes}" 
+                                                  SelectedValue="{Binding FilterClassId, Mode=TwoWay}" 
+                                                  SelectedValuePath="Id" 
+                                                  DisplayMemberPath="Name" 
+                                                  Padding="6" 
+                                                  FontSize="12"
+                                                  Margin="0,0,0,8"/>
+
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button Content="🔍 Lọc" Command="{Binding ApplyFilterCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="12,5" FontSize="12"/>
+                                            <Button Content="🔄 Xóa lọc" Command="{Binding ClearFilterCommand}" Style="{StaticResource SecondaryButton}" Padding="12,5" FontSize="12"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Students List (visible when class is filtered) -->
+                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="0,0,0,10">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <TextBlock Text="👥 Danh sách học sinh" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                        
+                                        <DataGrid Grid.Row="1" ItemsSource="{Binding FilteredStudents}" SelectedItem="{Binding SelectedStudent, Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="12">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Mã HS" Binding="{Binding Code}" Width="70" MinWidth="70"/>
+                                                <DataGridTextColumn Header="Họ tên" Binding="{Binding FullName}" Width="*" MinWidth="120"/>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </Grid>
+                                </Border>
+
+                                <Border Grid.Row="2" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
+                                    <DataGrid ItemsSource="{Binding FilteredRecords}" SelectedItem="{Binding SelectedRecord, Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="12">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Học sinh" Binding="{Binding Student.FullName}" Width="*" MinWidth="100"/>
+                                            <DataGridTextColumn Header="Tháng/Năm" Width="80" MinWidth="80">
+                                                <DataGridTextColumn.Binding>
+                                                    <MultiBinding StringFormat="{}{0}/{1}">
+                                                        <Binding Path="Month"/>
+                                                        <Binding Path="Year"/>
+                                                    </MultiBinding>
+                                                </DataGridTextColumn.Binding>
+                                            </DataGridTextColumn>
+                                            <DataGridTextColumn Header="CC(cm)" Binding="{Binding Height}" Width="70" MinWidth="70"/>
+                                            <DataGridTextColumn Header="CN(kg)" Binding="{Binding Weight}" Width="70" MinWidth="70"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Border>
+                            </Grid>
+
+                            <!-- Right: Health Record Form -->
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,15">
+                                            <TextBlock Text="Thông tin sức khỏe" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddRecordCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12"/>
+                                        </Grid>
+
+                                        <TextBlock Text="Học sinh *" Margin="0,0,0,5" FontSize="12"/>
+                                        <ComboBox ItemsSource="{Binding Students}" SelectedValue="{Binding SelectedRecord.StudentId, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="FullName" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+
+                                        <Grid Margin="0,0,0,12">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="Tháng *" Margin="0,0,0,5" FontSize="12"/>
+                                                <TextBox Text="{Binding SelectedRecord.Month, Mode=TwoWay}" Padding="6" FontSize="12"/>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="Năm *" Margin="0,0,0,5" FontSize="12"/>
+                                                <TextBox Text="{Binding SelectedRecord.Year, Mode=TwoWay}" Padding="6" FontSize="12"/>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <Grid Margin="0,0,0,12">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="Chiều cao (cm)" Margin="0,0,0,5" FontSize="12"/>
+                                                <TextBox Text="{Binding SelectedRecord.Height, Mode=TwoWay}" Padding="6" FontSize="12"/>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="Cân nặng (kg)" Margin="0,0,0,5" FontSize="12"/>
+                                                <TextBox Text="{Binding SelectedRecord.Weight, Mode=TwoWay}" Padding="6" FontSize="12"/>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <TextBlock Text="Sức khỏe tổng quát" Margin="0,0,0,5" FontSize="12"/>
+                                        <ComboBox SelectedValue="{Binding SelectedRecord.GeneralHealth, Mode=TwoWay}" SelectedValuePath="Tag" Padding="6" Margin="0,0,0,12" FontSize="12">
+                                            <ComboBoxItem Content="Tốt" Tag="Good"/>
+                                            <ComboBoxItem Content="Khá" Tag="Fair"/>
+                                            <ComboBoxItem Content="Yếu" Tag="Poor"/>
+                                        </ComboBox>
+
+                                        <TextBlock Text="Tình trạng bệnh lý" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedRecord.MedicalConditions, Mode=TwoWay}" Padding="6" Margin="0,0,0,12" Height="50" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
+
+                                        <TextBlock Text="Nhận xét của giáo viên" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedRecord.TeacherComments, Mode=TwoWay}" Padding="6" Margin="0,0,0,12" Height="60" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
+
+                                        <TextBlock Text="Đánh giá của giáo viên" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedRecord.TeacherEvaluation, Mode=TwoWay}" Padding="6" Margin="0,0,0,12" Height="60" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
+
+                                        <TextBlock Text="Ghi chú" Margin="0,0,0,5" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedRecord.Notes, Mode=TwoWay}" Padding="6" Margin="0,0,0,15" Height="50" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
+
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button Content="💾 Lưu" Command="{Binding SaveRecordCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteRecordCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>

@@ -344,6 +344,304 @@ public class DatabaseSeeder
         _context.StaffLeaves.AddRange(staffLeaves);
         await _context.SaveChangesAsync();
 
-        Console.WriteLine("Database seeded successfully with Phase 1 data!");
+        // Seed Vaccines (Phase 4)
+        var vaccines = new List<Vaccine>
+        {
+            new Vaccine
+            {
+                Name = "BCG (Lao)",
+                Description = "Vaccine phòng bệnh lao",
+                RequiredAgeMonths = 0,
+                DiseasesPrevented = "Bệnh lao",
+                IsMandatory = true
+            },
+            new Vaccine
+            {
+                Name = "Viêm gan B - Mũi 1",
+                Description = "Vaccine phòng viêm gan B - Mũi tiêm thứ nhất",
+                RequiredAgeMonths = 0,
+                DiseasesPrevented = "Viêm gan B",
+                IsMandatory = true
+            },
+            new Vaccine
+            {
+                Name = "Viêm gan B - Mũi 2",
+                Description = "Vaccine phòng viêm gan B - Mũi tiêm thứ hai",
+                RequiredAgeMonths = 1,
+                DiseasesPrevented = "Viêm gan B",
+                IsMandatory = true
+            },
+            new Vaccine
+            {
+                Name = "Viêm gan B - Mũi 3",
+                Description = "Vaccine phòng viêm gan B - Mũi tiêm thứ ba",
+                RequiredAgeMonths = 2,
+                DiseasesPrevented = "Viêm gan B",
+                IsMandatory = true
+            },
+            new Vaccine
+            {
+                Name = "Bại liệt (OPV) - Mũi 1",
+                Description = "Vaccine phòng bệnh bại liệt uống - Mũi 1",
+                RequiredAgeMonths = 2,
+                DiseasesPrevented = "Bại liệt",
+                IsMandatory = true
+            },
+            new Vaccine
+            {
+                Name = "Bại liệt (OPV) - Mũi 2",
+                Description = "Vaccine phòng bệnh bại liệt uống - Mũi 2",
+                RequiredAgeMonths = 3,
+                DiseasesPrevented = "Bại liệt",
+                IsMandatory = true
+            },
+            new Vaccine
+            {
+                Name = "Bại liệt (OPV) - Mũi 3",
+                Description = "Vaccine phòng bệnh bại liệt uống - Mũi 3",
+                RequiredAgeMonths = 4,
+                DiseasesPrevented = "Bại liệt",
+                IsMandatory = true
+            },
+            new Vaccine
+            {
+                Name = "Bạch hầu - Ho gà - Uốn ván (DPT) - Mũi 1",
+                Description = "Vaccine 3 trong 1: Bạch hầu, Ho gà, Uốn ván - Mũi 1",
+                RequiredAgeMonths = 2,
+                DiseasesPrevented = "Bạch hầu, Ho gà, Uốn ván",
+                IsMandatory = true
+            },
+            new Vaccine
+            {
+                Name = "Bạch hầu - Ho gà - Uốn ván (DPT) - Mũi 2",
+                Description = "Vaccine 3 trong 1: Bạch hầu, Ho gà, Uốn ván - Mũi 2",
+                RequiredAgeMonths = 3,
+                DiseasesPrevented = "Bạch hầu, Ho gà, Uốn ván",
+                IsMandatory = true
+            },
+            new Vaccine
+            {
+                Name = "Bạch hầu - Ho gà - Uốn ván (DPT) - Mũi 3",
+                Description = "Vaccine 3 trong 1: Bạch hầu, Ho gà, Uốn ván - Mũi 3",
+                RequiredAgeMonths = 4,
+                DiseasesPrevented = "Bạch hầu, Ho gà, Uốn ván",
+                IsMandatory = true
+            },
+            new Vaccine
+            {
+                Name = "Sởi - Quai bị - Rubella (MMR) - Mũi 1",
+                Description = "Vaccine 3 trong 1: Sởi, Quai bị, Rubella - Mũi 1",
+                RequiredAgeMonths = 9,
+                DiseasesPrevented = "Sởi, Quai bị, Rubella",
+                IsMandatory = true
+            },
+            new Vaccine
+            {
+                Name = "Sởi - Quai bị - Rubella (MMR) - Mũi 2",
+                Description = "Vaccine 3 trong 1: Sởi, Quai bị, Rubella - Mũi 2",
+                RequiredAgeMonths = 18,
+                DiseasesPrevented = "Sởi, Quai bị, Rubella",
+                IsMandatory = true
+            },
+            new Vaccine
+            {
+                Name = "Viêm não Nhật Bản - Mũi 1",
+                Description = "Vaccine phòng viêm não Nhật Bản - Mũi 1",
+                RequiredAgeMonths = 12,
+                DiseasesPrevented = "Viêm não Nhật Bản",
+                IsMandatory = true
+            },
+            new Vaccine
+            {
+                Name = "Viêm não Nhật Bản - Mũi 2",
+                Description = "Vaccine phòng viêm não Nhật Bản - Mũi 2",
+                RequiredAgeMonths = 24,
+                DiseasesPrevented = "Viêm não Nhật Bản",
+                IsMandatory = true
+            },
+            new Vaccine
+            {
+                Name = "Thủy đậu",
+                Description = "Vaccine phòng bệnh thủy đậu",
+                RequiredAgeMonths = 12,
+                DiseasesPrevented = "Thủy đậu",
+                IsMandatory = false
+            },
+            new Vaccine
+            {
+                Name = "Cúm (Influenza)",
+                Description = "Vaccine phòng cúm hàng năm",
+                RequiredAgeMonths = 6,
+                DiseasesPrevented = "Cúm",
+                IsMandatory = false
+            },
+            new Vaccine
+            {
+                Name = "Viêm gan A",
+                Description = "Vaccine phòng viêm gan A",
+                RequiredAgeMonths = 18,
+                DiseasesPrevented = "Viêm gan A",
+                IsMandatory = false
+            },
+            new Vaccine
+            {
+                Name = "Phế cầu (Pneumococcal)",
+                Description = "Vaccine phòng bệnh do vi khuẩn phế cầu",
+                RequiredAgeMonths = 2,
+                DiseasesPrevented = "Viêm phổi, Viêm tai giữa, Viêm màng não",
+                IsMandatory = false
+            },
+            new Vaccine
+            {
+                Name = "Rotavirus",
+                Description = "Vaccine phòng tiêu chảy do Rotavirus",
+                RequiredAgeMonths = 2,
+                DiseasesPrevented = "Tiêu chảy cấp",
+                IsMandatory = false
+            }
+        };
+        _context.Vaccines.AddRange(vaccines);
+        await _context.SaveChangesAsync();
+
+        // Seed some VaccinationRecords for existing students (if any)
+        if (students.Any())
+        {
+            var vaccinationRecords = new List<VaccinationRecord>
+            {
+                // Student 1 vaccinations
+                new VaccinationRecord
+                {
+                    StudentId = students[0].Id,
+                    VaccineId = vaccines[0].Id, // BCG
+                    Status = "Done",
+                    VaccinationDate = students[0].DateOfBirth.AddDays(1),
+                    MedicalUnit = "Bệnh viện Nhi Đồng 1",
+                    LotNumber = "BCG-2024-001",
+                    Notes = "Tiêm thành công, không có phản ứng phụ"
+                },
+                new VaccinationRecord
+                {
+                    StudentId = students[0].Id,
+                    VaccineId = vaccines[1].Id, // Viêm gan B - Mũi 1
+                    Status = "Done",
+                    VaccinationDate = students[0].DateOfBirth.AddDays(1),
+                    MedicalUnit = "Bệnh viện Nhi Đồng 1",
+                    LotNumber = "HBV-2024-015",
+                    Notes = "Tiêm thành công"
+                },
+                new VaccinationRecord
+                {
+                    StudentId = students[0].Id,
+                    VaccineId = vaccines[2].Id, // Viêm gan B - Mũi 2
+                    Status = "Done",
+                    VaccinationDate = students[0].DateOfBirth.AddMonths(1),
+                    MedicalUnit = "Trạm Y tế Phường 1",
+                    LotNumber = "HBV-2024-020"
+                },
+                new VaccinationRecord
+                {
+                    StudentId = students[0].Id,
+                    VaccineId = vaccines[10].Id, // MMR - Mũi 1
+                    Status = "Done",
+                    VaccinationDate = students[0].DateOfBirth.AddMonths(9),
+                    MedicalUnit = "Trạm Y tế Phường 1",
+                    LotNumber = "MMR-2024-045"
+                },
+                // Student 2 vaccinations
+                new VaccinationRecord
+                {
+                    StudentId = students[1].Id,
+                    VaccineId = vaccines[0].Id, // BCG
+                    Status = "Done",
+                    VaccinationDate = students[1].DateOfBirth.AddDays(2),
+                    MedicalUnit = "Bệnh viện Nhi Đồng 2"
+                },
+                new VaccinationRecord
+                {
+                    StudentId = students[1].Id,
+                    VaccineId = vaccines[14].Id, // Thủy đậu
+                    Status = "Scheduled",
+                    VaccinationDate = DateTime.Now.AddDays(30),
+                    MedicalUnit = "Trạm Y tế Phường 2",
+                    Notes = "Đã đặt lịch tiêm"
+                },
+                // Student 3 vaccinations
+                new VaccinationRecord
+                {
+                    StudentId = students[2].Id,
+                    VaccineId = vaccines[0].Id, // BCG
+                    Status = "Done",
+                    VaccinationDate = students[2].DateOfBirth.AddDays(1),
+                    MedicalUnit = "Phòng khám Đa khoa Quốc tế"
+                },
+                new VaccinationRecord
+                {
+                    StudentId = students[2].Id,
+                    VaccineId = vaccines[15].Id, // Cúm
+                    Status = "Not Done",
+                    Notes = "Chưa tiêm, cần theo dõi"
+                }
+            };
+            _context.VaccinationRecords.AddRange(vaccinationRecords);
+            await _context.SaveChangesAsync();
+        }
+
+        // Seed some HealthRecords (monthly tracking) for existing students
+        if (students.Any())
+        {
+            var healthRecords = new List<HealthRecord>
+            {
+                new HealthRecord
+                {
+                    StudentId = students[0].Id,
+                    Month = DateTime.Now.Month - 1 > 0 ? DateTime.Now.Month - 1 : 12,
+                    Year = DateTime.Now.Month - 1 > 0 ? DateTime.Now.Year : DateTime.Now.Year - 1,
+                    Height = 105.5m,
+                    Weight = 18.2m,
+                    GeneralHealth = "Tốt",
+                    MedicalConditions = "Không có",
+                    TeacherComments = "Bé năng động, vui vẻ, ăn uống tốt",
+                    TeacherEvaluation = "Phát triển tốt, đúng chuẩn"
+                },
+                new HealthRecord
+                {
+                    StudentId = students[0].Id,
+                    Month = DateTime.Now.Month,
+                    Year = DateTime.Now.Year,
+                    Height = 106.0m,
+                    Weight = 18.5m,
+                    GeneralHealth = "Tốt",
+                    TeacherComments = "Bé vẫn khỏe mạnh, tăng cân đều",
+                    TeacherEvaluation = "Tiếp tục theo dõi"
+                },
+                new HealthRecord
+                {
+                    StudentId = students[1].Id,
+                    Month = DateTime.Now.Month,
+                    Year = DateTime.Now.Year,
+                    Height = 103.0m,
+                    Weight = 16.8m,
+                    GeneralHealth = "Khá",
+                    MedicalConditions = "Dị ứng phấn hoa nhẹ",
+                    TeacherComments = "Bé hơi nhút nhát nhưng ngoan ngoãn",
+                    TeacherEvaluation = "Cần quan tâm thêm về tâm lý"
+                },
+                new HealthRecord
+                {
+                    StudentId = students[2].Id,
+                    Month = DateTime.Now.Month,
+                    Year = DateTime.Now.Year,
+                    Height = 108.5m,
+                    Weight = 19.5m,
+                    GeneralHealth = "Tốt",
+                    TeacherComments = "Bé rất năng động, thích vận động",
+                    TeacherEvaluation = "Phát triển vượt chuẩn"
+                }
+            };
+            _context.HealthRecords.AddRange(healthRecords);
+            await _context.SaveChangesAsync();
+        }
+
+        Console.WriteLine("Database seeded successfully with all data including Phase 4!");
     }
 }

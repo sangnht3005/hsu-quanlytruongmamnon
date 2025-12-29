@@ -20,7 +20,10 @@ public class MainViewModel : ViewModelBase
         AccountManagementViewModel accountManagementViewModel,
         StaffManagementViewModel staffManagementViewModel,
         ParentManagementViewModel parentManagementViewModel,
-        StaffLeaveManagementViewModel staffLeaveManagementViewModel)
+        StaffLeaveManagementViewModel staffLeaveManagementViewModel,
+        VaccineManagementViewModel vaccineManagementViewModel,
+        VaccinationRecordManagementViewModel vaccinationRecordManagementViewModel,
+        HealthRecordManagementViewModel healthRecordManagementViewModel)
     {
         DashboardViewModel = dashboardViewModel;
         StudentManagementViewModel = studentManagementViewModel;
@@ -34,6 +37,9 @@ public class MainViewModel : ViewModelBase
         StaffManagementViewModel = staffManagementViewModel;
         ParentManagementViewModel = parentManagementViewModel;
         StaffLeaveManagementViewModel = staffLeaveManagementViewModel;
+        VaccineManagementViewModel = vaccineManagementViewModel;
+        VaccinationRecordManagementViewModel = vaccinationRecordManagementViewModel;
+        HealthRecordManagementViewModel = healthRecordManagementViewModel;
 
         NavigateCommand = new RelayCommand(Navigate);
         LogoutCommand = new RelayCommand(Logout);
@@ -72,6 +78,9 @@ public class MainViewModel : ViewModelBase
     public StaffManagementViewModel StaffManagementViewModel { get; }
     public ParentManagementViewModel ParentManagementViewModel { get; }
     public StaffLeaveManagementViewModel StaffLeaveManagementViewModel { get; }
+    public VaccineManagementViewModel VaccineManagementViewModel { get; }
+    public VaccinationRecordManagementViewModel VaccinationRecordManagementViewModel { get; }
+    public HealthRecordManagementViewModel HealthRecordManagementViewModel { get; }
 
     public ICommand NavigateCommand { get; }
     public ICommand LogoutCommand { get; }
@@ -91,6 +100,9 @@ public class MainViewModel : ViewModelBase
                 "Menu" => MenuManagementViewModel,
                 "Invoice" => InvoiceManagementViewModel,
                 "Accounts" => AccountManagementViewModel,
+                "Vaccines" => VaccineManagementViewModel,
+                "VaccinationRecords" => VaccinationRecordManagementViewModel,
+                "HealthRecords" => HealthRecordManagementViewModel,
                 "Staff" => StaffManagementViewModel,
                 "Parents" => ParentManagementViewModel,
                 "StaffLeave" => StaffLeaveManagementViewModel,
