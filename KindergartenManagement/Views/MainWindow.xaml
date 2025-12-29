@@ -17,14 +17,16 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <conv:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <conv:StatusToVietnameseConverter x:Key="StatusToVietnameseConverter"/>
+        <conv:PageToTagConverter x:Key="PageToTagConverter"/>
         <!-- Sidebar section header style -->
         <Style x:Key="SidebarSectionHeader" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Opacity" Value="0.8"/>
+            <Setter Property="Opacity" Value="0.75"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Margin" Value="10,18,0,6"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="15,16,0,8"/>
             <Setter Property="TextWrapping" Value="NoWrap"/>
+            <Setter Property="Foreground" Value="#B3E5FC"/>
         </Style>
     </Window.Resources>
 
@@ -67,152 +69,188 @@
 
                 <!-- Navigation Menu -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                    <StackPanel Margin="0,20,0,0">
+                    <StackPanel Margin="0,10,0,0">
+                        <!-- Dashboard -->
                         <Button Content="📊 Tổng quan"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="Dashboard"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Dashboard}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,5"/>
-                       <TextBlock Text="HỌC SINH &amp; PHỤ HUYNH" Style="{StaticResource SidebarSectionHeader}"/>
+                               Margin="0,0,0,3"/>
                         
-                        <Button Content="👶 Quản lý học sinh"
+                        <!-- Students & Parents Section -->
+                        <TextBlock Text="👶 HỌC SINH" Style="{StaticResource SidebarSectionHeader}"/>
+                        
+                        <Button Content="   Danh sách học sinh"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="Students"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Students}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,5"/>
+                               Margin="0,0,0,3"/>
                         
-                        <Button Content="👪 Quản lý phụ huynh"
+                        <Button Content="   Phụ huynh"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="Parents"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Parents}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,5"/>
-                       <TextBlock Text="NHÂN SỰ &amp; TÀI KHOẢN" Style="{StaticResource SidebarSectionHeader}"/>
+                               Margin="0,0,0,8"/>
                         
-                        <Button Content="👨‍💼 Quản lý nhân viên"
-                               Command="{Binding NavigateCommand}"
-                               CommandParameter="Staff"
-                               Style="{StaticResource MenuButton}"
-                               Foreground="White"
-                               Margin="0,0,0,5"/>
+                        <!-- Classes & Attendance Section -->
+                        <TextBlock Text="🏫 LỚP HỌC" Style="{StaticResource SidebarSectionHeader}"/>
                         
-                        <Button Content="🔐 Quản lý tài khoản"
-                               Command="{Binding NavigateCommand}"
-                               CommandParameter="Accounts"
-                               Style="{StaticResource MenuButton}"
-                               Foreground="White"
-                               Margin="0,0,0,5"/>
-                       <TextBlock Text="LỚP &amp; ĐIỂM DANH" Style="{StaticResource SidebarSectionHeader}"/>
-                        
-                        <Button Content="🏫 Quản lý lớp học"
-                               Command="{Binding NavigateCommand}"
-                               CommandParameter="Classes"
-                               Style="{StaticResource MenuButton}"
-                               Foreground="White"
-                               Margin="0,0,0,5"/>
-                        
-                        <Button Content="📚 Quản lý khối lớp"
+                        <Button Content="   Khối lớp"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="Grades"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Grades}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,5"/>
+                               Margin="0,0,0,3"/>
                         
-                        <Button Content="✅ Điểm danh"
+                        <Button Content="   Quản lý lớp"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="Classes"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Classes}"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,3"/>
+                        
+                        <Button Content="   Điểm danh"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="Attendance"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Attendance}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,5"/>
-                       <TextBlock Text="SỨC KHỎE &amp; TIÊM CHỦNG" Style="{StaticResource SidebarSectionHeader}"/>
+                               Margin="0,0,0,8"/>
                         
-                        <Button Content="💊 Sức khỏe"
+                        <!-- Health & Vaccines Section -->
+                        <TextBlock Text="💊 SỨC KHỎE" Style="{StaticResource SidebarSectionHeader}"/>
+                        
+                        <Button Content="   Hồ sơ sức khỏe"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="Health"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Health}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,5"/>
+                               Margin="0,0,0,3"/>
                         
-                        <Button Content="� Quản lý Vaccine"
+                        <Button Content="   Vaccine"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="Vaccines"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Vaccines}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,5"/>
+                               Margin="0,0,0,3"/>
                         
-                        <Button Content="📋 Hồ sơ tiêm chủng"
+                        <Button Content="   Tiêm chủng"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="VaccinationRecords"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=VaccinationRecords}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,5"/>
+                               Margin="0,0,0,3"/>
                         
-                        <Button Content="🏥 Hồ sơ sức khỏe tháng"
+                        <Button Content="   Hồ sơ tháng"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="HealthRecords"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=HealthRecords}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,5"/>
-                       <TextBlock Text="THỰC ĐƠN &amp; TÀI CHÍNH" Style="{StaticResource SidebarSectionHeader}"/>
+                               Margin="0,0,0,8"/>
                         
-                        <Button Content="�📅 Đơn nghỉ nhân viên"
-                               Command="{Binding NavigateCommand}"
-                               CommandParameter="StaffLeave"
-                               Style="{StaticResource MenuButton}"
-                               Foreground="White"
-                               Margin="0,0,0,5"/>
+                        <!-- Nutrition Management Section -->
+                        <TextBlock Text="🍽️ THỰC ĐƠN" Style="{StaticResource SidebarSectionHeader}"/>
                         
-                           <Button Content="🍽️ Thực đơn"
+                        <Button Content="   Thực đơn"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="Menu"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Menu}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,5"/>
-
-                           <!-- Phase-5: Nutrition management -->
-                           <Button Content="🏷️ Nhà cung cấp"
-                               Command="{Binding NavigateCommand}"
-                               CommandParameter="Suppliers"
-                               Style="{StaticResource MenuButton}"
-                               Foreground="White"
-                               Margin="0,0,0,5"/>
-
-                           <Button Content="🥬 Nguyên liệu"
-                               Command="{Binding NavigateCommand}"
-                               CommandParameter="Ingredients"
-                               Style="{StaticResource MenuButton}"
-                               Foreground="White"
-                               Margin="0,0,0,5"/>
-
-                           <Button Content="🍱 Món ăn"
-                               Command="{Binding NavigateCommand}"
-                               CommandParameter="Dishes"
-                               Style="{StaticResource MenuButton}"
-                               Foreground="White"
-                               Margin="0,0,0,5"/>
-
-                           <Button Content="📋 Menu hằng ngày"
+                               Margin="0,0,0,3"/>
+                        
+                        <Button Content="   Menu hằng ngày"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="DailyMenus"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=DailyMenus}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,5"/>
-
-                           <Button Content="🎫 Phiếu ăn"
+                               Margin="0,0,0,3"/>
+                        
+                        <Button Content="   Phiếu ăn"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="MealTickets"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=MealTickets}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,5"/>
+                               Margin="0,0,0,3"/>
                         
-                        <Button Content="💰 Hóa đơn"
+                        <Button Content="   Nhà cung cấp"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="Suppliers"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Suppliers}"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,3"/>
+                        
+                        <Button Content="   Nguyên liệu"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="Ingredients"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Ingredients}"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,3"/>
+                        
+                        <Button Content="   Món ăn"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="Dishes"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Dishes}"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,8"/>
+                        
+                        <!-- Staff & Finance Section -->
+                        <TextBlock Text="👨‍💼 NHÂN SỰ" Style="{StaticResource SidebarSectionHeader}"/>
+                        
+                        <Button Content="   Nhân viên"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="Staff"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Staff}"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,3"/>
+                        
+                        <Button Content="   Đơn nghỉ"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="StaffLeave"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=StaffLeave}"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,8"/>
+                        
+                        <!-- Finance Section -->
+                        <TextBlock Text="💰 TÀI CHÍNH" Style="{StaticResource SidebarSectionHeader}"/>
+                        
+                        <Button Content="   Hóa đơn"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="Invoice"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Invoice}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,5"/>
+                               Margin="0,0,0,8"/>
+                        
+                        <!-- System Section -->
+                        <TextBlock Text="🔐 HỆ THỐNG" Style="{StaticResource SidebarSectionHeader}"/>
+                        
+                        <Button Content="   Tài khoản"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="Accounts"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Accounts}"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,3"/>
                     </StackPanel>
                 </ScrollViewer>
 
