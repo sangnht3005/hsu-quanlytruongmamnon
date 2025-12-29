@@ -171,12 +171,14 @@ public class AttendanceBlo : IAttendanceBlo
     private readonly IAttendanceDao _attendanceDao;
     private readonly IStudentDao _studentDao;
     private readonly IClassDao _classDao;
+    private readonly IFoodManagementBlo _foodBlo;
 
-    public AttendanceBlo(IAttendanceDao attendanceDao, IStudentDao studentDao, IClassDao classDao)
+    public AttendanceBlo(IAttendanceDao attendanceDao, IStudentDao studentDao, IClassDao classDao, IFoodManagementBlo foodBlo)
     {
         _attendanceDao = attendanceDao;
         _studentDao = studentDao;
         _classDao = classDao;
+        _foodBlo = foodBlo;
     }
 
     public async Task<Attendance?> GetByIdAsync(Guid id)
@@ -215,7 +217,15 @@ public class AttendanceBlo : IAttendanceBlo
             throw new InvalidOperationException($"Điểm danh cho học sinh này đã tồn tại trong ngày {attendance.Date:dd/MM/yyyy}");
         }
 
-        return await _attendanceDao.CreateAsync(attendance);
+        var created = await _attendanceDao.CreateAsync(attendance);
+
+        // Tự động tạo phiếu ăn nếu học sinh có mặt
+        if (created.Status == "Present")
+        {
+            await CreateMealTicketsForAttendanceAsync(created);
+        }
+
+        return created;
     }
 
     public async Task<Attendance> UpdateAsync(Attendance attendance)
@@ -225,7 +235,28 @@ public class AttendanceBlo : IAttendanceBlo
             throw new ArgumentNullException(nameof(attendance));
         }
 
-        return await _attendanceDao.UpdateAsync(attendance);
+        // Lấy trạng thái cũ bằng cách query riêng với AsNoTracking
+        var oldStatus = await _attendanceDao.GetStatusByIdAsync(attendance.Id);
+
+        // Update attendance
+        var updated = await _attendanceDao.UpdateAsync(attendance);
+
+        // Xử lý phiếu ăn khi thay đổi trạng thái
+        if (oldStatus != null)
+        {
+            // Nếu chuyển từ không có mặt -> có mặt: Tạo phiếu ăn
+            if (oldStatus != "Present" && updated.Status == "Present")
+            {
+                await CreateMealTicketsForAttendanceAsync(updated);
+            }
+            // Nếu chuyển từ có mặt -> không có mặt: Xóa phiếu ăn
+            else if (oldStatus == "Present" && updated.Status != "Present")
+            {
+                await DeleteMealTicketsForAttendanceAsync(updated);
+            }
+        }
+
+        return updated;
     }
 
     public async Task DeleteAsync(Guid id)
@@ -233,33 +264,116 @@ public class AttendanceBlo : IAttendanceBlo
         await _attendanceDao.DeleteAsync(id);
     }
 
+    private async Task CreateMealTicketsForAttendanceAsync(Attendance attendance)
+    {
+        try
+        {
+            // Lấy ngày trong tuần từ attendance date
+            int dayOfWeek = (int)attendance.Date.DayOfWeek;
+            
+            // Tìm tất cả menu cho ngày này
+            var menus = await _foodBlo.GetMenusByDayOfWeekAsync(dayOfWeek);
+            // Lọc theo cấu hình bữa được bật
+            menus = menus
+                .Where(m => KindergartenManagement.Utilities.AutoMealSettings.IsEnabled(m.MealType))
+                .ToList();
+            
+            if (!menus.Any())
+            {
+                // Không có menu cho ngày này, bỏ qua
+                return;
+            }
+            
+            // Lấy tất cả phiếu ăn hiện có của học sinh trong ngày này
+            var existingTickets = await _foodBlo.GetMealTicketsByDateAsync(attendance.Date);
+            var studentExistingTickets = existingTickets
+                .Where(mt => mt.StudentId == attendance.StudentId && mt.Date.Date == attendance.Date.Date)
+                .ToList();
+            
+            // Tạo phiếu ăn cho mỗi menu (Breakfast, Lunch, Snack, etc.) đã bật trong cấu hình
+            foreach (var menu in menus)
+            {
+                // Kiểm tra xem phiếu ăn đã tồn tại chưa
+                var exists = studentExistingTickets.Any(mt => mt.MenuId == menu.Id);
+
+                if (!exists)
+                {
+                    var mealTicket = new MealTicket
+                    {
+                        StudentId = attendance.StudentId,
+                        MenuId = menu.Id,
+                        Date = attendance.Date,
+                        IsConsumed = false
+                    };
+                    await _foodBlo.SaveMealTicketAsync(mealTicket);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log lỗi nhưng không throw để không chặn điểm danh
+            System.Diagnostics.Debug.WriteLine($"Lỗi tạo phiếu ăn: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteMealTicketsForAttendanceAsync(Attendance attendance)
+    {
+        try
+        {
+            // Lấy tất cả phiếu ăn của học sinh trong ngày
+            var tickets = await _foodBlo.GetMealTicketsByDateAsync(attendance.Date);
+            var studentTickets = tickets.Where(mt => 
+                mt.StudentId == attendance.StudentId && 
+                mt.Date.Date == attendance.Date.Date)
+                .ToList();
+
+            // Xóa tất cả phiếu ăn chưa sử dụng
+            foreach (var ticket in studentTickets)
+            {
+                if (!ticket.IsConsumed)
+                {
+                    await _foodBlo.DeleteMealTicketAsync(ticket.Id);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log lỗi nhưng không throw
+            System.Diagnostics.Debug.WriteLine($"Lỗi xóa phiếu ăn: {ex.Message}");
+        }
+    }
+
     public async Task<IEnumerable<Attendance>> CreateClassAttendanceAsync(Guid classId, DateTime date)
     {
-        // Check if attendance already exists for this class and date
+        // Idempotent creation: create only missing records and return full list
         var existing = await _attendanceDao.GetByClassIdAsync(classId, date);
-        if (existing.Any())
-        {
-            throw new InvalidOperationException("Attendance already exists for this date");
-        }
+        var existingByStudent = existing.ToDictionary(a => a.StudentId, a => a);
 
         var students = await _studentDao.GetByClassIdAsync(classId);
-        var attendances = new List<Attendance>();
+        var createdList = new List<Attendance>();
 
         foreach (var student in students)
         {
-            var attendance = new Attendance
+            if (!existingByStudent.ContainsKey(student.Id))
             {
-                StudentId = student.Id,
-                ClassId = classId,
-                Date = date,
-                Status = "Present"
-            };
+                var attendance = new Attendance
+                {
+                    StudentId = student.Id,
+                    ClassId = classId,
+                    Date = date,
+                    Status = "Present"
+                };
 
-            var created = await _attendanceDao.CreateAsync(attendance);
-            attendances.Add(created);
+                var created = await _attendanceDao.CreateAsync(attendance);
+                createdList.Add(created);
+
+                // Tự động tạo phiếu ăn cho học sinh có mặt
+                await CreateMealTicketsForAttendanceAsync(created);
+            }
         }
 
-        return attendances;
+        // Trả về đầy đủ danh sách điểm danh (đã có + mới tạo)
+        return existing.Concat(createdList).ToList();
     }
 }
 
@@ -444,7 +558,7 @@ public interface IMenuBlo
 {
     Task<Menu?> GetByIdAsync(Guid id);
     Task<IEnumerable<Menu>> GetAllAsync();
-    Task<IEnumerable<Menu>> GetByDateAsync(DateTime date);
+    Task<IEnumerable<Menu>> GetByDayOfWeekAsync(int dayOfWeek);
     Task<Menu> CreateAsync(Menu menu);
     Task<Menu> UpdateAsync(Menu menu);
     Task DeleteAsync(Guid id);
@@ -469,9 +583,9 @@ public class MenuBlo : IMenuBlo
         return await _menuDao.GetAllAsync();
     }
 
-    public async Task<IEnumerable<Menu>> GetByDateAsync(DateTime date)
+    public async Task<IEnumerable<Menu>> GetByDayOfWeekAsync(int dayOfWeek)
     {
-        return await _menuDao.GetByDateAsync(date);
+        return await _menuDao.GetByDayOfWeekAsync(dayOfWeek);
     }
 
     public async Task<Menu> CreateAsync(Menu menu)
@@ -532,17 +646,17 @@ public class MealTicketBlo : IMealTicketBlo
 
     public async Task<IEnumerable<MealTicket>> GenerateFromAttendanceAsync(DateTime date)
     {
-        var menus = await _menuDao.GetByDateAsync(date);
+        // Lấy menu dựa trên ngày trong tuần của date
+        int dayOfWeek = (int)date.DayOfWeek;
+        var menus = await _menuDao.GetByDayOfWeekAsync(dayOfWeek);
         if (!menus.Any())
         {
-            throw new InvalidOperationException("No menu available for this date");
+            throw new InvalidOperationException($"No menu available for day of week: {dayOfWeek}");
         }
 
+        // Phiếu ăn sẽ được tạo tự động bởi GenerateMealTicketsForMenuAsync trong FoodManagementDao
+        // Phương thức này chỉ trả về danh sách rỗng vì logic thay đổi
         var mealTickets = new List<MealTicket>();
-
-        // Get all attendances for the date where students are present
-        // This is simplified - in reality you'd query all classes
-        
         return mealTickets;
     }
 }

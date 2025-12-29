@@ -145,6 +145,7 @@ public class GradeDao : IGradeDao
 public interface IAttendanceDao
 {
     Task<Attendance?> GetByIdAsync(Guid id);
+    Task<string?> GetStatusByIdAsync(Guid id);
     Task<IEnumerable<Attendance>> GetByStudentIdAsync(Guid studentId);
     Task<IEnumerable<Attendance>> GetByClassIdAsync(Guid classId, DateTime date);
     Task<Attendance?> GetByStudentAndDateAsync(Guid studentId, DateTime date);
@@ -170,6 +171,15 @@ public class AttendanceDao : IAttendanceDao
             .FirstOrDefaultAsync(a => a.Id == id);
     }
 
+    public async Task<string?> GetStatusByIdAsync(Guid id)
+    {
+        return await _context.Attendances
+            .AsNoTracking()
+            .Where(a => a.Id == id)
+            .Select(a => a.Status)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<IEnumerable<Attendance>> GetByStudentIdAsync(Guid studentId)
     {
         return await _context.Attendances
@@ -183,6 +193,7 @@ public class AttendanceDao : IAttendanceDao
     public async Task<IEnumerable<Attendance>> GetByClassIdAsync(Guid classId, DateTime date)
     {
         return await _context.Attendances
+            .AsNoTracking()
             .Include(a => a.Student)
             .Include(a => a.Class)
             .Where(a => a.ClassId == classId && a.Date.Date == date.Date)
@@ -205,7 +216,34 @@ public class AttendanceDao : IAttendanceDao
     public async Task<Attendance> UpdateAsync(Attendance attendance)
     {
         attendance.UpdatedAt = DateTime.Now;
-        _context.Attendances.Update(attendance);
+
+        // Không cập nhật theo graph; tránh dính nav Student/Class
+        attendance.Student = null;
+        attendance.Class = null;
+
+        // Nếu đã có entity được track, cập nhật trực tiếp; nếu không thì attach mới
+        var tracked = _context.ChangeTracker.Entries<Attendance>()
+            .FirstOrDefault(e => e.Entity.Id == attendance.Id);
+
+        if (tracked != null)
+        {
+            tracked.Entity.Status = attendance.Status;
+            tracked.Entity.Notes = attendance.Notes;
+            tracked.Entity.UpdatedAt = attendance.UpdatedAt;
+
+            _context.Entry(tracked.Entity).Property(a => a.Status).IsModified = true;
+            _context.Entry(tracked.Entity).Property(a => a.Notes).IsModified = true;
+            _context.Entry(tracked.Entity).Property(a => a.UpdatedAt).IsModified = true;
+        }
+        else
+        {
+            // Đính kèm và chỉ đánh dấu các trường cần cập nhật
+            _context.Attendances.Attach(attendance);
+            _context.Entry(attendance).Property(a => a.Status).IsModified = true;
+            _context.Entry(attendance).Property(a => a.Notes).IsModified = true;
+            _context.Entry(attendance).Property(a => a.UpdatedAt).IsModified = true;
+        }
+
         await _context.SaveChangesAsync();
         return attendance;
     }

@@ -7,6 +7,7 @@ public class MainViewModel : ViewModelBase
 {
     private ViewModelBase? _currentViewModel;
     private Account? _currentAccount;
+    private string _currentPage = "Dashboard";
 
     public MainViewModel(
         DashboardViewModel dashboardViewModel,
@@ -23,7 +24,12 @@ public class MainViewModel : ViewModelBase
         StaffLeaveManagementViewModel staffLeaveManagementViewModel,
         VaccineManagementViewModel vaccineManagementViewModel,
         VaccinationRecordManagementViewModel vaccinationRecordManagementViewModel,
-        HealthRecordManagementViewModel healthRecordManagementViewModel)
+        HealthRecordManagementViewModel healthRecordManagementViewModel,
+        SupplierManagementViewModel supplierManagementViewModel,
+        IngredientManagementViewModel ingredientManagementViewModel,
+        DishManagementViewModel dishManagementViewModel,
+        DailyMenuManagementViewModel dailyMenuManagementViewModel,
+        MealTicketManagementViewModel mealTicketManagementViewModel)
     {
         DashboardViewModel = dashboardViewModel;
         StudentManagementViewModel = studentManagementViewModel;
@@ -40,6 +46,11 @@ public class MainViewModel : ViewModelBase
         VaccineManagementViewModel = vaccineManagementViewModel;
         VaccinationRecordManagementViewModel = vaccinationRecordManagementViewModel;
         HealthRecordManagementViewModel = healthRecordManagementViewModel;
+        SupplierManagementViewModel = supplierManagementViewModel;
+        IngredientManagementViewModel = ingredientManagementViewModel;
+        DishManagementViewModel = dishManagementViewModel;
+        DailyMenuManagementViewModel = dailyMenuManagementViewModel;
+        MealTicketManagementViewModel = mealTicketManagementViewModel;
 
         NavigateCommand = new RelayCommand(Navigate);
         LogoutCommand = new RelayCommand(Logout);
@@ -66,6 +77,12 @@ public class MainViewModel : ViewModelBase
         set => SetProperty(ref _currentViewModel, value);
     }
 
+    public string CurrentPage
+    {
+        get => _currentPage;
+        set => SetProperty(ref _currentPage, value);
+    }
+
     public DashboardViewModel DashboardViewModel { get; }
     public StudentManagementViewModel StudentManagementViewModel { get; }
     public GradeManagementViewModel GradeManagementViewModel { get; }
@@ -81,6 +98,11 @@ public class MainViewModel : ViewModelBase
     public VaccineManagementViewModel VaccineManagementViewModel { get; }
     public VaccinationRecordManagementViewModel VaccinationRecordManagementViewModel { get; }
     public HealthRecordManagementViewModel HealthRecordManagementViewModel { get; }
+    public SupplierManagementViewModel SupplierManagementViewModel { get; }
+    public IngredientManagementViewModel IngredientManagementViewModel { get; }
+    public DishManagementViewModel DishManagementViewModel { get; }
+    public DailyMenuManagementViewModel DailyMenuManagementViewModel { get; }
+    public MealTicketManagementViewModel MealTicketManagementViewModel { get; }
 
     public ICommand NavigateCommand { get; }
     public ICommand LogoutCommand { get; }
@@ -89,6 +111,7 @@ public class MainViewModel : ViewModelBase
     {
         if (parameter is string viewName)
         {
+            CurrentPage = viewName;
             CurrentViewModel = viewName switch
             {
                 "Dashboard" => DashboardViewModel,
@@ -106,6 +129,11 @@ public class MainViewModel : ViewModelBase
                 "Staff" => StaffManagementViewModel,
                 "Parents" => ParentManagementViewModel,
                 "StaffLeave" => StaffLeaveManagementViewModel,
+                "Suppliers" => SupplierManagementViewModel,
+                "Ingredients" => IngredientManagementViewModel,
+                "Dishes" => DishManagementViewModel,
+                "DailyMenus" => DailyMenuManagementViewModel,
+                "MealTickets" => MealTicketManagementViewModel,
                 _ => DashboardViewModel
             };
         }

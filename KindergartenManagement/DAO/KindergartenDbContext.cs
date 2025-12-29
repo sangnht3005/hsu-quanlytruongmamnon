@@ -16,9 +16,13 @@ public class KindergartenDbContext : DbContext
     public DbSet<Grade> Grades { get; set; } = null!;
     public DbSet<Attendance> Attendances { get; set; } = null!;
     public DbSet<HealthRecord> HealthRecords { get; set; } = null!;
+    public DbSet<Supplier> Suppliers { get; set; } = null!;
+    public DbSet<Ingredient> Ingredients { get; set; } = null!;
+    public DbSet<Dish> Dishes { get; set; } = null!;
+    public DbSet<DishIngredient> DishIngredients { get; set; } = null!;
     public DbSet<Food> Foods { get; set; } = null!;
     public DbSet<Menu> Menus { get; set; } = null!;
-    public DbSet<MenuFood> MenuFoods { get; set; } = null!;
+    public DbSet<MenuDish> MenuDishes { get; set; } = null!;
     public DbSet<MealTicket> MealTickets { get; set; } = null!;
     public DbSet<Invoice> Invoices { get; set; } = null!;
     public DbSet<StaffLeave> StaffLeaves { get; set; } = null!;
@@ -46,19 +50,39 @@ public class KindergartenDbContext : DbContext
             .WithMany(p => p.RolePermissions)
             .HasForeignKey(rp => rp.PermissionId);
 
-        // MenuFood composite key
-        modelBuilder.Entity<MenuFood>()
-            .HasKey(mf => new { mf.MenuId, mf.FoodId });
+        // DishIngredient composite key
+        modelBuilder.Entity<DishIngredient>()
+            .HasKey(di => new { di.DishId, di.IngredientId });
 
-        modelBuilder.Entity<MenuFood>()
-            .HasOne(mf => mf.Menu)
-            .WithMany(m => m.MenuFoods)
-            .HasForeignKey(mf => mf.MenuId);
+        modelBuilder.Entity<DishIngredient>()
+            .HasOne(di => di.Dish)
+            .WithMany(d => d.DishIngredients)
+            .HasForeignKey(di => di.DishId);
 
-        modelBuilder.Entity<MenuFood>()
-            .HasOne(mf => mf.Food)
-            .WithMany(f => f.MenuFoods)
-            .HasForeignKey(mf => mf.FoodId);
+        modelBuilder.Entity<DishIngredient>()
+            .HasOne(di => di.Ingredient)
+            .WithMany(i => i.DishIngredients)
+            .HasForeignKey(di => di.IngredientId);
+
+        // MenuDish composite key
+        modelBuilder.Entity<MenuDish>()
+            .HasKey(md => new { md.MenuId, md.DishId });
+
+        modelBuilder.Entity<MenuDish>()
+            .HasOne(md => md.Menu)
+            .WithMany(m => m.MenuDishes)
+            .HasForeignKey(md => md.MenuId);
+
+        modelBuilder.Entity<MenuDish>()
+            .HasOne(md => md.Dish)
+            .WithMany(d => d.MenuDishes)
+            .HasForeignKey(md => md.DishId);
+
+        // Ingredient-Supplier relationship
+        modelBuilder.Entity<Ingredient>()
+            .HasOne(i => i.Supplier)
+            .WithMany(s => s.Ingredients)
+            .HasForeignKey(i => i.SupplierId);
 
         // Account-Role relationship
         modelBuilder.Entity<Account>()

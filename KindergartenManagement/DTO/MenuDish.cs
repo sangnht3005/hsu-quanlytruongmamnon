@@ -2,18 +2,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace KindergartenManagement.DTO;
 
-public class MenuFood
+public class MenuDish
 {
     public Guid MenuId { get; set; }
     public Menu? Menu { get; set; }
 
-    public Guid FoodId { get; set; }
-    public Food? Food { get; set; }
+    public Guid DishId { get; set; }
+    public Dish? Dish { get; set; }
 
-    public decimal Quantity { get; set; }
-
-    [MaxLength(50)]
-    public string? Unit { get; set; }
+    [MaxLength(500)]
+    public string? Notes { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

@@ -63,6 +63,22 @@ public class StringToVisibilityConverter : IValueConverter
     }
 }
 
+public class PageToTagConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is string currentPage && parameter is string targetPage)
+        {
+            return currentPage == targetPage ? "Selected" : "NotSelected";
+        }
+        return "NotSelected";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
 public class StatusToVietnameseConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -101,5 +117,32 @@ public class StatusToVietnameseConverter : IValueConverter
             };
         }
         return value;
+    }
+}
+
+public class DayOfWeekToVietnameseConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is int dayOfWeek)
+        {
+            return dayOfWeek switch
+            {
+                0 => "Chủ nhật",
+                1 => "Thứ hai",
+                2 => "Thứ ba",
+                3 => "Thứ tư",
+                4 => "Thứ năm",
+                5 => "Thứ sáu",
+                6 => "Thứ bảy",
+                _ => dayOfWeek.ToString()
+            };
+        }
+        return value;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

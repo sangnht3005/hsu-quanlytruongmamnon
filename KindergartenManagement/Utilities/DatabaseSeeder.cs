@@ -1,5 +1,6 @@
 using KindergartenManagement.DTO;
 using KindergartenManagement.DAO;
+using Microsoft.EntityFrameworkCore;
 
 namespace KindergartenManagement.Utilities;
 
@@ -642,6 +643,253 @@ public class DatabaseSeeder
             await _context.SaveChangesAsync();
         }
 
-        Console.WriteLine("Database seeded successfully with all data including Phase 4!");
+        // ==================== Phase 5: Food Management ====================
+        
+        // Seed Suppliers
+        var suppliers = new List<Supplier>
+        {
+            new Supplier 
+            { 
+                Name = "Công ty TNHH Thực phẩm Sạch Việt",
+                ContactPerson = "Nguyễn Văn Sạch",
+                Phone = "0901234567",
+                Email = "info@thucphamsach.vn",
+                Address = "123 Đường Nguyễn Trãi, Q.1, TP.HCM",
+                IsActive = true
+            },
+            new Supplier 
+            { 
+                Name = "Công ty CP Rau Quả Đà Lạt",
+                ContactPerson = "Trần Thị Hoa",
+                Phone = "0902345678",
+                Email = "contact@rauquadalat.vn",
+                Address = "45 Lâm Đồng, Đà Lạt",
+                IsActive = true
+            },
+            new Supplier 
+            { 
+                Name = "Trang trại Hữu cơ Xanh",
+                ContactPerson = "Lê Văn Xanh",
+                Phone = "0903456789",
+                Email = "xanh@huuco.vn",
+                Address = "789 Đường Lê Lợi, Q.3, TP.HCM",
+                IsActive = true
+            }
+        };
+        _context.Suppliers.AddRange(suppliers);
+        await _context.SaveChangesAsync();
+
+        // Seed Ingredients
+        var ingredients = new List<Ingredient>
+        {
+            // Protein
+            new Ingredient { Name = "Thịt gà", Category = "Protein", Unit = "kg", CaloriesPer100g = 165m, UnitPrice = 85000m, SupplierId = suppliers[0].Id, IsActive = true },
+            new Ingredient { Name = "Thịt heo", Category = "Protein", Unit = "kg", CaloriesPer100g = 242m, UnitPrice = 120000m, SupplierId = suppliers[0].Id, IsActive = true },
+            new Ingredient { Name = "Cá hồi", Category = "Protein", Unit = "kg", CaloriesPer100g = 208m, UnitPrice = 250000m, SupplierId = suppliers[0].Id, IsActive = true },
+            new Ingredient { Name = "Trứng gà", Category = "Protein", Unit = "kg", CaloriesPer100g = 155m, UnitPrice = 35000m, SupplierId = suppliers[0].Id, IsActive = true },
+            new Ingredient { Name = "Đậu hũ", Category = "Protein", Unit = "kg", CaloriesPer100g = 76m, UnitPrice = 25000m, SupplierId = suppliers[0].Id, IsActive = true },
+            
+            // Vegetables
+            new Ingredient { Name = "Cà rót", Category = "Vegetable", Unit = "kg", CaloriesPer100g = 25m, UnitPrice = 18000m, SupplierId = suppliers[1].Id, IsActive = true },
+            new Ingredient { Name = "Bông cải xanh", Category = "Vegetable", Unit = "kg", CaloriesPer100g = 34m, UnitPrice = 30000m, SupplierId = suppliers[1].Id, IsActive = true },
+            new Ingredient { Name = "Cà chua", Category = "Vegetable", Unit = "kg", CaloriesPer100g = 18m, UnitPrice = 20000m, SupplierId = suppliers[1].Id, IsActive = true },
+            new Ingredient { Name = "Súp lơ", Category = "Vegetable", Unit = "kg", CaloriesPer100g = 25m, UnitPrice = 35000m, SupplierId = suppliers[2].Id, IsActive = true },
+            new Ingredient { Name = "Rau muống", Category = "Vegetable", Unit = "kg", CaloriesPer100g = 19m, UnitPrice = 12000m, SupplierId = suppliers[2].Id, IsActive = true },
+            
+            // Fruits
+            new Ingredient { Name = "Chuối", Category = "Fruit", Unit = "kg", CaloriesPer100g = 89m, UnitPrice = 22000m, SupplierId = suppliers[1].Id, IsActive = true },
+            new Ingredient { Name = "Táo", Category = "Fruit", Unit = "kg", CaloriesPer100g = 52m, UnitPrice = 45000m, SupplierId = suppliers[1].Id, IsActive = true },
+            new Ingredient { Name = "Cam", Category = "Fruit", Unit = "kg", CaloriesPer100g = 47m, UnitPrice = 35000m, SupplierId = suppliers[1].Id, IsActive = true },
+            
+            // Grains
+            new Ingredient { Name = "Gạo trắng", Category = "Grain", Unit = "kg", CaloriesPer100g = 130m, UnitPrice = 25000m, SupplierId = suppliers[0].Id, IsActive = true },
+            new Ingredient { Name = "Mì ý", Category = "Grain", Unit = "kg", CaloriesPer100g = 131m, UnitPrice = 35000m, SupplierId = suppliers[0].Id, IsActive = true },
+            
+            // Dairy
+            new Ingredient { Name = "Sữa tươi", Category = "Dairy", Unit = "liter", CaloriesPer100g = 61m, UnitPrice = 35000m, SupplierId = suppliers[0].Id, IsActive = true },
+            new Ingredient { Name = "Sữa chua", Category = "Dairy", Unit = "kg", CaloriesPer100g = 59m, UnitPrice = 45000m, SupplierId = suppliers[0].Id, IsActive = true }
+        };
+        _context.Ingredients.AddRange(ingredients);
+        await _context.SaveChangesAsync();
+
+        // Seed Dishes with ingredients
+        var dishes = new List<Dish>();
+        
+        // Dish 1: Cơm gà xào rau
+        var dish1 = new Dish 
+        { 
+            Name = "Cơm gà xào rau",
+            Category = "Main Course",
+            Description = "Cơm trắng với thịt gà xào cùng rau củ",
+            SellingPrice = 35000m,
+            IsActive = true
+        };
+        _context.Dishes.Add(dish1);
+        await _context.SaveChangesAsync();
+        
+        var dish1Ingredients = new List<DishIngredient>
+        {
+            new DishIngredient { DishId = dish1.Id, IngredientId = ingredients[13].Id, Quantity = 100 }, // Gạo
+            new DishIngredient { DishId = dish1.Id, IngredientId = ingredients[0].Id, Quantity = 80 },  // Thịt gà
+            new DishIngredient { DishId = dish1.Id, IngredientId = ingredients[6].Id, Quantity = 50 },  // Bông cải
+            new DishIngredient { DishId = dish1.Id, IngredientId = ingredients[7].Id, Quantity = 30 }   // Cà chua
+        };
+        _context.DishIngredients.AddRange(dish1Ingredients);
+        await _context.SaveChangesAsync();
+
+        // Dish 2: Canh cá hồi nấu rau
+        var dish2 = new Dish 
+        { 
+            Name = "Canh cá hồi nấu rau",
+            Category = "Soup",
+            Description = "Canh cá hồi thanh mát với rau củ",
+            SellingPrice = 28000m,
+            IsActive = true
+        };
+        _context.Dishes.Add(dish2);
+        await _context.SaveChangesAsync();
+        
+        var dish2Ingredients = new List<DishIngredient>
+        {
+            new DishIngredient { DishId = dish2.Id, IngredientId = ingredients[2].Id, Quantity = 60 },  // Cá hồi
+            new DishIngredient { DishId = dish2.Id, IngredientId = ingredients[7].Id, Quantity = 40 },  // Cà chua
+            new DishIngredient { DishId = dish2.Id, IngredientId = ingredients[9].Id, Quantity = 30 }   // Rau muống
+        };
+        _context.DishIngredients.AddRange(dish2Ingredients);
+        await _context.SaveChangesAsync();
+
+        // Dish 3: Trứng chiên đậu hũ
+        var dish3 = new Dish 
+        { 
+            Name = "Trứng chiên đậu hũ",
+            Category = "Main Course",
+            Description = "Món ăn giàu protein từ trứng và đậu hũ",
+            SellingPrice = 20000m,
+            IsActive = true
+        };
+        _context.Dishes.Add(dish3);
+        await _context.SaveChangesAsync();
+        
+        var dish3Ingredients = new List<DishIngredient>
+        {
+            new DishIngredient { DishId = dish3.Id, IngredientId = ingredients[3].Id, Quantity = 100 }, // Trứng
+            new DishIngredient { DishId = dish3.Id, IngredientId = ingredients[4].Id, Quantity = 80 }   // Đậu hũ
+        };
+        _context.DishIngredients.AddRange(dish3Ingredients);
+        await _context.SaveChangesAsync();
+
+        // Dish 4: Salad trái cây
+        var dish4 = new Dish 
+        { 
+            Name = "Salad trái cây",
+            Category = "Dessert",
+            Description = "Hỗn hợp trái cây tươi ngon",
+            SellingPrice = 18000m,
+            IsActive = true
+        };
+        _context.Dishes.Add(dish4);
+        await _context.SaveChangesAsync();
+        
+        var dish4Ingredients = new List<DishIngredient>
+        {
+            new DishIngredient { DishId = dish4.Id, IngredientId = ingredients[10].Id, Quantity = 50 }, // Chuối
+            new DishIngredient { DishId = dish4.Id, IngredientId = ingredients[11].Id, Quantity = 60 }, // Táo
+            new DishIngredient { DishId = dish4.Id, IngredientId = ingredients[12].Id, Quantity = 50 }, // Cam
+            new DishIngredient { DishId = dish4.Id, IngredientId = ingredients[16].Id, Quantity = 30 }  // Sữa chua
+        };
+        _context.DishIngredients.AddRange(dish4Ingredients);
+        await _context.SaveChangesAsync();
+
+        dishes.AddRange(new[] { dish1, dish2, dish3, dish4 });
+
+        // Recalculate all dishes cost and calories
+        foreach (var dish in dishes)
+        {
+            var dishIngredients = await _context.DishIngredients
+                .Where(di => di.DishId == dish.Id)
+                .ToListAsync();
+            
+            decimal totalCalories = 0;
+            decimal totalCost = 0;
+
+            foreach (var di in dishIngredients)
+            {
+                var ingredient = ingredients.First(i => i.Id == di.IngredientId);
+                totalCalories += (ingredient.CaloriesPer100g * di.Quantity) / 100;
+                totalCost += (ingredient.UnitPrice * di.Quantity) / 1000;
+            }
+
+            dish.TotalCalories = Math.Round(totalCalories, 2);
+            dish.TotalCost = Math.Round(totalCost, 2);
+        }
+        await _context.SaveChangesAsync();
+
+        // Seed Menus - theo mẫu ngày trong tuần, tái sử dụng được
+        var menus = new List<Menu>
+        {
+            // Thứ 2
+            new Menu 
+            { 
+                Name = "Thực đơn sáng thứ 2",
+                DayOfWeek = 1, // Monday
+                MealType = "Breakfast",
+                Description = "Bữa sáng thứ 2 - Trứng chiên đậu hũ"
+            },
+            new Menu 
+            { 
+                Name = "Thực đơn trưa thứ 2",
+                DayOfWeek = 1, // Monday
+                MealType = "Lunch",
+                Description = "Bữa trưa thứ 2 - Cơm gà xào rau + Canh cá"
+            },
+            new Menu 
+            { 
+                Name = "Thực đơn xế thứ 2",
+                DayOfWeek = 1, // Monday
+                MealType = "Snack",
+                Description = "Bữa phụ thứ 2 - Salad trái cây"
+            },
+            // Thứ 3
+            new Menu 
+            { 
+                Name = "Thực đơn sáng thứ 3",
+                DayOfWeek = 2, // Tuesday
+                MealType = "Breakfast",
+                Description = "Bữa sáng thứ 3 - Cháo gà"
+            },
+            new Menu 
+            { 
+                Name = "Thực đơn trưa thứ 3",
+                DayOfWeek = 2, // Tuesday
+                MealType = "Lunch",
+                Description = "Bữa trưa thứ 3 - Cơm + Canh"
+            },
+        };
+        _context.Menus.AddRange(menus);
+        await _context.SaveChangesAsync();
+
+        // Link dishes to menus
+        var menuDishes = new List<MenuDish>
+        {
+            // Monday Breakfast
+            new MenuDish { MenuId = menus[0].Id, DishId = dish3.Id }, // Trứng chiên đậu hũ
+            
+            // Monday Lunch
+            new MenuDish { MenuId = menus[1].Id, DishId = dish1.Id }, // Cơm gà xào rau
+            new MenuDish { MenuId = menus[1].Id, DishId = dish2.Id }, // Canh cá
+            
+            // Monday Snack
+            new MenuDish { MenuId = menus[2].Id, DishId = dish4.Id }, // Salad trái cây
+            
+            // Tuesday Breakfast
+            new MenuDish { MenuId = menus[3].Id, DishId = dish1.Id }, // Cơm gà
+            
+            // Tuesday Lunch
+            new MenuDish { MenuId = menus[4].Id, DishId = dish2.Id }, // Canh cá
+        };
+        _context.MenuDishes.AddRange(menuDishes);
+        await _context.SaveChangesAsync();
+
+        Console.WriteLine("Database seeded successfully with all data including Phase 5!");
     }
 }

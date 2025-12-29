@@ -5,7 +5,7 @@ namespace KindergartenManagement.DTO;
 public class MealTicket
 {
     [Key]
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
 
     public Guid StudentId { get; set; }
     public Student? Student { get; set; }

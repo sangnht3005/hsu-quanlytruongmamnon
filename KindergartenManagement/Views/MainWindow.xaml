@@ -17,6 +17,15 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <conv:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <conv:StatusToVietnameseConverter x:Key="StatusToVietnameseConverter"/>
+        <!-- Sidebar section header style -->
+        <Style x:Key="SidebarSectionHeader" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Opacity" Value="0.8"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="10,18,0,6"/>
+            <Setter Property="TextWrapping" Value="NoWrap"/>
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -65,6 +74,7 @@
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
                                Margin="0,0,0,5"/>
+                       <TextBlock Text="HỌC SINH &amp; PHỤ HUYNH" Style="{StaticResource SidebarSectionHeader}"/>
                         
                         <Button Content="👶 Quản lý học sinh"
                                Command="{Binding NavigateCommand}"
@@ -79,6 +89,7 @@
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
                                Margin="0,0,0,5"/>
+                       <TextBlock Text="NHÂN SỰ &amp; TÀI KHOẢN" Style="{StaticResource SidebarSectionHeader}"/>
                         
                         <Button Content="👨‍💼 Quản lý nhân viên"
                                Command="{Binding NavigateCommand}"
@@ -93,6 +104,7 @@
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
                                Margin="0,0,0,5"/>
+                       <TextBlock Text="LỚP &amp; ĐIỂM DANH" Style="{StaticResource SidebarSectionHeader}"/>
                         
                         <Button Content="🏫 Quản lý lớp học"
                                Command="{Binding NavigateCommand}"
@@ -114,6 +126,7 @@
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
                                Margin="0,0,0,5"/>
+                       <TextBlock Text="SỨC KHỎE &amp; TIÊM CHỦNG" Style="{StaticResource SidebarSectionHeader}"/>
                         
                         <Button Content="💊 Sức khỏe"
                                Command="{Binding NavigateCommand}"
@@ -142,6 +155,7 @@
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
                                Margin="0,0,0,5"/>
+                       <TextBlock Text="THỰC ĐƠN &amp; TÀI CHÍNH" Style="{StaticResource SidebarSectionHeader}"/>
                         
                         <Button Content="�📅 Đơn nghỉ nhân viên"
                                Command="{Binding NavigateCommand}"
@@ -150,9 +164,45 @@
                                Foreground="White"
                                Margin="0,0,0,5"/>
                         
-                        <Button Content="🍽️ Thực đơn"
+                           <Button Content="🍽️ Thực đơn"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="Menu"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,5"/>
+
+                           <!-- Phase-5: Nutrition management -->
+                           <Button Content="🏷️ Nhà cung cấp"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="Suppliers"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,5"/>
+
+                           <Button Content="🥬 Nguyên liệu"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="Ingredients"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,5"/>
+
+                           <Button Content="🍱 Món ăn"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="Dishes"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,5"/>
+
+                           <Button Content="📋 Menu hằng ngày"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="DailyMenus"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,5"/>
+
+                           <Button Content="🎫 Phiếu ăn"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="MealTickets"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
                                Margin="0,0,0,5"/>
@@ -430,6 +480,404 @@
                                             <Button Content="💾 Lưu" Command="{Binding SaveGradeCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" ToolTip="Lưu thông tin khối lớp vào cơ sở dữ liệu"/>
                                             <Button Content="🗑️ Xóa" Command="{Binding DeleteGradeCommand}" Style="{StaticResource DangerButton}" ToolTip="Xóa khối lớp đã chọn"/>
                                         </StackPanel>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- Daily Menu Management View -->
+                    <DataTemplate DataType="{x:Type vm:DailyMenuManagementViewModel}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" MinWidth="320"/>
+                                <ColumnDefinition Width="3*" MinWidth="420"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Menus list -->
+                            <Border Grid.Column="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="12" Margin="0,0,10,0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Margin="0,0,0,10">
+                                        <TextBlock Text="Thực đơn hằng ngày" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource PrimaryColor}"/>
+                                        <Button Content="🔁 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                    <DataGrid Grid.Row="1" ItemsSource="{Binding Menus}" SelectedItem="{Binding SelectedMenu}" AutoGenerateColumns="False" IsReadOnly="True">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Thứ" Binding="{Binding DayOfWeek}" Width="60"/>
+                                            <DataGridTextColumn Header="Bữa" Binding="{Binding MealType}" Width="80"/>
+                                            <DataGridTextColumn Header="Tên" Binding="{Binding Name}" Width="*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                            </Border>
+
+                            <!-- Menu form and dishes -->
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="12">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,10">
+                                            <TextBlock Text="Thông tin thực đơn" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource PrimaryColor}"/>
+                                            <Button Content="➕ Thêm mới" Command="{Binding AddNewCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                        <Border Background="#f7f7f7" CornerRadius="8" Padding="10" Margin="0,0,0,10">
+                                            <StackPanel>
+                                                <TextBlock Text="Tạo phiếu khi điểm danh cho các bữa:" FontWeight="SemiBold"/>
+                                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                                    <CheckBox Content="Breakfast" IsChecked="{Binding AutoBreakfast, Mode=TwoWay}" Margin="0,0,12,0"/>
+                                                    <CheckBox Content="Lunch" IsChecked="{Binding AutoLunch, Mode=TwoWay}" Margin="0,0,12,0"/>
+                                                    <CheckBox Content="Snack" IsChecked="{Binding AutoSnack, Mode=TwoWay}" Margin="0,0,12,0"/>
+                                                    <CheckBox Content="Dinner" IsChecked="{Binding AutoDinner, Mode=TwoWay}"/>
+                                                </StackPanel>
+                                                <Button Content="💾 Lưu cấu hình" Command="{Binding SaveAutoSettingsCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Margin="0,8,0,0"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Background="#f7f7f7" CornerRadius="8" Padding="10" Margin="0,0,0,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="Tạo phiếu ăn theo ngày" FontWeight="SemiBold"/>
+                                                    <DatePicker SelectedDate="{Binding GenerationDate, Mode=TwoWay}" Margin="0,6,0,0"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="1" Content="🎫 Tạo phiếu" Command="{Binding GenerateMealTicketsCommand}" Style="{StaticResource PrimaryButton}" Margin="8,22,0,0"/>
+                                            </Grid>
+                                        </Border>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                                                <TextBlock Text="Tên *"/>
+                                                <TextBox Text="{Binding Name, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                                <TextBlock Text="Ngày trong tuần *"/>
+                                                <ComboBox SelectedValue="{Binding DayOfWeek, Mode=TwoWay}" SelectedValuePath="Tag" Padding="6" Margin="0,0,0,8">
+                                                    <ComboBoxItem Content="Chủ nhật" Tag="0"/>
+                                                    <ComboBoxItem Content="Thứ hai" Tag="1"/>
+                                                    <ComboBoxItem Content="Thứ ba" Tag="2"/>
+                                                    <ComboBoxItem Content="Thứ tư" Tag="3"/>
+                                                    <ComboBoxItem Content="Thứ năm" Tag="4"/>
+                                                    <ComboBoxItem Content="Thứ sáu" Tag="5"/>
+                                                    <ComboBoxItem Content="Thứ bảy" Tag="6"/>
+                                                </ComboBox>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Margin="6,0,0,0">
+                                                <TextBlock Text="Loại bữa *"/>
+                                                <ComboBox Text="{Binding MealType, Mode=TwoWay}" IsEditable="False" Padding="6" Margin="0,0,0,8">
+                                                    <ComboBoxItem Content="Breakfast"/>
+                                                    <ComboBoxItem Content="Lunch"/>
+                                                    <ComboBoxItem Content="Snack"/>
+                                                    <ComboBoxItem Content="Dinner"/>
+                                                </ComboBox>
+                                                <TextBlock Text="Mô tả"/>
+                                                <TextBox Text="{Binding Description, Mode=TwoWay}" Padding="6" Height="50" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Grid>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
+                                            <Button Content="💾 Lưu" Command="{Binding SaveMenuCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteMenuCommand}" Style="{StaticResource DangerButton}"/>
+                                        </StackPanel>
+
+                                        <Border Background="#f7f7f7" CornerRadius="8" Padding="10" Margin="0,12,0,0">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="*"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Text="Món ăn trong thực đơn" FontWeight="SemiBold"/>
+                                                <DataGrid Grid.Row="1" ItemsSource="{Binding MenuDishes}" SelectedItem="{Binding SelectedMenuDish}" AutoGenerateColumns="False" FontSize="11">
+                                                    <DataGrid.Columns>
+                                                        <DataGridTextColumn Header="Món" Binding="{Binding Dish.Name}" Width="*"/>
+                                                        <DataGridTextColumn Header="Loại" Binding="{Binding Dish.Category}" Width="120"/>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                            </Grid>
+                                        </Border>
+
+                                        <Border Background="#f7f7f7" CornerRadius="8" Padding="10" Margin="0,8,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="Thêm món" FontWeight="SemiBold"/>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <ComboBox Grid.Column="0" ItemsSource="{Binding Dishes}" SelectedItem="{Binding SelectedDishToAdd}" DisplayMemberPath="Name" Padding="6" Margin="0,0,6,0"/>
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                        <Button Content="➕ Thêm" Command="{Binding AddDishCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"/>
+                                                        <Button Content="🗑️ Xóa" Command="{Binding RemoveDishCommand}" Style="{StaticResource DangerButton}"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- Meal Ticket Management View -->
+                    <DataTemplate DataType="{x:Type vm:MealTicketManagementViewModel}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*" MinWidth="420"/>
+                                <ColumnDefinition Width="2*" MinWidth="340"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="12" Margin="0,0,10,0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Phiếu ăn" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource PrimaryColor}"/>
+                                    <Border Grid.Row="1" Background="#f7f7f7" CornerRadius="8" Padding="8" Margin="0,8,0,8">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <DatePicker Grid.Column="0" SelectedDate="{Binding FilterDate, Mode=TwoWay}" Padding="6"/>
+                                            <Button Grid.Column="1" Content="🔍 Lọc" Command="{Binding ApplyFilterCommand}" Style="{StaticResource PrimaryButton}" Margin="8,0,0,0"/>
+                                        </Grid>
+                                    </Border>
+                                    <DataGrid Grid.Row="2" ItemsSource="{Binding FilteredMealTickets}" SelectedItem="{Binding SelectedMealTicket}" AutoGenerateColumns="False" IsReadOnly="True">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Học sinh" Binding="{Binding Student.FullName}" Width="*"/>
+                                            <DataGridTextColumn Header="Lớp" Binding="{Binding Student.Class.Name}" Width="120"/>
+                                            <DataGridTextColumn Header="Thực đơn" Binding="{Binding Menu.Name}" Width="*"/>
+                                            <DataGridTextColumn Header="Ngày" Binding="{Binding Date, StringFormat=dd/MM/yyyy}" Width="100"/>
+                                            <DataGridCheckBoxColumn Header="Đã dùng" Binding="{Binding IsConsumed}" Width="80"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="12">
+                                <StackPanel>
+                                    <TextBlock Text="Chi tiết" FontSize="16" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Đã sử dụng" Margin="0,8,0,4"/>
+                                    <CheckBox IsChecked="{Binding IsConsumed, Mode=TwoWay}"/>
+                                    <TextBlock Text="Ghi chú" Margin="0,8,0,4"/>
+                                    <TextBox Text="{Binding Notes, Mode=TwoWay}" Height="80" TextWrapping="Wrap" AcceptsReturn="True"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                                        <Button Content="💾 Lưu" Command="{Binding SaveMealTicketCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"/>
+                                        <Button Content="🗑️ Xóa" Command="{Binding DeleteMealTicketCommand}" Style="{StaticResource DangerButton}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- Supplier Management View -->
+                    <DataTemplate DataType="{x:Type vm:SupplierManagementViewModel}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" MinWidth="320"/>
+                                <ColumnDefinition Width="3*" MinWidth="380"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="12" Margin="0,0,10,0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Margin="0,0,0,10">
+                                        <TextBlock Text="Nhà cung cấp" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource PrimaryColor}"/>
+                                        <Button Content="🔁 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                    <DataGrid Grid.Row="1" ItemsSource="{Binding Suppliers}" SelectedItem="{Binding SelectedSupplier}" AutoGenerateColumns="False" IsReadOnly="True">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Tên" Binding="{Binding Name}" Width="*"/>
+                                            <DataGridTextColumn Header="SĐT" Binding="{Binding Phone}" Width="120"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="12">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,10">
+                                            <TextBlock Text="Thông tin NCC" FontSize="16" FontWeight="SemiBold"/>
+                                            <Button Content="➕ Thêm mới" Command="{Binding AddNewCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                        <TextBlock Text="Tên *"/>
+                                        <TextBox Text="{Binding Name, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBlock Text="Người liên hệ"/>
+                                        <TextBox Text="{Binding ContactPerson, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBlock Text="Điện thoại"/>
+                                        <TextBox Text="{Binding Phone, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBlock Text="Email"/>
+                                        <TextBox Text="{Binding Email, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBlock Text="Địa chỉ"/>
+                                        <TextBox Text="{Binding Address, Mode=TwoWay}" Padding="6" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,8"/>
+                                        <TextBlock Text="Ghi chú"/>
+                                        <TextBox Text="{Binding Notes, Mode=TwoWay}" Padding="6" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,8"/>
+                                        <CheckBox Content="Đang hoạt động" IsChecked="{Binding IsActive, Mode=TwoWay}"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                                            <Button Content="💾 Lưu" Command="{Binding SaveSupplierCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteSupplierCommand}" Style="{StaticResource DangerButton}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- Ingredient Management View -->
+                    <DataTemplate DataType="{x:Type vm:IngredientManagementViewModel}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" MinWidth="320"/>
+                                <ColumnDefinition Width="3*" MinWidth="380"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="12" Margin="0,0,10,0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Margin="0,0,0,10">
+                                        <TextBlock Text="Nguyên liệu" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource PrimaryColor}"/>
+                                        <Button Content="🔁 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                    <DataGrid Grid.Row="1" ItemsSource="{Binding Ingredients}" SelectedItem="{Binding SelectedIngredient}" AutoGenerateColumns="False" IsReadOnly="True">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Tên" Binding="{Binding Name}" Width="*"/>
+                                            <DataGridTextColumn Header="Đơn vị" Binding="{Binding Unit}" Width="90"/>
+                                            <DataGridTextColumn Header="Giá" Binding="{Binding UnitPrice, StringFormat=N0}" Width="100"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="12">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,10">
+                                            <TextBlock Text="Thông tin nguyên liệu" FontSize="16" FontWeight="SemiBold"/>
+                                            <Button Content="➕ Thêm mới" Command="{Binding AddNewCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                        <TextBlock Text="Tên *"/>
+                                        <TextBox Text="{Binding Name, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBlock Text="Loại"/>
+                                        <TextBox Text="{Binding Category, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBlock Text="Đơn vị *"/>
+                                        <TextBox Text="{Binding Unit, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBlock Text="Calo/100g *"/>
+                                        <TextBox Text="{Binding CaloriesPer100g, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBlock Text="Đơn giá *"/>
+                                        <TextBox Text="{Binding UnitPrice, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBlock Text="Nhà cung cấp"/>
+                                        <ComboBox ItemsSource="{Binding Suppliers}" SelectedValue="{Binding SupplierId, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="Name" Padding="6" Margin="0,0,0,8"/>
+                                        <CheckBox Content="Đang hoạt động" IsChecked="{Binding IsActive, Mode=TwoWay}"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                                            <Button Content="💾 Lưu" Command="{Binding SaveIngredientCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteIngredientCommand}" Style="{StaticResource DangerButton}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- Dish Management View -->
+                    <DataTemplate DataType="{x:Type vm:DishManagementViewModel}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" MinWidth="320"/>
+                                <ColumnDefinition Width="3*" MinWidth="420"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="12" Margin="0,0,10,0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Margin="0,0,0,10">
+                                        <TextBlock Text="Món ăn" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource PrimaryColor}"/>
+                                        <Button Content="🔁 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                    <DataGrid Grid.Row="1" ItemsSource="{Binding Dishes}" SelectedItem="{Binding SelectedDish}" AutoGenerateColumns="False" IsReadOnly="True">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Tên" Binding="{Binding Name}" Width="*"/>
+                                            <DataGridTextColumn Header="Giá bán" Binding="{Binding SellingPrice, StringFormat=N0}" Width="120"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="12">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,10">
+                                            <TextBlock Text="Thông tin món" FontSize="16" FontWeight="SemiBold"/>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                <Button Content="🧮 Tính lại" Command="{Binding RecalculateCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,6,0"/>
+                                                <Button Content="➕ Thêm mới" Command="{Binding AddNewCommand}" Style="{StaticResource SecondaryButton}"/>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                                                <TextBlock Text="Tên *"/>
+                                                <TextBox Text="{Binding Name, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                                <TextBlock Text="Tổng calo"/>
+                                                <TextBox Text="{Binding TotalCalories}" IsReadOnly="True" Padding="6" Margin="0,0,0,8" Background="#f0f0f0"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Margin="6,0,0,0">
+                                                <TextBlock Text="Giá bán *"/>
+                                                <TextBox Text="{Binding SellingPrice, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                                <TextBlock Text="Tổng chi phí"/>
+                                                <TextBox Text="{Binding TotalCost}" IsReadOnly="True" Padding="6" Margin="0,0,0,8" Background="#f0f0f0"/>
+                                            </StackPanel>
+                                        </Grid>
+                                        <CheckBox Content="Đang hoạt động" IsChecked="{Binding IsActive, Mode=TwoWay}"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                                            <Button Content="💾 Lưu" Command="{Binding SaveDishCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteDishCommand}" Style="{StaticResource DangerButton}"/>
+                                        </StackPanel>
+
+                                        <Border Background="#f7f7f7" CornerRadius="8" Padding="10" Margin="0,12,0,0">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="*"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Text="Nguyên liệu trong món" FontWeight="SemiBold"/>
+                                                <DataGrid Grid.Row="1" ItemsSource="{Binding DishIngredients}" SelectedItem="{Binding SelectedDishIngredient}" AutoGenerateColumns="False" FontSize="11">
+                                                    <DataGrid.Columns>
+                                                        <DataGridTextColumn Header="Nguyên liệu" Binding="{Binding Ingredient.Name}" Width="*"/>
+                                                        <DataGridTextColumn Header="Số lượng (g)" Binding="{Binding Quantity}" Width="130"/>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                            </Grid>
+                                        </Border>
+
+                                        <Border Background="#f7f7f7" CornerRadius="8" Padding="10" Margin="0,8,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="Thêm nguyên liệu" FontWeight="SemiBold"/>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <ComboBox Grid.Column="0" ItemsSource="{Binding Ingredients}" SelectedItem="{Binding SelectedIngredientToAdd}" DisplayMemberPath="Name" Padding="6" Margin="0,0,6,0"/>
+                                                    <TextBox Grid.Column="1" Text="{Binding IngredientQuantity, Mode=TwoWay}" Padding="6" Margin="0,0,6,0"/>
+                                                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                        <Button Content="➕ Thêm" Command="{Binding AddIngredientCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"/>
+                                                        <Button Content="🗑️ Xóa" Command="{Binding RemoveIngredientCommand}" Style="{StaticResource DangerButton}"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
                                     </StackPanel>
                                 </ScrollViewer>
                             </Border>

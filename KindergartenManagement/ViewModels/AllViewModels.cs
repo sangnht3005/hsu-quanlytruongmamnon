@@ -713,6 +713,12 @@ public class AttendanceManagementViewModel : ViewModelBase
         {
             var classes = await _classBlo.GetAllAsync();
             Classes = new ObservableCollection<Class>(classes);
+
+            // Tự động chọn lớp đầu tiên và load dữ liệu điểm danh
+            if (Classes.Count > 0 && SelectedClass == null)
+            {
+                SelectedClass = Classes.First();
+            }
         }
         catch (Exception ex)
         {
@@ -754,16 +760,37 @@ public class AttendanceManagementViewModel : ViewModelBase
         try
         {
             IsLoading = true;
-            var attendances = await _attendanceBlo.CreateClassAttendanceAsync(SelectedClass.Id, SelectedDate);
-            Attendances = new ObservableCollection<Attendance>(attendances);
+            var currentCount = Attendances.Count;
+            var allAttendances = await _attendanceBlo.CreateClassAttendanceAsync(SelectedClass.Id, SelectedDate);
+            var newCount = allAttendances.Count();
+            var createdCount = newCount - currentCount;
 
-            System.Windows.MessageBox.Show($"Đã tạo điểm danh cho {attendances.Count()} học sinh!", "Thành công",
-                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+            // Cập nhật collection để UI refresh
+            Attendances = new ObservableCollection<Attendance>(allAttendances);
+
+            // Thông báo chi tiết với số lượng điểm danh được tạo
+            var message = createdCount > 0
+                ? $"✓ Tạo thành công {createdCount} bảng điểm danh cho lớp {SelectedClass.Name} ngày {SelectedDate:dd/MM/yyyy}.\n" +
+                  $"  Phiếu ăn đã được tạo tự động cho các học sinh có mặt."
+                : $"ℹ Bảng điểm danh cho lớp {SelectedClass.Name} ngày {SelectedDate:dd/MM/yyyy} đã tồn tại.\n" +
+                  $"  Đã tải lên để bạn tiếp tục chỉnh sửa.";
+
+            System.Windows.MessageBox.Show(
+                message,
+                "Thành công",
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Information);
         }
         catch (InvalidOperationException ex)
         {
-            System.Windows.MessageBox.Show(ex.Message, "Thông báo",
-                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+            // Trong trường hợp logic cũ còn sót lại ở nơi khác ném lỗi "đã tồn tại",
+            // chuyển sang tải dữ liệu để người dùng tiếp tục làm việc
+            await LoadAttendanceAsync(null);
+            System.Windows.MessageBox.Show(
+                $"{ex.Message}\nĐã tải bảng điểm danh hiện có để bạn tiếp tục chỉnh sửa.",
+                "Thông báo",
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Information);
         }
         catch (Exception ex)
         {

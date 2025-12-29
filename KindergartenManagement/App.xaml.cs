@@ -38,6 +38,7 @@ public partial class App : Application
                 services.AddScoped<IStaffLeaveDao, StaffLeaveDao>();
                 services.AddScoped<IVaccineDao, VaccineDao>();
                 services.AddScoped<IVaccinationRecordDao, VaccinationRecordDao>();
+                services.AddScoped<IFoodManagementDao, FoodManagementDao>();
 
                 // Register BLOs
                 services.AddScoped<IAccountBlo, AccountBlo>();
@@ -57,6 +58,7 @@ public partial class App : Application
                 services.AddScoped<IStaffLeaveBlo, StaffLeaveBlo>();
                 services.AddScoped<IVaccineBlo, VaccineBlo>();
                 services.AddScoped<IVaccinationRecordBlo, VaccinationRecordBlo>();
+                services.AddScoped<IFoodManagementBlo, FoodManagementBlo>();
 
                 // Register ViewModels
                 services.AddTransient<MainViewModel>();
@@ -77,6 +79,11 @@ public partial class App : Application
                 services.AddTransient<VaccineManagementViewModel>();
                 services.AddTransient<VaccinationRecordManagementViewModel>();
                 services.AddTransient<HealthRecordManagementViewModel>();
+                services.AddTransient<SupplierManagementViewModel>();
+                services.AddTransient<IngredientManagementViewModel>();
+                services.AddTransient<DishManagementViewModel>();
+                services.AddTransient<DailyMenuManagementViewModel>();
+                services.AddTransient<MealTicketManagementViewModel>();
 
                 // Register Views
                 services.AddTransient<MainWindow>();
@@ -87,21 +94,30 @@ public partial class App : Application
 
     protected override async void OnStartup(StartupEventArgs e)
     {
-        await _host.StartAsync();
+        try
+        {
+            await _host.StartAsync();
 
-        // Initialize database
-        var dbContext = _host.Services.GetRequiredService<KindergartenDbContext>();
-        await dbContext.Database.EnsureCreatedAsync();
+            // Initialize database
+            var dbContext = _host.Services.GetRequiredService<KindergartenDbContext>();
+            await dbContext.Database.EnsureCreatedAsync();
 
-        // Seed database with sample data
-        var seeder = new Utilities.DatabaseSeeder(dbContext);
-        await seeder.SeedAsync();
+            // Seed database with sample data
+            var seeder = new Utilities.DatabaseSeeder(dbContext);
+            await seeder.SeedAsync();
 
-        // Show login window
-        var loginWindow = _host.Services.GetRequiredService<LoginWindow>();
-        loginWindow.Show();
+            // Show login window
+            var loginWindow = _host.Services.GetRequiredService<LoginWindow>();
+            loginWindow.Show();
 
-        base.OnStartup(e);
+            base.OnStartup(e);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error starting application:\n\n{ex.Message}\n\nStack Trace:\n{ex.StackTrace}", 
+                "Application Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            Shutdown();
+        }
     }
 
     protected override async void OnExit(ExitEventArgs e)

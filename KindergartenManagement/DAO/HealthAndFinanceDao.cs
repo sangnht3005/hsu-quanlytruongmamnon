@@ -140,7 +140,7 @@ public interface IMenuDao
 {
     Task<Menu?> GetByIdAsync(Guid id);
     Task<IEnumerable<Menu>> GetAllAsync();
-    Task<IEnumerable<Menu>> GetByDateAsync(DateTime date);
+    Task<IEnumerable<Menu>> GetByDayOfWeekAsync(int dayOfWeek);
     Task<Menu> CreateAsync(Menu menu);
     Task<Menu> UpdateAsync(Menu menu);
     Task DeleteAsync(Guid id);
@@ -158,26 +158,27 @@ public class MenuDao : IMenuDao
     public async Task<Menu?> GetByIdAsync(Guid id)
     {
         return await _context.Menus
-            .Include(m => m.MenuFoods)
-            .ThenInclude(mf => mf.Food)
+            .Include(m => m.MenuDishes)
+            .ThenInclude(md => md.Dish)
             .FirstOrDefaultAsync(m => m.Id == id);
     }
 
     public async Task<IEnumerable<Menu>> GetAllAsync()
     {
         return await _context.Menus
-            .Include(m => m.MenuFoods)
-            .ThenInclude(mf => mf.Food)
-            .OrderByDescending(m => m.Date)
+            .Include(m => m.MenuDishes)
+            .ThenInclude(md => md.Dish)
+            .OrderBy(m => m.DayOfWeek)
+            .ThenBy(m => m.MealType)
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Menu>> GetByDateAsync(DateTime date)
+    public async Task<IEnumerable<Menu>> GetByDayOfWeekAsync(int dayOfWeek)
     {
         return await _context.Menus
-            .Include(m => m.MenuFoods)
-            .ThenInclude(mf => mf.Food)
-            .Where(m => m.Date.Date == date.Date)
+            .Include(m => m.MenuDishes)
+            .ThenInclude(md => md.Dish)
+            .Where(m => m.DayOfWeek == dayOfWeek)
             .ToListAsync();
     }
 
