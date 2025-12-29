@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:KindergartenManagement.ViewModels"
         xmlns:util="clr-namespace:KindergartenManagement.Utilities"
+        xmlns:conv="clr-namespace:KindergartenManagement.Converters"
         mc:Ignorable="d"
         Title="Hệ thống quản lý mầm non" 
         Height="700" Width="1200"
@@ -14,6 +15,8 @@
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <conv:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <conv:StatusToVietnameseConverter x:Key="StatusToVietnameseConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -94,6 +97,13 @@
                         <Button Content="🏫 Quản lý lớp học"
                                Command="{Binding NavigateCommand}"
                                CommandParameter="Classes"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,5"/>
+                        
+                        <Button Content="📚 Quản lý khối lớp"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="Grades"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
                                Margin="0,0,0,5"/>
@@ -201,6 +211,24 @@
                                             <TextBlock Text="0" 
                                                      FontSize="28" 
                                                      FontWeight="Bold"
+                                                     Foreground="#4CAF50"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Grade Card -->
+                                    <Border Background="#FFF3E0"
+                                           CornerRadius="8"
+                                           Padding="20"
+                                           Margin="5">
+                                        <StackPanel>
+                                            <TextBlock Text="📚" FontSize="40"/>
+                                            <TextBlock Text="Khối lớp" 
+                                                     FontSize="14" 
+                                                     Foreground="{StaticResource TextSecondaryColor}"
+                                                     Margin="0,10,0,5"/>
+                                            <TextBlock Text="0" 
+                                                     FontSize="28" 
+                                                     FontWeight="Bold"
                                                      Foreground="{StaticResource SuccessColor}"/>
                                         </StackPanel>
                                     </Border>
@@ -300,7 +328,10 @@
                                         <TextBox Text="{Binding SelectedStudent.Address}" Padding="8" Margin="0,0,0,15" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
 
                                         <TextBlock Text="Ghi chú y tế" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedStudent.MedicalNotes}" Padding="8" Margin="0,0,0,15" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
+                                        <TextBox Text="{Binding SelectedStudent.MedicalNotes, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
+
+                                        <TextBlock Text="Mã thực phẩm dị ứng" Margin="0,0,0,5"/>
+                                        <TextBox Text="{Binding SelectedStudent.AllergyIngredientCodes, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15" ToolTip="Nhập các mã thực phẩm gây dị ứng, phân cách bằng dấu phẩy"/>
 
                                         <TextBlock Text="Phụ huynh *" Margin="0,0,0,5"/>
                                         <ComboBox ItemsSource="{Binding Parents}" SelectedValue="{Binding SelectedStudent.ParentId}" SelectedValuePath="Id" DisplayMemberPath="FullName" Padding="8" Margin="0,0,0,15"/>
@@ -312,6 +343,69 @@
                                             <Button Content="➕ Tạo mới" Command="{Binding AddStudentCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" ToolTip="Tạo form trống để nhập học sinh mới"/>
                                             <Button Content="💾 Lưu" Command="{Binding SaveStudentCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" ToolTip="Lưu thông tin học sinh vào cơ sở dữ liệu"/>
                                             <Button Content="🗑️ Xóa" Command="{Binding DeleteStudentCommand}" Style="{StaticResource DangerButton}" ToolTip="Xóa học sinh đã chọn"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- Grade Management View -->
+                    <DataTemplate DataType="{x:Type vm:GradeManagementViewModel}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*" MinWidth="350"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Left: Grade List -->
+                            <Grid Grid.Column="0" Margin="0,0,10,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+                                    <Grid>
+                                        <TextBlock Text="Danh sách khối lớp" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                        <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </Border>
+
+                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
+                                    <DataGrid ItemsSource="{Binding Grades}" SelectedItem="{Binding SelectedGrade}" AutoGenerateColumns="False" IsReadOnly="True">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Tên khối" Binding="{Binding Name}" Width="*"/>
+                                            <DataGridTextColumn Header="Độ tuổi" Binding="{Binding MinAge, StringFormat={}{0} - }" Width="80"/>
+                                            <DataGridTextColumn Header="" Binding="{Binding MaxAge, StringFormat={}{0} tuổi}" Width="80"/>
+                                            <DataGridTextColumn Header="Mô tả" Binding="{Binding Description}" Width="200"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Border>
+                            </Grid>
+
+                            <!-- Right: Grade Form -->
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel>
+                                        <TextBlock Text="Thông tin khối lớp" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" Margin="0,0,0,20"/>
+
+                                        <TextBlock Text="Tên khối *" Margin="0,0,0,5"/>
+                                        <TextBox Text="{Binding SelectedGrade.Name, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+
+                                        <TextBlock Text="Độ tuổi tối thiểu *" Margin="0,0,0,5"/>
+                                        <TextBox Text="{Binding SelectedGrade.MinAge, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+
+                                        <TextBlock Text="Độ tuổi tối đa *" Margin="0,0,0,5"/>
+                                        <TextBox Text="{Binding SelectedGrade.MaxAge, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+
+                                        <TextBlock Text="Mô tả" Margin="0,0,0,5"/>
+                                        <TextBox Text="{Binding SelectedGrade.Description, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,20" Height="80" TextWrapping="Wrap" AcceptsReturn="True"/>
+
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddGradeCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" ToolTip="Tạo form trống để nhập khối lớp mới"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveGradeCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" ToolTip="Lưu thông tin khối lớp vào cơ sở dữ liệu"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteGradeCommand}" Style="{StaticResource DangerButton}" ToolTip="Xóa khối lớp đã chọn"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -381,10 +475,76 @@
                         </Grid>
                     </DataTemplate>
 
-                    <DataTemplate DataType="{x:Type vm:AttendanceViewModel}">
-                        <Border Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="30">
-                            <TextBlock Text="Điểm danh" FontSize="24" FontWeight="Bold"/>
-                        </Border>
+                    <!-- Attendance Management View -->
+                    <DataTemplate DataType="{x:Type vm:AttendanceManagementViewModel}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Top: Filter Controls -->
+                            <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Margin="0,0,15,0">
+                                        <TextBlock Text="Lớp học *" Margin="0,0,0,5"/>
+                                        <ComboBox ItemsSource="{Binding Classes}" 
+                                                  SelectedItem="{Binding SelectedClass}" 
+                                                  DisplayMemberPath="Name" 
+                                                  Padding="8"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1" Margin="0,0,15,0">
+                                        <TextBlock Text="Ngày *" Margin="0,0,0,5"/>
+                                        <DatePicker SelectedDate="{Binding SelectedDate}" Padding="8"/>
+                                    </StackPanel>
+
+                                    <Button Grid.Column="2" Content="📋 Tạo điểm danh" 
+                                            Command="{Binding CreateAttendanceCommand}" 
+                                            Style="{StaticResource SecondaryButton}" 
+                                            VerticalAlignment="Bottom" 
+                                            Margin="0,0,10,0"
+                                            ToolTip="Tạo bảng điểm danh cho tất cả học sinh trong lớp"/>
+
+                                    <Button Grid.Column="3" Content="💾 Lưu" 
+                                            Command="{Binding SaveAttendanceCommand}" 
+                                            Style="{StaticResource PrimaryButton}" 
+                                            VerticalAlignment="Bottom"
+                                            ToolTip="Lưu điểm danh"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Bottom: Attendance List -->
+                            <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
+                                <DataGrid ItemsSource="{Binding Attendances}" 
+                                          AutoGenerateColumns="False" 
+                                          CanUserAddRows="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Học sinh" Binding="{Binding Student.FullName}" Width="*" IsReadOnly="True"/>
+                                        <DataGridTextColumn Header="Lớp" Binding="{Binding Class.Name}" Width="120" IsReadOnly="True"/>
+                                        <DataGridTemplateColumn Header="Trạng thái" Width="150">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ComboBox ItemsSource="{Binding DataContext.StatusList, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                              SelectedValue="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                              SelectedValuePath="Value"
+                                                              DisplayMemberPath="Display"
+                                                              Padding="5"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Header="Ghi chú" Binding="{Binding Notes, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Border>
+                        </Grid>
                     </DataTemplate>
 
                     <DataTemplate DataType="{x:Type vm:HealthRecordViewModel}">
@@ -656,12 +816,13 @@
                                 </Border>
 
                                 <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
-                                    <DataGrid ItemsSource="{Binding StaffLeaves}" SelectedItem="{Binding SelectedLeave}" AutoGenerateColumns="False" IsReadOnly="True">
+                                    <DataGrid ItemsSource="{Binding StaffLeaves}" SelectedItem="{Binding SelectedLeave, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" IsReadOnly="True">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Nhân viên" Binding="{Binding User.FullName}" Width="*"/>
                                             <DataGridTextColumn Header="Từ ngày" Binding="{Binding StartDate, StringFormat={}{0:dd/MM/yyyy}}" Width="100"/>
                                             <DataGridTextColumn Header="Đến ngày" Binding="{Binding EndDate, StringFormat={}{0:dd/MM/yyyy}}" Width="100"/>
-                                            <DataGridTextColumn Header="Trạng thái" Binding="{Binding Status}" Width="100"/>
+                                            <DataGridTextColumn Header="Loại nghỉ" Binding="{Binding LeaveType, Converter={StaticResource StatusToVietnameseConverter}}" Width="120"/>
+                                            <DataGridTextColumn Header="Trạng thái" Binding="{Binding Status, Converter={StaticResource StatusToVietnameseConverter}}" Width="100"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Border>
@@ -677,7 +838,8 @@
                                         <ComboBox ItemsSource="{Binding Users}" 
                                                   SelectedValue="{Binding SelectedLeave.UserId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                   SelectedValuePath="Id" 
-                                                  DisplayMemberPath="FullName" 
+                                                  DisplayMemberPath="FullName"
+                                                  IsEnabled="{Binding CanSelectUser}"
                                                   Padding="8" Margin="0,0,0,15"/>
 
                                         <TextBlock Text="Từ ngày *" Margin="0,0,0,5"/>
@@ -702,9 +864,9 @@
                                         <TextBox Text="{Binding SelectedLeave.Reason, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
 
                                         <TextBlock Text="Trạng thái" Margin="0,0,0,5"/>
-                                        <ComboBox SelectedValue="{Binding SelectedLeave.Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                        <ComboBox SelectedValue="{Binding TempStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                   SelectedValuePath="Tag"
-                                                  IsEnabled="False" 
+                                                  IsEnabled="{Binding CanEditStatus}"
                                                   Padding="8" Margin="0,0,0,15">
                                             <ComboBoxItem Content="Chờ duyệt" Tag="Pending"/>
                                             <ComboBoxItem Content="Đã duyệt" Tag="Approved"/>
@@ -714,7 +876,7 @@
                                         <TextBlock Text="Ghi chú duyệt" Margin="0,0,0,5"/>
                                         <TextBox Text="{Binding SelectedLeave.ApprovalNotes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                  Padding="8" Margin="0,0,0,20" Height="60" TextWrapping="Wrap" AcceptsReturn="True" 
-                                                 IsReadOnly="True"/>
+                                                 IsReadOnly="{Binding CanEditApprovalNotes, Converter={StaticResource InverseBooleanConverter}}"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                             <Button Content="➕ Tạo mới" Command="{Binding AddLeaveCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" ToolTip="Tạo form trống để nhập đơn nghỉ mới"/>

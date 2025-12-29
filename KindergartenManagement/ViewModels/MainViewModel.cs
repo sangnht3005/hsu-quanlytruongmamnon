@@ -11,8 +11,9 @@ public class MainViewModel : ViewModelBase
     public MainViewModel(
         DashboardViewModel dashboardViewModel,
         StudentManagementViewModel studentManagementViewModel,
+        GradeManagementViewModel gradeManagementViewModel,
         ClassManagementViewModel classManagementViewModel,
-        AttendanceViewModel attendanceViewModel,
+        AttendanceManagementViewModel attendanceManagementViewModel,
         HealthRecordViewModel healthRecordViewModel,
         MenuManagementViewModel menuManagementViewModel,
         InvoiceManagementViewModel invoiceManagementViewModel,
@@ -23,8 +24,9 @@ public class MainViewModel : ViewModelBase
     {
         DashboardViewModel = dashboardViewModel;
         StudentManagementViewModel = studentManagementViewModel;
+        GradeManagementViewModel = gradeManagementViewModel;
         ClassManagementViewModel = classManagementViewModel;
-        AttendanceViewModel = attendanceViewModel;
+        AttendanceManagementViewModel = attendanceManagementViewModel;
         HealthRecordViewModel = healthRecordViewModel;
         MenuManagementViewModel = menuManagementViewModel;
         InvoiceManagementViewModel = invoiceManagementViewModel;
@@ -42,7 +44,14 @@ public class MainViewModel : ViewModelBase
     public Account? CurrentAccount
     {
         get => _currentAccount;
-        set => SetProperty(ref _currentAccount, value);
+        set
+        {
+            if (SetProperty(ref _currentAccount, value))
+            {
+                // Propagate current account to StaffLeaveManagementViewModel
+                StaffLeaveManagementViewModel.CurrentAccount = value;
+            }
+        }
     }
 
     public ViewModelBase? CurrentViewModel
@@ -53,8 +62,9 @@ public class MainViewModel : ViewModelBase
 
     public DashboardViewModel DashboardViewModel { get; }
     public StudentManagementViewModel StudentManagementViewModel { get; }
+    public GradeManagementViewModel GradeManagementViewModel { get; }
     public ClassManagementViewModel ClassManagementViewModel { get; }
-    public AttendanceViewModel AttendanceViewModel { get; }
+    public AttendanceManagementViewModel AttendanceManagementViewModel { get; }
     public HealthRecordViewModel HealthRecordViewModel { get; }
     public MenuManagementViewModel MenuManagementViewModel { get; }
     public InvoiceManagementViewModel InvoiceManagementViewModel { get; }
@@ -74,8 +84,9 @@ public class MainViewModel : ViewModelBase
             {
                 "Dashboard" => DashboardViewModel,
                 "Students" => StudentManagementViewModel,
+                "Grades" => GradeManagementViewModel,
                 "Classes" => ClassManagementViewModel,
-                "Attendance" => AttendanceViewModel,
+                "Attendance" => AttendanceManagementViewModel,
                 "Health" => HealthRecordViewModel,
                 "Menu" => MenuManagementViewModel,
                 "Invoice" => InvoiceManagementViewModel,

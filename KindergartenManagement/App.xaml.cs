@@ -59,8 +59,9 @@ public partial class App : Application
                 services.AddTransient<LoginViewModel>();
                 services.AddTransient<DashboardViewModel>();
                 services.AddTransient<StudentManagementViewModel>();
+                services.AddTransient<GradeManagementViewModel>();
                 services.AddTransient<ClassManagementViewModel>();
-                services.AddTransient<AttendanceViewModel>();
+                services.AddTransient<AttendanceManagementViewModel>();
                 services.AddTransient<HealthRecordViewModel>();
                 services.AddTransient<MenuManagementViewModel>();
                 services.AddTransient<InvoiceManagementViewModel>();

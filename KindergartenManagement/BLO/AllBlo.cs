@@ -208,6 +208,13 @@ public class AttendanceBlo : IAttendanceBlo
             throw new ArgumentException("Class not found");
         }
 
+        // Enforce uniqueness: StudentId + Date
+        var existing = await _attendanceDao.GetByStudentAndDateAsync(attendance.StudentId, attendance.Date);
+        if (existing != null)
+        {
+            throw new InvalidOperationException($"Điểm danh cho học sinh này đã tồn tại trong ngày {attendance.Date:dd/MM/yyyy}");
+        }
+
         return await _attendanceDao.CreateAsync(attendance);
     }
 

@@ -15,6 +15,7 @@ public interface IStaffLeaveBlo
     Task<StaffLeave> RejectLeaveAsync(Guid leaveId, Guid approverId, string? notes);
     Task DeleteAsync(Guid id);
     Task<int> GetLeaveDaysAsync(Guid userId, DateTime startDate, DateTime endDate);
+    Task FixAllStatusValuesAsync();
 }
 
 public class StaffLeaveBlo : IStaffLeaveBlo
@@ -82,6 +83,7 @@ public class StaffLeaveBlo : IStaffLeaveBlo
         }
 
         staffLeave.Status = "Pending";
+        staffLeave.LeaveType = NormalizeLeaveType(staffLeave.LeaveType);
         return await _staffLeaveDao.CreateAsync(staffLeave);
     }
 
@@ -98,12 +100,56 @@ public class StaffLeaveBlo : IStaffLeaveBlo
             throw new InvalidOperationException("Đơn nghỉ không tồn tại");
         }
 
-        if (existing.Status != "Pending")
+        // Normalize status values (trim and compare case-insensitive)
+        var existingStatus = existing.Status?.Trim() ?? "Pending";
+        var newStatus = staffLeave.Status?.Trim() ?? "Pending";
+        
+        System.Diagnostics.Debug.WriteLine($"UpdateAsync - Existing Status: '{existingStatus}', New Status: '{newStatus}'");
+
+        // Allow status change from Pending to Approved/Rejected (admin approval)
+        // But prevent changing other fields if status is not Pending
+        if (!existingStatus.Equals("Pending", StringComparison.OrdinalIgnoreCase) && 
+            existingStatus.Equals(newStatus, StringComparison.OrdinalIgnoreCase))
         {
+            System.Diagnostics.Debug.WriteLine("Throwing exception: Cannot edit non-pending leave without status change");
             throw new InvalidOperationException("Chỉ có thể sửa đơn nghỉ đang chờ duyệt");
         }
 
+        // Ensure status is properly formatted before saving
+        staffLeave.Status = NormalizeStatus(newStatus);
+        staffLeave.LeaveType = NormalizeLeaveType(staffLeave.LeaveType);
+        
+        System.Diagnostics.Debug.WriteLine($"Proceeding with update, normalized status: {staffLeave.Status}");
         return await _staffLeaveDao.UpdateAsync(staffLeave);
+    }
+
+    private string NormalizeStatus(string status)
+    {
+        var normalized = status?.Trim() ?? "Pending";
+        
+        // Handle Vietnamese status values
+        return normalized.ToLower() switch
+        {
+            "pending" or "chờ duyệt" or "cho duyet" => "Pending",
+            "approved" or "đã duyệt" or "da duyet" => "Approved",
+            "rejected" or "từ chối" or "tu choi" => "Rejected",
+            _ => normalized
+        };
+    }
+
+    private string NormalizeLeaveType(string leaveType)
+    {
+        var normalized = leaveType?.Trim() ?? "Vacation";
+        
+        // Handle Vietnamese leave type values
+        return normalized.ToLower() switch
+        {
+            "vacation" or "nghỉ phép" or "nghi phep" => "Vacation",
+            "sick" or "nghỉ ốm" or "nghi om" => "Sick",
+            "personal" or "nghỉ cá nhân" or "nghi ca nhan" => "Personal",
+            "unpaid" or "nghỉ không lương" or "nghi khong luong" => "Unpaid",
+            _ => normalized
+        };
     }
 
     public async Task<StaffLeave> ApproveLeaveAsync(Guid leaveId, Guid approverId, string? notes)
@@ -193,5 +239,30 @@ public class StaffLeaveBlo : IStaffLeaveBlo
         }
 
         return totalDays;
+    }
+
+    public async Task FixAllStatusValuesAsync()
+    {
+        var allLeaves = await _staffLeaveDao.GetAllAsync();
+        int fixedCount = 0;
+
+        foreach (var leave in allLeaves)
+        {
+            var originalStatus = leave.Status;
+            var originalLeaveType = leave.LeaveType;
+            var normalizedStatus = NormalizeStatus(leave.Status);
+            var normalizedLeaveType = NormalizeLeaveType(leave.LeaveType);
+            
+            if (originalStatus != normalizedStatus || originalLeaveType != normalizedLeaveType)
+            {
+                leave.Status = normalizedStatus;
+                leave.LeaveType = normalizedLeaveType;
+                await _staffLeaveDao.UpdateAsync(leave);
+                fixedCount++;
+                System.Diagnostics.Debug.WriteLine($"Fixed Leave {leave.Id}: Status '{originalStatus}' -> '{normalizedStatus}', Type '{originalLeaveType}' -> '{normalizedLeaveType}'");
+            }
+        }
+
+        System.Diagnostics.Debug.WriteLine($"Fixed {fixedCount} leave records");
     }
 }

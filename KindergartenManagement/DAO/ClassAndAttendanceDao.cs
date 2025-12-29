@@ -147,6 +147,7 @@ public interface IAttendanceDao
     Task<Attendance?> GetByIdAsync(Guid id);
     Task<IEnumerable<Attendance>> GetByStudentIdAsync(Guid studentId);
     Task<IEnumerable<Attendance>> GetByClassIdAsync(Guid classId, DateTime date);
+    Task<Attendance?> GetByStudentAndDateAsync(Guid studentId, DateTime date);
     Task<Attendance> CreateAsync(Attendance attendance);
     Task<Attendance> UpdateAsync(Attendance attendance);
     Task DeleteAsync(Guid id);
@@ -186,6 +187,12 @@ public class AttendanceDao : IAttendanceDao
             .Include(a => a.Class)
             .Where(a => a.ClassId == classId && a.Date.Date == date.Date)
             .ToListAsync();
+    }
+
+    public async Task<Attendance?> GetByStudentAndDateAsync(Guid studentId, DateTime date)
+    {
+        return await _context.Attendances
+            .FirstOrDefaultAsync(a => a.StudentId == studentId && a.Date.Date == date.Date);
     }
 
     public async Task<Attendance> CreateAsync(Attendance attendance)

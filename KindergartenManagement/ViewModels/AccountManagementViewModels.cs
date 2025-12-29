@@ -865,10 +865,12 @@ public class StaffLeaveManagementViewModel : ViewModelBase
 {
     private readonly IStaffLeaveBlo _staffLeaveBlo;
     private readonly IUserBlo _userBlo;
+    private Account? _currentAccount;
     
     private ObservableCollection<StaffLeave> _staffLeaves = new();
     private ObservableCollection<User> _users = new();
     private StaffLeave? _selectedLeave;
+    private string _tempStatus = "Pending";
     private bool _isLoading;
 
     public StaffLeaveManagementViewModel(IStaffLeaveBlo staffLeaveBlo, IUserBlo userBlo)
@@ -878,8 +880,6 @@ public class StaffLeaveManagementViewModel : ViewModelBase
 
         LoadDataCommand = new AsyncRelayCommand(LoadDataAsync);
         AddLeaveCommand = new RelayCommand(AddLeave);
-        ApproveLeaveCommand = new AsyncRelayCommand(ApproveLeaveAsync, CanApproveOrReject);
-        RejectLeaveCommand = new AsyncRelayCommand(RejectLeaveAsync, CanApproveOrReject);
         SaveLeaveCommand = new AsyncRelayCommand(SaveLeaveAsync);
         DeleteLeaveCommand = new AsyncRelayCommand(DeleteLeaveAsync, CanDelete);
 
@@ -898,6 +898,35 @@ public class StaffLeaveManagementViewModel : ViewModelBase
         _ = LoadDataAsync(null);
     }
 
+    public Account? CurrentAccount
+    {
+        get => _currentAccount;
+        set
+        {
+            if (SetProperty(ref _currentAccount, value))
+            {
+                OnPropertyChanged(nameof(IsAdminOrManager));
+                OnPropertyChanged(nameof(CanSelectUser));
+                OnPropertyChanged(nameof(CanEditStatus));
+                OnPropertyChanged(nameof(CanEditApprovalNotes));
+            }
+        }
+    }
+
+    public bool IsAdminOrManager
+    {
+        get
+        {
+            if (CurrentAccount?.Role == null) return false;
+            var roleName = CurrentAccount.Role.Name?.ToLower();
+            return roleName == "admin" || roleName == "manager" || roleName == "hiệu trưởng";
+        }
+    }
+
+    public bool CanSelectUser => IsAdminOrManager;
+    public bool CanEditStatus => IsAdminOrManager;
+    public bool CanEditApprovalNotes => IsAdminOrManager;
+
     public ObservableCollection<StaffLeave> StaffLeaves
     {
         get => _staffLeaves;
@@ -913,7 +942,23 @@ public class StaffLeaveManagementViewModel : ViewModelBase
     public StaffLeave? SelectedLeave
     {
         get => _selectedLeave;
-        set => SetProperty(ref _selectedLeave, value);
+        set
+        {
+            if (SetProperty(ref _selectedLeave, value))
+            {
+                // When selecting a leave, copy its status to temp status
+                if (_selectedLeave != null)
+                {
+                    TempStatus = _selectedLeave.Status;
+                }
+            }
+        }
+    }
+
+    public string TempStatus
+    {
+        get => _tempStatus;
+        set => SetProperty(ref _tempStatus, value);
     }
 
     public bool IsLoading
@@ -924,8 +969,6 @@ public class StaffLeaveManagementViewModel : ViewModelBase
 
     public ICommand LoadDataCommand { get; }
     public ICommand AddLeaveCommand { get; }
-    public ICommand ApproveLeaveCommand { get; }
-    public ICommand RejectLeaveCommand { get; }
     public ICommand SaveLeaveCommand { get; }
     public ICommand DeleteLeaveCommand { get; }
 
@@ -935,7 +978,24 @@ public class StaffLeaveManagementViewModel : ViewModelBase
         {
             IsLoading = true;
 
+            // Fix any malformed status values in database (one-time cleanup)
+            try
+            {
+                await _staffLeaveBlo.FixAllStatusValuesAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Warning: Could not fix status values: {ex.Message}");
+            }
+
             var leaves = await _staffLeaveBlo.GetAllAsync();
+            
+            // If not admin/manager, only show current user's leaves
+            if (!IsAdminOrManager && CurrentAccount?.UserId != null)
+            {
+                leaves = leaves.Where(l => l.UserId == CurrentAccount.UserId.Value).ToList();
+            }
+            
             StaffLeaves = new ObservableCollection<StaffLeave>(leaves);
 
             var users = await _userBlo.GetAllAsync();
@@ -954,7 +1014,7 @@ public class StaffLeaveManagementViewModel : ViewModelBase
 
     private void AddLeave(object? parameter)
     {
-        SelectedLeave = new StaffLeave 
+        var newLeave = new StaffLeave 
         { 
             Id = Guid.Empty,
             StartDate = DateTime.Now, 
@@ -963,11 +1023,15 @@ public class StaffLeaveManagementViewModel : ViewModelBase
             LeaveType = string.Empty,
             Reason = string.Empty
         };
-    }
-
-    private bool CanApproveOrReject(object? parameter)
-    {
-        return SelectedLeave != null && SelectedLeave.Status == "Pending";
+        
+        // If not admin/manager, auto-set to current user
+        if (!IsAdminOrManager && CurrentAccount?.UserId != null)
+        {
+            newLeave.UserId = CurrentAccount.UserId.Value;
+        }
+        
+        SelectedLeave = newLeave;
+        TempStatus = "Pending";
     }
 
     private bool CanDelete(object? parameter)
@@ -981,14 +1045,26 @@ public class StaffLeaveManagementViewModel : ViewModelBase
 
         try
         {
-            // In a real app, get the current logged-in user's ID
-            var approverId = Guid.NewGuid(); // Placeholder
+            // TODO: Get the current logged-in user's ID from app context
+            // For now, using a placeholder - you should get this from MainViewModel.CurrentAccount
+            var approverId = Guid.Parse("00000000-0000-0000-0000-000000000001"); // Admin user from seeder
             await _staffLeaveBlo.ApproveLeaveAsync(SelectedLeave.Id, approverId, null);
             
             System.Windows.MessageBox.Show("Duyệt đơn nghỉ thành công!", "Thành công",
                 System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
 
             await LoadDataAsync(null);
+            
+            // Clear form
+            SelectedLeave = new StaffLeave
+            {
+                Id = Guid.Empty,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(1),
+                Status = "Pending",
+                LeaveType = string.Empty,
+                Reason = string.Empty
+            };
         }
         catch (Exception ex)
         {
@@ -1003,14 +1079,25 @@ public class StaffLeaveManagementViewModel : ViewModelBase
 
         try
         {
-            // In a real app, get the current logged-in user's ID
-            var approverId = Guid.NewGuid(); // Placeholder
+            // TODO: Get the current logged-in user's ID from app context
+            var approverId = Guid.Parse("00000000-0000-0000-0000-000000000001"); // Admin user from seeder
             await _staffLeaveBlo.RejectLeaveAsync(SelectedLeave.Id, approverId, null);
             
             System.Windows.MessageBox.Show("Từ chối đơn nghỉ thành công!", "Thành công",
                 System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
 
             await LoadDataAsync(null);
+            
+            // Clear form
+            SelectedLeave = new StaffLeave
+            {
+                Id = Guid.Empty,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(1),
+                Status = "Pending",
+                LeaveType = string.Empty,
+                Reason = string.Empty
+            };
         }
         catch (Exception ex)
         {
@@ -1079,12 +1166,35 @@ public class StaffLeaveManagementViewModel : ViewModelBase
 
         try
         {
+            // Update the actual Status from TempStatus before saving
+            SelectedLeave.Status = TempStatus;
+            
+            System.Diagnostics.Debug.WriteLine($"Saving Leave - Id: {SelectedLeave.Id}, Status: {SelectedLeave.Status}, UserId: {SelectedLeave.UserId}");
+            
+            // If not admin/manager and creating new, ensure UserId is current user
+            if (!IsAdminOrManager && SelectedLeave.Id == Guid.Empty && CurrentAccount?.UserId != null)
+            {
+                SelectedLeave.UserId = CurrentAccount.UserId.Value;
+            }
+            
+            // If status changed to Approved/Rejected and user is admin/manager, set ApprovedBy
+            if (IsAdminOrManager && (SelectedLeave.Status == "Approved" || SelectedLeave.Status == "Rejected"))
+            {
+                if (CurrentAccount?.UserId != null)
+                {
+                    SelectedLeave.ApprovedBy = CurrentAccount.UserId.Value;
+                    SelectedLeave.ApprovalDate = DateTime.Now;
+                }
+            }
+            
             if (SelectedLeave.Id == Guid.Empty)
             {
+                System.Diagnostics.Debug.WriteLine("Calling CreateAsync");
                 await _staffLeaveBlo.CreateAsync(SelectedLeave);
             }
             else
             {
+                System.Diagnostics.Debug.WriteLine("Calling UpdateAsync");
                 await _staffLeaveBlo.UpdateAsync(SelectedLeave);
             }
 
@@ -1094,7 +1204,7 @@ public class StaffLeaveManagementViewModel : ViewModelBase
             await LoadDataAsync(null);
             
             // Clear form for next entry
-            SelectedLeave = new StaffLeave
+            var newLeave = new StaffLeave
             {
                 Id = Guid.Empty,
                 StartDate = DateTime.Now,
@@ -1103,6 +1213,15 @@ public class StaffLeaveManagementViewModel : ViewModelBase
                 LeaveType = string.Empty,
                 Reason = string.Empty
             };
+            
+            // Auto-set UserId for non-admin
+            if (!IsAdminOrManager && CurrentAccount?.UserId != null)
+            {
+                newLeave.UserId = CurrentAccount.UserId.Value;
+            }
+            
+            SelectedLeave = newLeave;
+            TempStatus = "Pending";
         }
         catch (Exception ex)
         {

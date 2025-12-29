@@ -152,3 +152,4 @@ D:\Hoa Sen University\Phát triển phần mềm ứng dụng\Final Project\Kind
 D:\Hoa Sen University\Phát triển phần mềm ứng dụng\Final Project\KindergartenManagement\obj\Debug\net8.0-windows\KindergartenManagement.genruntimeconfig.cache
 D:\Hoa Sen University\Phát triển phần mềm ứng dụng\Final Project\KindergartenManagement\obj\Debug\net8.0-windows\ref\KindergartenManagement.dll
 D:\Hoa Sen University\Phát triển phần mềm ứng dụng\Final Project\KindergartenManagement\obj\Debug\net8.0-windows\Styles\ScrollBars.baml
+D:\Hoa Sen University\Phát triển phần mềm ứng dụng\Final Project\KindergartenManagement\obj\Debug\net8.0-windows\KindergartenManagement.sourcelink.json

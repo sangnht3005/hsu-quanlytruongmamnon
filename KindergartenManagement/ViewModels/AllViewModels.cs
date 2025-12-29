@@ -417,20 +417,363 @@ public class ClassManagementViewModel : ViewModelBase
     }
 }
 
-public class AttendanceViewModel : ViewModelBase
+public class GradeManagementViewModel : ViewModelBase
+{
+    private readonly IGradeBlo _gradeBlo;
+    private ObservableCollection<Grade> _grades = new();
+    private Grade? _selectedGrade;
+
+    public GradeManagementViewModel(IGradeBlo gradeBlo)
+    {
+        _gradeBlo = gradeBlo;
+
+        LoadDataCommand = new AsyncRelayCommand(LoadDataAsync);
+        AddGradeCommand = new RelayCommand(AddGrade);
+        SaveGradeCommand = new AsyncRelayCommand(SaveGradeAsync);
+        DeleteGradeCommand = new AsyncRelayCommand(DeleteGradeAsync, CanEditOrDelete);
+
+        // Initialize with empty grade for user to input directly
+        SelectedGrade = new Grade
+        {
+            Id = Guid.Empty,
+            Name = string.Empty,
+            MinAge = 0,
+            MaxAge = 0
+        };
+
+        // Auto-load data on initialization
+        _ = LoadDataAsync(null);
+    }
+
+    public ObservableCollection<Grade> Grades
+    {
+        get => _grades;
+        set => SetProperty(ref _grades, value);
+    }
+
+    public Grade? SelectedGrade
+    {
+        get => _selectedGrade;
+        set => SetProperty(ref _selectedGrade, value);
+    }
+
+    public ICommand LoadDataCommand { get; }
+    public ICommand AddGradeCommand { get; }
+    public ICommand SaveGradeCommand { get; }
+    public ICommand DeleteGradeCommand { get; }
+
+    private async Task LoadDataAsync(object? parameter)
+    {
+        try
+        {
+            var grades = await _gradeBlo.GetAllAsync();
+            Grades = new ObservableCollection<Grade>(grades);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi tải dữ liệu: {ex.Message}", "Lỗi",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+    }
+
+    private void AddGrade(object? parameter)
+    {
+        SelectedGrade = new Grade
+        {
+            Id = Guid.Empty,
+            Name = string.Empty,
+            MinAge = 0,
+            MaxAge = 0
+        };
+    }
+
+    private bool CanEditOrDelete(object? parameter)
+    {
+        return SelectedGrade != null && SelectedGrade.Id != Guid.Empty;
+    }
+
+    private bool ValidateGrade()
+    {
+        if (SelectedGrade == null) return false;
+
+        if (string.IsNullOrWhiteSpace(SelectedGrade.Name))
+        {
+            System.Windows.MessageBox.Show("Vui lòng nhập tên khối!", "Lỗi validation",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+            return false;
+        }
+
+        if (SelectedGrade.MinAge < 0 || SelectedGrade.MaxAge < 0)
+        {
+            System.Windows.MessageBox.Show("Độ tuổi không được âm!", "Lỗi validation",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+            return false;
+        }
+
+        if (SelectedGrade.MinAge > SelectedGrade.MaxAge)
+        {
+            System.Windows.MessageBox.Show("Độ tuổi tối thiểu không được lớn hơn độ tuổi tối đa!", "Lỗi validation",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+            return false;
+        }
+
+        return true;
+    }
+
+    private async Task SaveGradeAsync(object? parameter)
+    {
+        if (SelectedGrade == null) return;
+
+        if (!ValidateGrade())
+        {
+            return;
+        }
+
+        try
+        {
+            if (SelectedGrade.Id == Guid.Empty)
+            {
+                await _gradeBlo.CreateAsync(SelectedGrade);
+            }
+            else
+            {
+                await _gradeBlo.UpdateAsync(SelectedGrade);
+            }
+
+            System.Windows.MessageBox.Show("Lưu khối lớp thành công!", "Thành công",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+
+            await LoadDataAsync(null);
+
+            // Clear form for next entry
+            SelectedGrade = new Grade
+            {
+                Id = Guid.Empty,
+                Name = string.Empty,
+                MinAge = 0,
+                MaxAge = 0
+            };
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi lưu khối lớp: {ex.Message}", "Lỗi",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+    }
+
+    private async Task DeleteGradeAsync(object? parameter)
+    {
+        if (SelectedGrade == null) return;
+
+        var result = System.Windows.MessageBox.Show(
+            $"Bạn có chắc chắn muốn xóa khối {SelectedGrade.Name}?",
+            "Xác nhận",
+            System.Windows.MessageBoxButton.YesNo,
+            System.Windows.MessageBoxImage.Question);
+
+        if (result == System.Windows.MessageBoxResult.Yes)
+        {
+            try
+            {
+                await _gradeBlo.DeleteAsync(SelectedGrade.Id);
+                Grades.Remove(SelectedGrade);
+                SelectedGrade = new Grade
+                {
+                    Id = Guid.Empty,
+                    Name = string.Empty,
+                    MinAge = 0,
+                    MaxAge = 0
+                };
+
+                System.Windows.MessageBox.Show("Xóa khối lớp thành công!", "Thành công",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Lỗi xóa khối lớp: {ex.Message}", "Lỗi",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            }
+        }
+    }
+}
+
+public class AttendanceManagementViewModel : ViewModelBase
 {
     private readonly IAttendanceBlo _attendanceBlo;
+    private readonly IClassBlo _classBlo;
     private ObservableCollection<Attendance> _attendances = new();
+    private ObservableCollection<Class> _classes = new();
+    private Class? _selectedClass;
+    private DateTime _selectedDate = DateTime.Today;
+    private bool _isLoading;
 
-    public AttendanceViewModel(IAttendanceBlo attendanceBlo)
+    public AttendanceManagementViewModel(IAttendanceBlo attendanceBlo, IClassBlo classBlo)
     {
         _attendanceBlo = attendanceBlo;
+        _classBlo = classBlo;
+
+        LoadClassesCommand = new AsyncRelayCommand(LoadClassesAsync);
+        LoadAttendanceCommand = new AsyncRelayCommand(LoadAttendanceAsync);
+        CreateAttendanceCommand = new AsyncRelayCommand(CreateAttendanceAsync);
+        SaveAttendanceCommand = new AsyncRelayCommand(SaveAttendanceAsync);
+
+        // Auto-load classes
+        _ = LoadClassesAsync(null);
     }
 
     public ObservableCollection<Attendance> Attendances
     {
         get => _attendances;
         set => SetProperty(ref _attendances, value);
+    }
+
+    public ObservableCollection<Class> Classes
+    {
+        get => _classes;
+        set => SetProperty(ref _classes, value);
+    }
+
+    public List<StatusItem> StatusList { get; } = new()
+    {
+        new StatusItem { Value = "Present", Display = "Có mặt" },
+        new StatusItem { Value = "Absent", Display = "Vắng" },
+        new StatusItem { Value = "Excused", Display = "Vắng có phép" },
+        new StatusItem { Value = "Late", Display = "Muộn" }
+    };
+
+    public Class? SelectedClass
+    {
+        get => _selectedClass;
+        set
+        {
+            if (SetProperty(ref _selectedClass, value))
+            {
+                _ = LoadAttendanceAsync(null);
+            }
+        }
+    }
+
+    public DateTime SelectedDate
+    {
+        get => _selectedDate;
+        set
+        {
+            if (SetProperty(ref _selectedDate, value))
+            {
+                _ = LoadAttendanceAsync(null);
+            }
+        }
+    }
+
+    public bool IsLoading
+    {
+        get => _isLoading;
+        set => SetProperty(ref _isLoading, value);
+    }
+
+    public ICommand LoadClassesCommand { get; }
+    public ICommand LoadAttendanceCommand { get; }
+    public ICommand CreateAttendanceCommand { get; }
+    public ICommand SaveAttendanceCommand { get; }
+
+    private async Task LoadClassesAsync(object? parameter)
+    {
+        try
+        {
+            var classes = await _classBlo.GetAllAsync();
+            Classes = new ObservableCollection<Class>(classes);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi tải danh sách lớp: {ex.Message}", "Lỗi",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+    }
+
+    private async Task LoadAttendanceAsync(object? parameter)
+    {
+        if (SelectedClass == null) return;
+
+        try
+        {
+            IsLoading = true;
+            var attendances = await _attendanceBlo.GetByClassIdAsync(SelectedClass.Id, SelectedDate);
+            Attendances = new ObservableCollection<Attendance>(attendances);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi tải điểm danh: {ex.Message}", "Lỗi",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task CreateAttendanceAsync(object? parameter)
+    {
+        if (SelectedClass == null)
+        {
+            System.Windows.MessageBox.Show("Vui lòng chọn lớp học!", "Thông báo",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+            return;
+        }
+
+        try
+        {
+            IsLoading = true;
+            var attendances = await _attendanceBlo.CreateClassAttendanceAsync(SelectedClass.Id, SelectedDate);
+            Attendances = new ObservableCollection<Attendance>(attendances);
+
+            System.Windows.MessageBox.Show($"Đã tạo điểm danh cho {attendances.Count()} học sinh!", "Thành công",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+        }
+        catch (InvalidOperationException ex)
+        {
+            System.Windows.MessageBox.Show(ex.Message, "Thông báo",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi tạo điểm danh: {ex.Message}", "Lỗi",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task SaveAttendanceAsync(object? parameter)
+    {
+        if (!Attendances.Any())
+        {
+            System.Windows.MessageBox.Show("Không có điểm danh nào để lưu!", "Thông báo",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+            return;
+        }
+
+        try
+        {
+            IsLoading = true;
+            foreach (var attendance in Attendances)
+            {
+                await _attendanceBlo.UpdateAsync(attendance);
+            }
+
+            System.Windows.MessageBox.Show("Lưu điểm danh thành công!", "Thành công",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi lưu điểm danh: {ex.Message}", "Lỗi",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 }
 
@@ -462,4 +805,10 @@ public class InvoiceManagementViewModel : ViewModelBase
     {
         _invoiceBlo = invoiceBlo;
     }
+}
+
+public class StatusItem
+{
+    public string Value { get; set; } = string.Empty;
+    public string Display { get; set; } = string.Empty;
 }

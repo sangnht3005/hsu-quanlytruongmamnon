@@ -62,3 +62,44 @@ public class StringToVisibilityConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
+
+public class StatusToVietnameseConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is string status)
+        {
+            return status switch
+            {
+                "Pending" => "Chờ duyệt",
+                "Approved" => "Đã duyệt",
+                "Rejected" => "Từ chối",
+                "Vacation" => "Nghỉ phép",
+                "Sick" => "Nghỉ ốm",
+                "Personal" => "Nghỉ cá nhân",
+                "Unpaid" => "Nghỉ không lương",
+                _ => status
+            };
+        }
+        return value;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is string vietnamese)
+        {
+            return vietnamese switch
+            {
+                "Chờ duyệt" => "Pending",
+                "Đã duyệt" => "Approved",
+                "Từ chối" => "Rejected",
+                "Nghỉ phép" => "Vacation",
+                "Nghỉ ốm" => "Sick",
+                "Nghỉ cá nhân" => "Personal",
+                "Nghỉ không lương" => "Unpaid",
+                _ => vietnamese
+            };
+        }
+        return value;
+    }
+}

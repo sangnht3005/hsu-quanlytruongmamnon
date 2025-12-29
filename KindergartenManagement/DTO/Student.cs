@@ -24,6 +24,9 @@ public class Student
     [MaxLength(1000)]
     public string? MedicalNotes { get; set; }
 
+    [MaxLength(500)]
+    public string? AllergyIngredientCodes { get; set; }
+
     public Guid ParentId { get; set; }
     public Parent? Parent { get; set; }
 
