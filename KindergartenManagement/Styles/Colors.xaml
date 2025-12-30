@@ -2,19 +2,23 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
     <!-- Color Palette -->
-    <SolidColorBrush x:Key="PrimaryColor" Color="#2196F3"/>
-    <SolidColorBrush x:Key="PrimaryDarkColor" Color="#1976D2"/>
-    <SolidColorBrush x:Key="PrimaryLightColor" Color="#BBDEFB"/>
-    <SolidColorBrush x:Key="AccentColor" Color="#FF9800"/>
-    <SolidColorBrush x:Key="SuccessColor" Color="#4CAF50"/>
-    <SolidColorBrush x:Key="WarningColor" Color="#FFC107"/>
-    <SolidColorBrush x:Key="DangerColor" Color="#F44336"/>
-    <SolidColorBrush x:Key="BackgroundColor" Color="#F5F5F5"/>
+    <SolidColorBrush x:Key="PrimaryColor" Color="#2563EB"/>
+    <SolidColorBrush x:Key="PrimaryDarkColor" Color="#1D4ED8"/>
+    <SolidColorBrush x:Key="PrimaryLightColor" Color="#EEF2FF"/>
+    <SolidColorBrush x:Key="AccentColor" Color="#22C55E"/>
+    <SolidColorBrush x:Key="SuccessColor" Color="#22C55E"/>
+    <SolidColorBrush x:Key="WarningColor" Color="#F59E0B"/>
+    <SolidColorBrush x:Key="DangerColor" Color="#EF4444"/>
+    <SolidColorBrush x:Key="BackgroundColor" Color="#F3F4F6"/>
     <SolidColorBrush x:Key="SurfaceColor" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="TextPrimaryColor" Color="#212121"/>
+    <SolidColorBrush x:Key="TextPrimaryColor" Color="#0F172A"/>
     <!-- Alias for general text usage -->
-    <SolidColorBrush x:Key="TextColor" Color="#212121"/>
-    <SolidColorBrush x:Key="TextSecondaryColor" Color="#757575"/>
-    <SolidColorBrush x:Key="BorderColor" Color="#E0E0E0"/>
+    <SolidColorBrush x:Key="TextColor" Color="#0F172A"/>
+    <SolidColorBrush x:Key="TextSecondaryColor" Color="#475569"/>
+    <SolidColorBrush x:Key="BorderColor" Color="#E5E7EB"/>
+    <LinearGradientBrush x:Key="SidebarGradient" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#1D4ED8" Offset="0"/>
+        <GradientStop Color="#2563EB" Offset="1"/>
+    </LinearGradientBrush>
     
 </ResourceDictionary>

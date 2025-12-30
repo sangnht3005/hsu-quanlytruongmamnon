@@ -6,9 +6,10 @@
         xmlns:converters="clr-namespace:KindergartenManagement.Converters"
         mc:Ignorable="d"
         Title="Đăng nhập - Hệ thống quản lý mầm non"
-        Height="500" Width="400"
+        Height="620" Width="520"
+        MinHeight="580" MinWidth="500"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
+        ResizeMode="CanResize"
         Background="{StaticResource BackgroundColor}">
     
     <Window.Resources>
@@ -18,17 +19,18 @@
     </Window.Resources>
     
     <Grid>
-        <Border Background="{StaticResource SurfaceColor}"
-                CornerRadius="10"
-                Margin="20"
-                Padding="40">
-            <Border.Effect>
-                <DropShadowEffect BlurRadius="20" 
-                                ShadowDepth="0" 
-                                Opacity="0.2"/>
-            </Border.Effect>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Border Background="{StaticResource SurfaceColor}"
+                    CornerRadius="10"
+                    Margin="20"
+                    Padding="40">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="20" 
+                                    ShadowDepth="0" 
+                                    Opacity="0.2"/>
+                </Border.Effect>
             
-            <StackPanel>
+                <StackPanel>
                 <!-- Logo/Title -->
                 <TextBlock Text="🏫"
                           FontSize="60"
@@ -49,12 +51,9 @@
                           Margin="0,0,0,5"/>
                 
                 <TextBox x:Name="UsernameTextBox"
-                        Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                        FontSize="14"
-                        Padding="10"
-                        Margin="0,0,0,20"
-                        BorderBrush="{StaticResource BorderColor}"
-                        BorderThickness="1"/>
+                    Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                    FontSize="14"
+                    Margin="0,0,0,20"/>
 
                 <!-- Password -->
                 <TextBlock Text="Mật khẩu"
@@ -64,10 +63,7 @@
                 
                 <PasswordBox x:Name="PasswordBox"
                             FontSize="14"
-                            Padding="10"
                             Margin="0,0,0,10"
-                            BorderBrush="{StaticResource BorderColor}"
-                            BorderThickness="1"
                             PasswordChanged="PasswordBox_PasswordChanged"/>
 
                 <!-- Error Message -->
@@ -97,5 +93,6 @@
                 </StackPanel>
             </StackPanel>
         </Border>
-    </Grid>
+    </ScrollViewer>
+</Grid>
 </Window>

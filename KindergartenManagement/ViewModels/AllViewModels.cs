@@ -873,7 +873,7 @@ public class InvoiceManagementViewModel : ViewModelBase
     private Invoice? _selectedInvoice;
     private Class? _selectedClass;
     private Class? _selectedClassFilter;
-    private DateTime _invoiceMonth = DateTime.Today;
+    private DateTime _invoiceMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
     private bool _isLoading;
 
     public InvoiceManagementViewModel(IInvoiceBlo invoiceBlo, IClassBlo classBlo, IStudentBlo studentBlo, IAttendanceBlo attendanceBlo, IUserBlo userBlo)

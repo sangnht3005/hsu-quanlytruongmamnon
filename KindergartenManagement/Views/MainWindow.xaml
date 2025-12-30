@@ -39,7 +39,7 @@
 
         <!-- Sidebar -->
         <Border Grid.Column="0" 
-                Background="{StaticResource PrimaryColor}"
+            Background="{StaticResource SidebarGradient}"
                 Padding="0">
             <Grid>
                 <Grid.RowDefinitions>
@@ -385,7 +385,8 @@
 
                     <!-- Student Management View -->
                     <DataTemplate DataType="{x:Type vm:StudentManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" MinWidth="300"/>
                                 <ColumnDefinition Width="*" MinWidth="350"/>
@@ -464,7 +465,8 @@
 
                     <!-- Grade Management View -->
                     <DataTemplate DataType="{x:Type vm:GradeManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="*" MinWidth="350"/>
@@ -527,7 +529,8 @@
 
                     <!-- Daily Menu Management View -->
                     <DataTemplate DataType="{x:Type vm:DailyMenuManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" MinWidth="320"/>
                                 <ColumnDefinition Width="3*" MinWidth="420"/>
@@ -663,7 +666,8 @@
 
                     <!-- Meal Ticket Management View -->
                     <DataTemplate DataType="{x:Type vm:MealTicketManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="3*" MinWidth="420"/>
                                 <ColumnDefinition Width="2*" MinWidth="340"/>
@@ -715,7 +719,8 @@
 
                     <!-- Supplier Management View -->
                     <DataTemplate DataType="{x:Type vm:SupplierManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" MinWidth="320"/>
                                 <ColumnDefinition Width="3*" MinWidth="380"/>
@@ -770,7 +775,8 @@
 
                     <!-- Ingredient Management View -->
                     <DataTemplate DataType="{x:Type vm:IngredientManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" MinWidth="320"/>
                                 <ColumnDefinition Width="3*" MinWidth="380"/>
@@ -826,7 +832,8 @@
 
                     <!-- Dish Management View -->
                     <DataTemplate DataType="{x:Type vm:DishManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" MinWidth="320"/>
                                 <ColumnDefinition Width="3*" MinWidth="420"/>
@@ -925,7 +932,8 @@
 
                     <!-- Class Management View -->
                     <DataTemplate DataType="{x:Type vm:ClassManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" MinWidth="300"/>
                                 <ColumnDefinition Width="*" MinWidth="350"/>
@@ -989,14 +997,21 @@
 
                     <!-- Attendance Management View -->
                     <DataTemplate DataType="{x:Type vm:AttendanceManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
+                            <!-- Title -->
+                            <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                                <TextBlock Text="Quản lý điểm danh" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                            </Border>
+
                             <!-- Top: Filter Controls -->
-                            <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+                            <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20" Margin="0,0,0,20">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
@@ -1034,7 +1049,7 @@
                             </Border>
 
                             <!-- Bottom: Attendance List -->
-                            <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
+                            <Border Grid.Row="2" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
                                 <DataGrid ItemsSource="{Binding Attendances}" 
                                           AutoGenerateColumns="False" 
                                           CanUserAddRows="False">
@@ -1090,7 +1105,10 @@
                                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                                 <StackPanel Margin="0,0,15,0">
                                                     <TextBlock Text="Tháng" Margin="0,0,0,5" FontSize="11"/>
-                                                    <DatePicker Width="130" SelectedDate="{Binding InvoiceMonth}" Padding="6" FontSize="11"/>
+                                                    <DatePicker Width="130"
+                                                                SelectedDate="{Binding InvoiceMonth}"
+                                                                SelectedDateFormat="Short"
+                                                                Padding="6" FontSize="11"/>
                                                 </StackPanel>
                                                 <Button Content="⚙️ Tạo Hóa Đơn" Command="{Binding CreateBatchTuitionInvoicesCommand}" Style="{StaticResource PrimaryButton}" Padding="12,5" FontSize="12" VerticalAlignment="Bottom" Margin="0,18,0,0"/>
                                             </StackPanel>
@@ -1238,7 +1256,10 @@
                                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                                 <StackPanel Margin="0,0,15,0">
                                                     <TextBlock Text="Tháng" Margin="0,0,0,5" FontSize="11"/>
-                                                    <DatePicker Width="130" SelectedDate="{Binding InvoiceMonth}" Padding="6" FontSize="11"/>
+                                                    <DatePicker Width="130"
+                                                                SelectedDate="{Binding InvoiceMonth}"
+                                                                SelectedDateFormat="Short"
+                                                                Padding="6" FontSize="11"/>
                                                 </StackPanel>
                                                 <Button Content="⚙️ Tạo Phiếu Lương" Command="{Binding CreateBatchSalaryInvoicesCommand}" Style="{StaticResource PrimaryButton}" Padding="12,5" FontSize="12" VerticalAlignment="Bottom" Margin="0,18,0,0"/>
                                             </StackPanel>
@@ -1408,7 +1429,8 @@
 
                     <!-- Account Management View -->
                     <DataTemplate DataType="{x:Type vm:AccountManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="*" MinWidth="350"/>
@@ -1494,7 +1516,8 @@
 
                     <!-- Staff Management View -->
                     <DataTemplate DataType="{x:Type vm:StaffManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" MinWidth="300"/>
                                 <ColumnDefinition Width="*" MinWidth="350"/>
@@ -1573,7 +1596,8 @@
 
                     <!-- Parent Management View -->
                     <DataTemplate DataType="{x:Type vm:ParentManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" MinWidth="300"/>
                                 <ColumnDefinition Width="*" MinWidth="350"/>
@@ -1640,7 +1664,8 @@
 
                     <!-- Staff Leave Management View -->
                     <DataTemplate DataType="{x:Type vm:StaffLeaveManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" MinWidth="300"/>
                                 <ColumnDefinition Width="*" MinWidth="400"/>
@@ -1738,7 +1763,8 @@
 
                     <!-- Vaccine Management View -->
                     <DataTemplate DataType="{x:Type vm:VaccineManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" MinWidth="300"/>
                                 <ColumnDefinition Width="3*" MinWidth="400"/>
@@ -1804,7 +1830,8 @@
 
                     <!-- Vaccination Record Management View -->
                     <DataTemplate DataType="{x:Type vm:VaccinationRecordManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="3*"/>
@@ -1930,7 +1957,8 @@
 
                     <!-- Health Record Management View -->
                     <DataTemplate DataType="{x:Type vm:HealthRecordManagementViewModel}">
-                        <Grid>
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" MinWidth="300"/>
                                 <ColumnDefinition Width="3*" MinWidth="400"/>
