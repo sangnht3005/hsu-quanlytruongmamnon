@@ -81,7 +81,8 @@
                                Margin="0,0,0,3"/>
                         
                         <!-- Students & Parents Section -->
-                        <TextBlock Text="👶 HỌC SINH" Style="{StaticResource SidebarSectionHeader}"/>
+                        <TextBlock Text="👶 HỌC SINH" Style="{StaticResource SidebarSectionHeader}"
+                                   Visibility="{Binding CanManageStudents, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Danh sách học sinh"
                                Command="{Binding NavigateCommand}"
@@ -89,7 +90,8 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Students}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,3"/>
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageStudents, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Phụ huynh"
                                Command="{Binding NavigateCommand}"
@@ -97,10 +99,12 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Parents}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,8"/>
+                               Margin="0,0,0,8"
+                               Visibility="{Binding CanManageParents, Converter={StaticResource BoolToVis}}"/>
                         
                         <!-- Classes & Attendance Section -->
-                        <TextBlock Text="🏫 LỚP HỌC" Style="{StaticResource SidebarSectionHeader}"/>
+                        <TextBlock Text="🏫 LỚP HỌC" Style="{StaticResource SidebarSectionHeader}"
+                                   Visibility="{Binding CanManageClasses, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Khối lớp"
                                Command="{Binding NavigateCommand}"
@@ -108,7 +112,8 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Grades}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,3"/>
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageGrades, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Quản lý lớp"
                                Command="{Binding NavigateCommand}"
@@ -116,7 +121,8 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Classes}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,3"/>
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageClasses, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Điểm danh"
                                Command="{Binding NavigateCommand}"
@@ -124,10 +130,12 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Attendance}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,8"/>
+                               Margin="0,0,0,8"
+                               Visibility="{Binding CanManageAttendance, Converter={StaticResource BoolToVis}}"/>
                         
                         <!-- Health & Vaccines Section -->
-                        <TextBlock Text="💊 SỨC KHỎE" Style="{StaticResource SidebarSectionHeader}"/>
+                        <TextBlock Text="💊 SỨC KHỎE" Style="{StaticResource SidebarSectionHeader}"
+                                   Visibility="{Binding CanManageHealth, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Hồ sơ sức khỏe"
                                Command="{Binding NavigateCommand}"
@@ -135,7 +143,8 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Health}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,3"/>
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageHealth, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Vaccine"
                                Command="{Binding NavigateCommand}"
@@ -143,7 +152,8 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Vaccines}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,3"/>
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageHealth, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Tiêm chủng"
                                Command="{Binding NavigateCommand}"
@@ -151,7 +161,8 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=VaccinationRecords}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,3"/>
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageHealth, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Hồ sơ tháng"
                                Command="{Binding NavigateCommand}"
@@ -159,10 +170,12 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=HealthRecords}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,8"/>
+                               Margin="0,0,0,8"
+                               Visibility="{Binding CanManageHealth, Converter={StaticResource BoolToVis}}"/>
                         
                         <!-- Nutrition Management Section -->
-                        <TextBlock Text="🍽️ THỰC ĐƠN" Style="{StaticResource SidebarSectionHeader}"/>
+                        <TextBlock Text="🍽️ THỰC ĐƠN" Style="{StaticResource SidebarSectionHeader}"
+                                   Visibility="{Binding CanManageMenu, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Thực đơn"
                                Command="{Binding NavigateCommand}"
@@ -170,7 +183,8 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Menu}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,3"/>
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageMenu, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Menu hằng ngày"
                                Command="{Binding NavigateCommand}"
@@ -178,7 +192,8 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=DailyMenus}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,3"/>
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageMenu, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Phiếu ăn"
                                Command="{Binding NavigateCommand}"
@@ -186,7 +201,8 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=MealTickets}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,3"/>
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageMenu, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Nhà cung cấp"
                                Command="{Binding NavigateCommand}"
@@ -194,7 +210,8 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Suppliers}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,3"/>
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageMenu, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Nguyên liệu"
                                Command="{Binding NavigateCommand}"
@@ -202,7 +219,8 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Ingredients}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,3"/>
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageMenu, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Món ăn"
                                Command="{Binding NavigateCommand}"
@@ -210,10 +228,12 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Dishes}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,8"/>
+                               Margin="0,0,0,8"
+                               Visibility="{Binding CanManageMenu, Converter={StaticResource BoolToVis}}"/>
                         
                         <!-- Staff & Finance Section -->
-                        <TextBlock Text="👨‍💼 NHÂN SỰ" Style="{StaticResource SidebarSectionHeader}"/>
+                        <TextBlock Text="👨‍💼 NHÂN SỰ" Style="{StaticResource SidebarSectionHeader}"
+                                   Visibility="{Binding CanManageStaff, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Nhân viên"
                                Command="{Binding NavigateCommand}"
@@ -221,7 +241,8 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Staff}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,3"/>
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageStaff, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Đơn nghỉ"
                                Command="{Binding NavigateCommand}"
@@ -229,10 +250,12 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=StaffLeave}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,8"/>
+                               Margin="0,0,0,8"
+                               Visibility="{Binding CanManageLeave, Converter={StaticResource BoolToVis}}"/>
                         
                         <!-- Finance Section -->
-                        <TextBlock Text="💰 TÀI CHÍNH" Style="{StaticResource SidebarSectionHeader}"/>
+                        <TextBlock Text="💰 TÀI CHÍNH" Style="{StaticResource SidebarSectionHeader}"
+                                   Visibility="{Binding CanManageFinance, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Hóa đơn"
                                Command="{Binding NavigateCommand}"
@@ -240,7 +263,8 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Invoice}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,3"/>
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageFinance, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Cấu hình học phí"
                                Command="{Binding NavigateCommand}"
@@ -248,10 +272,12 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=TuitionFeeManagement}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,8"/>
+                               Margin="0,0,0,8"
+                               Visibility="{Binding CanManageFinance, Converter={StaticResource BoolToVis}}"/>
                         
                         <!-- Reporting Section -->
-                        <TextBlock Text="📈 BÁO CÁO" Style="{StaticResource SidebarSectionHeader}"/>
+                        <TextBlock Text="📈 BÁO CÁO" Style="{StaticResource SidebarSectionHeader}"
+                                   Visibility="{Binding CanViewReports, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Báo cáo"
                                Command="{Binding NavigateCommand}"
@@ -259,10 +285,12 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Reporting}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,8"/>
+                               Margin="0,0,0,8"
+                               Visibility="{Binding CanViewReports, Converter={StaticResource BoolToVis}}"/>
                         
                         <!-- System Section -->
-                        <TextBlock Text="🔐 HỆ THỐNG" Style="{StaticResource SidebarSectionHeader}"/>
+                        <TextBlock Text="🔐 HỆ THỐNG" Style="{StaticResource SidebarSectionHeader}"
+                                   Visibility="{Binding CanManageAccounts, Converter={StaticResource BoolToVis}}"/>
                         
                         <Button Content="   Tài khoản"
                                Command="{Binding NavigateCommand}"
@@ -270,7 +298,8 @@
                                Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Accounts}"
                                Style="{StaticResource MenuButton}"
                                Foreground="White"
-                               Margin="0,0,0,3"/>
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageAccounts, Converter={StaticResource BoolToVis}}"/>
                     </StackPanel>
                 </ScrollViewer>
 

@@ -68,6 +68,9 @@ public partial class App : Application
                 // Register Tuition Fee BLOs
                 services.AddScoped<ITuitionFeeBlo, TuitionFeeBlo>();
 
+                // Register Services
+                services.AddScoped<Services.IPermissionService, Services.PermissionService>();
+
                 // Register ViewModels
                 services.AddTransient<MainViewModel>();
                 services.AddTransient<LoginViewModel>();
