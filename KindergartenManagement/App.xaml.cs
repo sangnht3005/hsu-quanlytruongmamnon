@@ -39,6 +39,7 @@ public partial class App : Application
                 services.AddScoped<IVaccineDao, VaccineDao>();
                 services.AddScoped<IVaccinationRecordDao, VaccinationRecordDao>();
                 services.AddScoped<IFoodManagementDao, FoodManagementDao>();
+                services.AddScoped<IReportingDao, ReportingDao>();
 
                 // Register BLOs
                 services.AddScoped<IAccountBlo, AccountBlo>();
@@ -59,6 +60,7 @@ public partial class App : Application
                 services.AddScoped<IVaccineBlo, VaccineBlo>();
                 services.AddScoped<IVaccinationRecordBlo, VaccinationRecordBlo>();
                 services.AddScoped<IFoodManagementBlo, FoodManagementBlo>();
+                services.AddScoped<IReportingBlo, ReportingBlo>();
 
                 // Register ViewModels
                 services.AddTransient<MainViewModel>();
@@ -84,6 +86,7 @@ public partial class App : Application
                 services.AddTransient<DishManagementViewModel>();
                 services.AddTransient<DailyMenuManagementViewModel>();
                 services.AddTransient<MealTicketManagementViewModel>();
+                services.AddTransient<ReportingViewModel>();
 
                 // Register Views
                 services.AddTransient<MainWindow>();

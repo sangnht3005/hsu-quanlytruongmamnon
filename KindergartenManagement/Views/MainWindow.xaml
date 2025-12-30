@@ -242,6 +242,17 @@
                                Foreground="White"
                                Margin="0,0,0,8"/>
                         
+                        <!-- Reporting Section -->
+                        <TextBlock Text="📈 BÁO CÁO" Style="{StaticResource SidebarSectionHeader}"/>
+                        
+                        <Button Content="   Báo cáo"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="Reporting"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=Reporting}"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,8"/>
+                        
                         <!-- System Section -->
                         <TextBlock Text="🔐 HỆ THỐNG" Style="{StaticResource SidebarSectionHeader}"/>
                         
@@ -2109,6 +2120,160 @@
                                     </StackPanel>
                                 </ScrollViewer>
                             </Border>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- Reporting View -->
+                    <DataTemplate DataType="{x:Type vm:ReportingViewModel}">
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Title -->
+                            <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                                <TextBlock Text="📈 Báo cáo và Thống kê" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                            </Border>
+
+                            <!-- Date Range Filter -->
+                            <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20" Margin="0,0,0,15">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Margin="0,0,15,0">
+                                        <TextBlock Text="Từ ngày" Margin="0,0,0,5"/>
+                                        <DatePicker SelectedDate="{Binding FromDate, Mode=TwoWay}" Padding="6"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1" Margin="0,0,15,0">
+                                        <TextBlock Text="Đến ngày" Margin="0,0,0,5"/>
+                                        <DatePicker SelectedDate="{Binding ToDate, Mode=TwoWay}" Padding="6"/>
+                                    </StackPanel>
+
+                                    <Button Grid.Column="2" Content="🔄 Tải lại" Command="{Binding LoadReportsCommand}" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" ToolTip="Tải lại tất cả báo cáo"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Reports Content -->
+                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                                <StackPanel>
+                                    <!-- Financial Report Section -->
+                                    <Border Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                                        <StackPanel>
+                                            <TextBlock Text="💰 Báo cáo tài chính" FontSize="16" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" Margin="0,0,0,12"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                                    <TextBlock Text="Tổng hóa đơn" FontSize="12" Foreground="{StaticResource TextSecondaryColor}"/>
+                                                    <TextBlock Text="{Binding FinancialReport.TotalInvoices}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                                    <TextBlock Text="Doanh thu" FontSize="12" Foreground="{StaticResource TextSecondaryColor}"/>
+                                                    <TextBlock Text="{Binding FinancialReport.TotalIncome, StringFormat={}{0:N0}đ}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="2">
+                                                    <TextBlock Text="Chưa thanh toán" FontSize="12" Foreground="{StaticResource TextSecondaryColor}"/>
+                                                    <TextBlock Text="{Binding FinancialReport.UnpaidIncome, StringFormat={}{0:N0}đ}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource DangerColor}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Health Statistics Section -->
+                                    <Border Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                                        <StackPanel>
+                                            <TextBlock Text="🏥 Thống kê sức khỏe" FontSize="16" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" Margin="0,0,0,12"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                                    <TextBlock Text="Kiểm tra sức khỏe" FontSize="12" Foreground="{StaticResource TextSecondaryColor}"/>
+                                                    <TextBlock Text="{Binding HealthStatistics.TotalHealthChecks}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                                    <TextBlock Text="Khỏe mạnh" FontSize="12" Foreground="{StaticResource TextSecondaryColor}"/>
+                                                    <TextBlock Text="{Binding HealthStatistics.HealthyCount}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SuccessColor}"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                                                    <TextBlock Text="Cần chú ý" FontSize="12" Foreground="{StaticResource TextSecondaryColor}"/>
+                                                    <TextBlock Text="{Binding HealthStatistics.NeedAttentionCount}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource WarningColor}"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="3">
+                                                    <TextBlock Text="Cân nặng TB (kg)" FontSize="12" Foreground="{StaticResource TextSecondaryColor}"/>
+                                                    <TextBlock Text="{Binding HealthStatistics.AverageWeight, StringFormat={}{0:F2}}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Vaccination Statistics Section -->
+                                    <Border Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                                        <StackPanel>
+                                            <TextBlock Text="💉 Thống kê tiêm chủng" FontSize="16" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" Margin="0,0,0,12"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                                    <TextBlock Text="Tổng học sinh" FontSize="12" Foreground="{StaticResource TextSecondaryColor}"/>
+                                                    <TextBlock Text="{Binding VaccinationStatistics.TotalStudents}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                                    <TextBlock Text="Đã tiêm chủng" FontSize="12" Foreground="{StaticResource TextSecondaryColor}"/>
+                                                    <TextBlock Text="{Binding VaccinationStatistics.VaccinatedCount}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SuccessColor}"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="2">
+                                                    <TextBlock Text="Tỷ lệ (%)" FontSize="12" Foreground="{StaticResource TextSecondaryColor}"/>
+                                                    <TextBlock Text="{Binding VaccinationStatistics.VaccinationPercentage, StringFormat={}{0:F1}%}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Class Reports Section -->
+                                    <Border Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
+                                        <StackPanel>
+                                            <TextBlock Text="🏫 Báo cáo lớp học" FontSize="16" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" Margin="0,0,0,12"/>
+                                            <DataGrid ItemsSource="{Binding ClassReports}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="12">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="Tên lớp" Binding="{Binding ClassName}" Width="150"/>
+                                                    <DataGridTextColumn Header="Khối" Binding="{Binding GradeName}" Width="100"/>
+                                                    <DataGridTextColumn Header="Số học sinh" Binding="{Binding TotalStudents}" Width="80"/>
+                                                    <DataGridTextColumn Header="Điểm danh (%)" Binding="{Binding AverageAttendancePercentage, StringFormat={}{0:F1}}" Width="100"/>
+                                                    <DataGridTextColumn Header="Kiểm tra SK" Binding="{Binding TotalHealthChecks}" Width="100"/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </ScrollViewer>
                         </Grid>
                     </DataTemplate>
                 </ContentControl.Resources>

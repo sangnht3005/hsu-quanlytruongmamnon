@@ -29,7 +29,8 @@ public class MainViewModel : ViewModelBase
         IngredientManagementViewModel ingredientManagementViewModel,
         DishManagementViewModel dishManagementViewModel,
         DailyMenuManagementViewModel dailyMenuManagementViewModel,
-        MealTicketManagementViewModel mealTicketManagementViewModel)
+        MealTicketManagementViewModel mealTicketManagementViewModel,
+        ReportingViewModel reportingViewModel)
     {
         DashboardViewModel = dashboardViewModel;
         StudentManagementViewModel = studentManagementViewModel;
@@ -51,6 +52,7 @@ public class MainViewModel : ViewModelBase
         DishManagementViewModel = dishManagementViewModel;
         DailyMenuManagementViewModel = dailyMenuManagementViewModel;
         MealTicketManagementViewModel = mealTicketManagementViewModel;
+        ReportingViewModel = reportingViewModel;
 
         NavigateCommand = new RelayCommand(Navigate);
         LogoutCommand = new RelayCommand(Logout);
@@ -103,6 +105,7 @@ public class MainViewModel : ViewModelBase
     public DishManagementViewModel DishManagementViewModel { get; }
     public DailyMenuManagementViewModel DailyMenuManagementViewModel { get; }
     public MealTicketManagementViewModel MealTicketManagementViewModel { get; }
+    public ReportingViewModel ReportingViewModel { get; }
 
     public ICommand NavigateCommand { get; }
     public ICommand LogoutCommand { get; }
@@ -134,6 +137,7 @@ public class MainViewModel : ViewModelBase
                 "Dishes" => DishManagementViewModel,
                 "DailyMenus" => DailyMenuManagementViewModel,
                 "MealTickets" => MealTicketManagementViewModel,
+                "Reporting" => ReportingViewModel,
                 _ => DashboardViewModel
             };
         }
