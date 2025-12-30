@@ -1,6 +1,8 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Microsoft.EntityFrameworkCore;
 using KindergartenManagement.BLO;
+using KindergartenManagement.DAO;
 using KindergartenManagement.DTO;
 
 namespace KindergartenManagement.ViewModels;
@@ -338,19 +340,24 @@ public class AccountManagementViewModel : ViewModelBase
 
 public class RolePermissionManagementViewModel : ViewModelBase
 {
-    private readonly IRoleBlo _roleBlo;
-    private readonly IPermissionBlo _permissionBlo;
+    private readonly KindergartenDbContext _context;
     
     private ObservableCollection<Role> _roles = new();
     private ObservableCollection<Permission> _permissions = new();
+    private ObservableCollection<PermissionCheckbox> _permissionCheckboxes = new();
     private Role? _selectedRole;
+    private string _roleName = string.Empty;
+    private string _roleDescription = string.Empty;
 
-    public RolePermissionManagementViewModel(IRoleBlo roleBlo, IPermissionBlo permissionBlo)
+    public RolePermissionManagementViewModel(KindergartenDbContext context)
     {
-        _roleBlo = roleBlo;
-        _permissionBlo = permissionBlo;
+        _context = context;
 
         LoadDataCommand = new AsyncRelayCommand(LoadDataAsync);
+        AddRoleCommand = new RelayCommand(AddRole);
+        SaveRoleCommand = new AsyncRelayCommand(SaveRoleAsync);
+        DeleteRoleCommand = new AsyncRelayCommand(DeleteRoleAsync, CanDeleteRole);
+        SavePermissionsCommand = new AsyncRelayCommand(SavePermissionsAsync);
     }
 
     public ObservableCollection<Role> Roles
@@ -365,29 +372,252 @@ public class RolePermissionManagementViewModel : ViewModelBase
         set => SetProperty(ref _permissions, value);
     }
 
+    public ObservableCollection<PermissionCheckbox> PermissionCheckboxes
+    {
+        get => _permissionCheckboxes;
+        set => SetProperty(ref _permissionCheckboxes, value);
+    }
+
     public Role? SelectedRole
     {
         get => _selectedRole;
-        set => SetProperty(ref _selectedRole, value);
+        set
+        {
+            if (SetProperty(ref _selectedRole, value))
+            {
+                if (value != null)
+                {
+                    RoleName = value.Name;
+                    RoleDescription = value.Description ?? string.Empty;
+                    _ = LoadRolePermissionsAsync();
+                }
+                else
+                {
+                    RoleName = string.Empty;
+                    RoleDescription = string.Empty;
+                }
+            }
+        }
+    }
+
+    public string RoleName
+    {
+        get => _roleName;
+        set => SetProperty(ref _roleName, value);
+    }
+
+    public string RoleDescription
+    {
+        get => _roleDescription;
+        set => SetProperty(ref _roleDescription, value);
     }
 
     public ICommand LoadDataCommand { get; }
+    public ICommand AddRoleCommand { get; }
+    public ICommand SaveRoleCommand { get; }
+    public ICommand DeleteRoleCommand { get; }
+    public ICommand SavePermissionsCommand { get; }
 
     private async Task LoadDataAsync(object? parameter)
     {
         try
         {
-            var roles = await _roleBlo.GetAllAsync();
+            var roles = await _context.Roles.ToListAsync();
             Roles = new ObservableCollection<Role>(roles);
 
-            var permissions = await _permissionBlo.GetAllAsync();
+            var permissions = await _context.Permissions.ToListAsync();
             Permissions = new ObservableCollection<Permission>(permissions);
+
+            // Initialize permission checkboxes
+            PermissionCheckboxes = new ObservableCollection<PermissionCheckbox>(
+                permissions.Select(p => new PermissionCheckbox
+                {
+                    Permission = p,
+                    IsChecked = false
+                })
+            );
         }
         catch (Exception ex)
         {
             System.Windows.MessageBox.Show($"Lỗi tải dữ liệu: {ex.Message}", "Lỗi", 
                 System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
         }
+    }
+
+    private async Task LoadRolePermissionsAsync()
+    {
+        if (SelectedRole == null) return;
+
+        try
+        {
+            var rolePermissions = await _context.RolePermissions
+                .Where(rp => rp.RoleId == SelectedRole.Id)
+                .Select(rp => rp.PermissionId)
+                .ToListAsync();
+
+            foreach (var checkbox in PermissionCheckboxes)
+            {
+                checkbox.IsChecked = rolePermissions.Contains(checkbox.Permission.Id);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi tải quyền: {ex.Message}", "Lỗi",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+    }
+
+    private void AddRole(object? parameter)
+    {
+        SelectedRole = new Role
+        {
+            Id = Guid.NewGuid(),
+            Name = string.Empty,
+            Description = string.Empty
+        };
+        RoleName = string.Empty;
+        RoleDescription = string.Empty;
+        
+        // Uncheck all permissions
+        foreach (var checkbox in PermissionCheckboxes)
+        {
+            checkbox.IsChecked = false;
+        }
+    }
+
+    private async Task SaveRoleAsync(object? parameter)
+    {
+        if (SelectedRole == null || string.IsNullOrWhiteSpace(RoleName))
+        {
+            System.Windows.MessageBox.Show("Vui lòng nhập tên vai trò!", "Cảnh báo",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+            return;
+        }
+
+        try
+        {
+            SelectedRole.Name = RoleName;
+            SelectedRole.Description = RoleDescription;
+
+            // Check if role is new or existing
+            var existingRole = await _context.Roles.FindAsync(SelectedRole.Id);
+            if (existingRole == null)
+            {
+                _context.Roles.Add(SelectedRole);
+            }
+            else
+            {
+                _context.Roles.Update(SelectedRole);
+            }
+
+            await _context.SaveChangesAsync();
+            
+            // Reload roles
+            var roles = await _context.Roles.ToListAsync();
+            Roles = new ObservableCollection<Role>(roles);
+            SelectedRole = Roles.FirstOrDefault(r => r.Id == SelectedRole.Id);
+
+            System.Windows.MessageBox.Show("Lưu vai trò thành công!", "Thành công",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi lưu vai trò: {ex.Message}", "Lỗi",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+    }
+
+    private bool CanDeleteRole(object? parameter)
+    {
+        return SelectedRole != null && SelectedRole.Id != Guid.Empty;
+    }
+
+    private async Task DeleteRoleAsync(object? parameter)
+    {
+        if (SelectedRole == null) return;
+
+        var result = System.Windows.MessageBox.Show(
+            $"Bạn có chắc muốn xóa vai trò '{SelectedRole.Name}'?",
+            "Xác nhận",
+            System.Windows.MessageBoxButton.YesNo,
+            System.Windows.MessageBoxImage.Question);
+
+        if (result != System.Windows.MessageBoxResult.Yes) return;
+
+        try
+        {
+            var roleToDelete = await _context.Roles.FindAsync(SelectedRole.Id);
+            if (roleToDelete != null)
+            {
+                _context.Roles.Remove(roleToDelete);
+                await _context.SaveChangesAsync();
+            }
+
+            var roles = await _context.Roles.ToListAsync();
+            Roles = new ObservableCollection<Role>(roles);
+            SelectedRole = null;
+
+            System.Windows.MessageBox.Show("Xóa vai trò thành công!", "Thành công",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi xóa vai trò: {ex.Message}", "Lỗi",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+    }
+
+    private async Task SavePermissionsAsync(object? parameter)
+    {
+        if (SelectedRole == null)
+        {
+            System.Windows.MessageBox.Show("Vui lòng chọn vai trò!", "Cảnh báo",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+            return;
+        }
+
+        try
+        {
+            // Remove all existing permissions for this role
+            var existingPermissions = await _context.RolePermissions
+                .Where(rp => rp.RoleId == SelectedRole.Id)
+                .ToListAsync();
+            _context.RolePermissions.RemoveRange(existingPermissions);
+
+            // Add selected permissions
+            var selectedPermissions = PermissionCheckboxes
+                .Where(cb => cb.IsChecked)
+                .Select(cb => new RolePermission
+                {
+                    RoleId = SelectedRole.Id,
+                    PermissionId = cb.Permission.Id
+                });
+
+            _context.RolePermissions.AddRange(selectedPermissions);
+            await _context.SaveChangesAsync();
+
+            System.Windows.MessageBox.Show("Lưu phân quyền thành công!", "Thành công",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi lưu phân quyền: {ex.Message}", "Lỗi",
+                System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+    }
+}
+
+// Helper class for permission checkboxes
+public class PermissionCheckbox : ViewModelBase
+{
+    private bool _isChecked;
+    
+    public Permission Permission { get; set; } = null!;
+    
+    public bool IsChecked
+    {
+        get => _isChecked;
+        set => SetProperty(ref _isChecked, value);
     }
 }
 

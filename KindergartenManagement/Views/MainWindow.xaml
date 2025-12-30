@@ -300,6 +300,15 @@
                                Foreground="White"
                                Margin="0,0,0,3"
                                Visibility="{Binding CanManageAccounts, Converter={StaticResource BoolToVis}}"/>
+                        
+                        <Button Content="   Vai trò &amp; Quyền"
+                               Command="{Binding NavigateCommand}"
+                               CommandParameter="RolePermission"
+                               Tag="{Binding CurrentPage, Converter={StaticResource PageToTagConverter}, ConverterParameter=RolePermission}"
+                               Style="{StaticResource MenuButton}"
+                               Foreground="White"
+                               Margin="0,0,0,3"
+                               Visibility="{Binding CanManageAccounts, Converter={StaticResource BoolToVis}}"/>
                     </StackPanel>
                 </ScrollViewer>
 
@@ -1556,6 +1565,89 @@
                                             <Button Content="💾 Lưu" Command="{Binding SaveAccountCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,10,0" ToolTip="Lưu thông tin tài khoản vào cơ sở dữ liệu" Foreground="White"/>
                                             <Button Content="🗑️ Xóa" Command="{Binding DeleteAccountCommand}" Style="{StaticResource DangerButton}" ToolTip="Xóa tài khoản đã chọn" Foreground="White"/>
                                         </StackPanel>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- Role Permission Management View -->
+                    <DataTemplate DataType="{x:Type vm:RolePermissionManagementViewModel}">
+                        <Grid util:AdaptiveGridBehavior.IsEnabled="True"
+                              util:AdaptiveGridBehavior.Breakpoint="1100">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" MinWidth="300"/>
+                                <ColumnDefinition Width="2*" MinWidth="400"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Left: Role List -->
+                            <Grid Grid.Column="0" Margin="0,0,10,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                                    <Grid>
+                                        <TextBlock Text="Danh sách vai trò" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                        <Button Content="🔄 Tải lại" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="10,5" FontSize="12"/>
+                                    </Grid>
+                                </Border>
+
+                                <Border Grid.Row="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15">
+                                    <DataGrid ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedRole}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="12">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Tên vai trò" Binding="{Binding Name}" Width="*"/>
+                                            <DataGridTextColumn Header="Mô tả" Binding="{Binding Description}" Width="2*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Border>
+                            </Grid>
+
+                            <!-- Right: Role Form and Permissions -->
+                            <Border Grid.Column="1" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="20">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel>
+                                        <TextBlock Text="Thông tin vai trò" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" Margin="0,0,0,20"/>
+
+                                        <TextBlock Text="Tên vai trò *" Margin="0,0,0,5"/>
+                                        <TextBox Text="{Binding RoleName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Padding="8" Margin="0,0,0,15" Height="40" Tag="VD: Teacher"/>
+
+                                        <TextBlock Text="Mô tả" Margin="0,0,0,5"/>
+                                        <TextBox Text="{Binding RoleDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Padding="8" Margin="0,0,0,15" Height="60" TextWrapping="Wrap" AcceptsReturn="True" 
+                                                 VerticalScrollBarVisibility="Auto" Tag="Mô tả vai trò"/>
+
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,20">
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddRoleCommand}" Style="{StaticResource PrimaryButton}" 
+                                                    Margin="0,0,10,0" ToolTip="Tạo vai trò mới" Foreground="White"/>
+                                            <Button Content="💾 Lưu vai trò" Command="{Binding SaveRoleCommand}" Style="{StaticResource SuccessButton}" 
+                                                    Margin="0,0,10,0" ToolTip="Lưu thông tin vai trò" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteRoleCommand}" Style="{StaticResource DangerButton}" 
+                                                    ToolTip="Xóa vai trò" Foreground="White"/>
+                                        </StackPanel>
+
+                                        <Separator Margin="0,0,0,20"/>
+
+                                        <Grid Margin="0,0,0,15">
+                                            <TextBlock Text="Phân quyền" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
+                                            <Button Content="💾 Lưu phân quyền" Command="{Binding SavePermissionsCommand}" 
+                                                    Style="{StaticResource SuccessButton}" HorizontalAlignment="Right" 
+                                                    Padding="12,5" FontSize="12" ToolTip="Lưu các quyền đã chọn" Foreground="White"/>
+                                        </Grid>
+
+                                        <TextBlock Text="Chọn các quyền cho vai trò này:" Margin="0,0,0,10" FontStyle="Italic"/>
+
+                                        <ItemsControl ItemsSource="{Binding PermissionCheckboxes}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" 
+                                                              Content="{Binding Permission.Name}" 
+                                                              Margin="0,5,0,5" FontSize="13"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
                                     </StackPanel>
                                 </ScrollViewer>
                             </Border>

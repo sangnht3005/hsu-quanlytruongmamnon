@@ -38,6 +38,7 @@ public class MainViewModel : ViewModelBase
         MenuManagementViewModel menuManagementViewModel,
         InvoiceManagementViewModel invoiceManagementViewModel,
         AccountManagementViewModel accountManagementViewModel,
+        RolePermissionManagementViewModel rolePermissionManagementViewModel,
         StaffManagementViewModel staffManagementViewModel,
         ParentManagementViewModel parentManagementViewModel,
         StaffLeaveManagementViewModel staffLeaveManagementViewModel,
@@ -63,6 +64,7 @@ public class MainViewModel : ViewModelBase
         MenuManagementViewModel = menuManagementViewModel;
         InvoiceManagementViewModel = invoiceManagementViewModel;
         AccountManagementViewModel = accountManagementViewModel;
+        RolePermissionManagementViewModel = rolePermissionManagementViewModel;
         StaffManagementViewModel = staffManagementViewModel;
         ParentManagementViewModel = parentManagementViewModel;
         StaffLeaveManagementViewModel = staffLeaveManagementViewModel;
@@ -221,6 +223,7 @@ public class MainViewModel : ViewModelBase
     public MenuManagementViewModel MenuManagementViewModel { get; }
     public InvoiceManagementViewModel InvoiceManagementViewModel { get; }
     public AccountManagementViewModel AccountManagementViewModel { get; }
+    public RolePermissionManagementViewModel RolePermissionManagementViewModel { get; }
     public StaffManagementViewModel StaffManagementViewModel { get; }
     public ParentManagementViewModel ParentManagementViewModel { get; }
     public StaffLeaveManagementViewModel StaffLeaveManagementViewModel { get; }
@@ -254,6 +257,7 @@ public class MainViewModel : ViewModelBase
                 "Menu" => MenuManagementViewModel,
                 "Invoice" => InvoiceManagementViewModel,
                 "Accounts" => AccountManagementViewModel,
+                "RolePermission" => RolePermissionManagementViewModel,
                 "Vaccines" => VaccineManagementViewModel,
                 "VaccinationRecords" => VaccinationRecordManagementViewModel,
                 "HealthRecords" => HealthRecordManagementViewModel,
