@@ -358,6 +358,9 @@ public class RolePermissionManagementViewModel : ViewModelBase
         SaveRoleCommand = new AsyncRelayCommand(SaveRoleAsync);
         DeleteRoleCommand = new AsyncRelayCommand(DeleteRoleAsync, CanDeleteRole);
         SavePermissionsCommand = new AsyncRelayCommand(SavePermissionsAsync);
+
+        // Auto-load data on initialization
+        _ = LoadDataAsync(null);
     }
 
     public ObservableCollection<Role> Roles
