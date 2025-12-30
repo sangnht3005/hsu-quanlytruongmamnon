@@ -41,6 +41,9 @@ public partial class App : Application
                 services.AddScoped<IFoodManagementDao, FoodManagementDao>();
                 services.AddScoped<IReportingDao, ReportingDao>();
 
+                // Register Tuition Fee DAOs
+                services.AddScoped<ITuitionFeeDao, TuitionFeeDao>();
+
                 // Register BLOs
                 services.AddScoped<IAccountBlo, AccountBlo>();
                 services.AddScoped<IRoleBlo, RoleBlo>();
@@ -61,6 +64,9 @@ public partial class App : Application
                 services.AddScoped<IVaccinationRecordBlo, VaccinationRecordBlo>();
                 services.AddScoped<IFoodManagementBlo, FoodManagementBlo>();
                 services.AddScoped<IReportingBlo, ReportingBlo>();
+
+                // Register Tuition Fee BLOs
+                services.AddScoped<ITuitionFeeBlo, TuitionFeeBlo>();
 
                 // Register ViewModels
                 services.AddTransient<MainViewModel>();
@@ -87,6 +93,7 @@ public partial class App : Application
                 services.AddTransient<DailyMenuManagementViewModel>();
                 services.AddTransient<MealTicketManagementViewModel>();
                 services.AddTransient<ReportingViewModel>();
+                services.AddTransient<TuitionFeeManagementViewModel>();
 
                 // Register Views
                 services.AddTransient<MainWindow>();

@@ -988,6 +988,47 @@ public class DatabaseSeeder
         _context.MenuDishes.AddRange(menuDishes);
         await _context.SaveChangesAsync();
 
-        Console.WriteLine("Database seeded successfully with all data including Phase 5!");
+        // Seed TuitionFees (Phase 7)
+        // Need to get grades first
+        var gradesForTuition = await _context.Grades.ToListAsync();
+        var tuitionFees = new List<TuitionFee>
+        {
+            new TuitionFee
+            {
+                GradeId = gradesForTuition[0].Id, // Nhà trẻ
+                MonthlyTuitionFee = 2500000,
+                DailyMealFee = 40000,
+                SchoolDaysPerMonth = 20,
+                EffectiveDate = DateTime.Now
+            },
+            new TuitionFee
+            {
+                GradeId = gradesForTuition[1].Id, // Mẫu giáo nhỏ
+                MonthlyTuitionFee = 2700000,
+                DailyMealFee = 42500,
+                SchoolDaysPerMonth = 20,
+                EffectiveDate = DateTime.Now
+            },
+            new TuitionFee
+            {
+                GradeId = gradesForTuition[2].Id, // Mẫu giáo vừa
+                MonthlyTuitionFee = 2900000,
+                DailyMealFee = 45000,
+                SchoolDaysPerMonth = 20,
+                EffectiveDate = DateTime.Now
+            },
+            new TuitionFee
+            {
+                GradeId = gradesForTuition[3].Id, // Mẫu giáo lớn
+                MonthlyTuitionFee = 3100000,
+                DailyMealFee = 47500,
+                SchoolDaysPerMonth = 20,
+                EffectiveDate = DateTime.Now
+            }
+        };
+        _context.TuitionFees.AddRange(tuitionFees);
+        await _context.SaveChangesAsync();
+
+        Console.WriteLine("Database seeded successfully with all data including Phase 7 TuitionFees!");
     }
 }

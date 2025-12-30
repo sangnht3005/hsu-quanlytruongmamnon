@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("KindergartenManagement")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+725ebeb325bdce62d276ba8e508352b20c7241d4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8fdb6a87f34b147dbecdffc72567910d1f6220c7")]
 [assembly: System.Reflection.AssemblyProductAttribute("KindergartenManagement")]
 [assembly: System.Reflection.AssemblyTitleAttribute("KindergartenManagement")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

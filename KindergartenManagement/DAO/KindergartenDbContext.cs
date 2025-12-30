@@ -28,6 +28,7 @@ public class KindergartenDbContext : DbContext
     public DbSet<StaffLeave> StaffLeaves { get; set; } = null!;
     public DbSet<Vaccine> Vaccines { get; set; } = null!;
     public DbSet<VaccinationRecord> VaccinationRecords { get; set; } = null!;
+    public DbSet<TuitionFee> TuitionFees { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

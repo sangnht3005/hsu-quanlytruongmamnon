@@ -863,6 +863,7 @@ public class InvoiceManagementViewModel : ViewModelBase
     private readonly IStudentBlo _studentBlo;
     private readonly IAttendanceBlo _attendanceBlo;
     private readonly IUserBlo _userBlo;
+    private readonly ITuitionFeeBlo _tuitionFeeBlo;
 
     private ObservableCollection<Invoice> _invoices = new();
     private ObservableCollection<Invoice> _tuitionInvoices = new();
@@ -876,13 +877,14 @@ public class InvoiceManagementViewModel : ViewModelBase
     private DateTime _invoiceMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
     private bool _isLoading;
 
-    public InvoiceManagementViewModel(IInvoiceBlo invoiceBlo, IClassBlo classBlo, IStudentBlo studentBlo, IAttendanceBlo attendanceBlo, IUserBlo userBlo)
+    public InvoiceManagementViewModel(IInvoiceBlo invoiceBlo, IClassBlo classBlo, IStudentBlo studentBlo, IAttendanceBlo attendanceBlo, IUserBlo userBlo, ITuitionFeeBlo tuitionFeeBlo)
     {
         _invoiceBlo = invoiceBlo;
         _classBlo = classBlo;
         _studentBlo = studentBlo;
         _attendanceBlo = attendanceBlo;
         _userBlo = userBlo;
+        _tuitionFeeBlo = tuitionFeeBlo;
 
         LoadDataCommand = new AsyncRelayCommand(LoadDataAsync);
         CreateInvoiceCommand = new AsyncRelayCommand(CreateInvoiceAsync);
@@ -1160,8 +1162,13 @@ public class InvoiceManagementViewModel : ViewModelBase
 
                     decimal totalMealRefund = monthAbsences.Sum(a => a.DailyMealRefund);
                     decimal previousBalance = prevMonthAbsences.Sum(a => a.DailyMealRefund);
-                    decimal baseTuition = selectedClass.TuitionFee;
-                    decimal mealFee = selectedClass.MealFee;
+                    
+                    // Get tuition fee from TuitionFee table based on grade
+                    var tuitionFee = await _tuitionFeeBlo.GetByGradeIdAsync(selectedClass.GradeId);
+                    decimal baseTuition = tuitionFee?.MonthlyTuitionFee ?? selectedClass.TuitionFee;
+                    decimal mealFeePerDay = tuitionFee?.DailyMealFee ?? (selectedClass.MealFee / 20);
+                    int schoolDaysPerMonth = tuitionFee?.SchoolDaysPerMonth ?? 20;
+                    decimal mealFee = mealFeePerDay * schoolDaysPerMonth;
 
                     decimal totalAmount = baseTuition + mealFee - totalMealRefund - previousBalance;
 
