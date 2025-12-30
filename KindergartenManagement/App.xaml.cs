@@ -128,10 +128,6 @@ public partial class App : Application
             var dbContext = _host.Services.GetRequiredService<KindergartenDbContext>();
             await dbContext.Database.EnsureCreatedAsync();
 
-            // Seed database with sample data
-            var seeder = new Utilities.DatabaseSeeder(dbContext);
-            await seeder.SeedAsync();
-
             // Show login window
             var loginWindow = _host.Services.GetRequiredService<LoginWindow>();
             loginWindow.Show();
