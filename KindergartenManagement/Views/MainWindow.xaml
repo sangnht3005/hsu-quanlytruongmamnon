@@ -442,7 +442,7 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,15">
                                             <TextBlock Text="Thông tin học sinh" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddStudentCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập học sinh mới"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddStudentCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập học sinh mới" Foreground="White"/>
                                         </Grid>
 
                                         <TextBlock Text="Họ và tên *" Margin="0,0,0,5" FontSize="12"/>
@@ -473,8 +473,8 @@
                                         <ComboBox ItemsSource="{Binding Classes}" SelectedValue="{Binding SelectedStudent.ClassId}" SelectedValuePath="Id" DisplayMemberPath="Name" Padding="6" Margin="0,0,0,15" FontSize="12"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="💾 Lưu" Command="{Binding SaveStudentCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin học sinh vào cơ sở dữ liệu"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteStudentCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa học sinh đã chọn"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveStudentCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin học sinh vào cơ sở dữ liệu" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteStudentCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa học sinh đã chọn" Foreground="White"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -536,9 +536,9 @@
                                         <TextBox Text="{Binding SelectedGrade.Description, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,20" Height="80" TextWrapping="Wrap" AcceptsReturn="True"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddGradeCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" ToolTip="Tạo form trống để nhập khối lớp mới"/>
-                                            <Button Content="💾 Lưu" Command="{Binding SaveGradeCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" ToolTip="Lưu thông tin khối lớp vào cơ sở dữ liệu"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteGradeCommand}" Style="{StaticResource DangerButton}" ToolTip="Xóa khối lớp đã chọn"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddGradeCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" ToolTip="Tạo form trống để nhập khối lớp mới" Foreground="White"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveGradeCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,10,0" ToolTip="Lưu thông tin khối lớp vào cơ sở dữ liệu" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteGradeCommand}" Style="{StaticResource DangerButton}" ToolTip="Xóa khối lớp đã chọn" Foreground="White"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -582,7 +582,7 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,10">
                                             <TextBlock Text="Thông tin thực đơn" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource PrimaryColor}"/>
-                                            <Button Content="➕ Thêm mới" Command="{Binding AddNewCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                            <Button Content="➕ Thêm mới" Command="{Binding AddNewCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Foreground="White"/>
                                         </Grid>
                                         <Border Background="#f7f7f7" CornerRadius="8" Padding="10" Margin="0,0,0,10">
                                             <StackPanel>
@@ -593,7 +593,7 @@
                                                     <CheckBox Content="Snack" IsChecked="{Binding AutoSnack, Mode=TwoWay}" Margin="0,0,12,0"/>
                                                     <CheckBox Content="Dinner" IsChecked="{Binding AutoDinner, Mode=TwoWay}"/>
                                                 </StackPanel>
-                                                <Button Content="💾 Lưu cấu hình" Command="{Binding SaveAutoSettingsCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Margin="0,8,0,0"/>
+                                                <Button Content="💾 Lưu cấu hình" Command="{Binding SaveAutoSettingsCommand}" Style="{StaticResource SuccessButton}" HorizontalAlignment="Right" Margin="0,8,0,0" Foreground="White"/>
                                             </StackPanel>
                                         </Border>
                                         <Border Background="#f7f7f7" CornerRadius="8" Padding="10" Margin="0,0,0,10">
@@ -606,7 +606,7 @@
                                                     <TextBlock Text="Tạo phiếu ăn theo ngày" FontWeight="SemiBold"/>
                                                     <DatePicker SelectedDate="{Binding GenerationDate, Mode=TwoWay}" Margin="0,6,0,0"/>
                                                 </StackPanel>
-                                                <Button Grid.Column="1" Content="🎫 Tạo phiếu" Command="{Binding GenerateMealTicketsCommand}" Style="{StaticResource PrimaryButton}" Margin="8,22,0,0"/>
+                                                <Button Grid.Column="1" Content="🎫 Tạo phiếu" Command="{Binding GenerateMealTicketsCommand}" Style="{StaticResource PrimaryButton}" Margin="8,22,0,0" Foreground="White"/>
                                             </Grid>
                                         </Border>
                                         <Grid>
@@ -641,8 +641,8 @@
                                             </StackPanel>
                                         </Grid>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
-                                            <Button Content="💾 Lưu" Command="{Binding SaveMenuCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteMenuCommand}" Style="{StaticResource DangerButton}"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveMenuCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,6,0" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteMenuCommand}" Style="{StaticResource DangerButton}" Foreground="White"/>
                                         </StackPanel>
 
                                         <Border Background="#f7f7f7" CornerRadius="8" Padding="10" Margin="0,12,0,0">
@@ -671,8 +671,8 @@
                                                     </Grid.ColumnDefinitions>
                                                     <ComboBox Grid.Column="0" ItemsSource="{Binding Dishes}" SelectedItem="{Binding SelectedDishToAdd}" DisplayMemberPath="Name" Padding="6" Margin="0,0,6,0"/>
                                                     <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                                        <Button Content="➕ Thêm" Command="{Binding AddDishCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"/>
-                                                        <Button Content="🗑️ Xóa" Command="{Binding RemoveDishCommand}" Style="{StaticResource DangerButton}"/>
+                                                        <Button Content="➕ Thêm" Command="{Binding AddDishCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0" Foreground="White"/>
+                                                        <Button Content="🗑️ Xóa" Command="{Binding RemoveDishCommand}" Style="{StaticResource DangerButton}" Foreground="White"/>
                                                     </StackPanel>
                                                 </Grid>
                                             </StackPanel>
@@ -728,8 +728,8 @@
                                     <TextBlock Text="Ghi chú" Margin="0,8,0,4"/>
                                     <TextBox Text="{Binding Notes, Mode=TwoWay}" Height="80" TextWrapping="Wrap" AcceptsReturn="True"/>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
-                                        <Button Content="💾 Lưu" Command="{Binding SaveMealTicketCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"/>
-                                        <Button Content="🗑️ Xóa" Command="{Binding DeleteMealTicketCommand}" Style="{StaticResource DangerButton}"/>
+                                        <Button Content="💾 Lưu" Command="{Binding SaveMealTicketCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,6,0" Foreground="White"/>
+                                        <Button Content="🗑️ Xóa" Command="{Binding DeleteMealTicketCommand}" Style="{StaticResource DangerButton}" Foreground="White"/>
                                     </StackPanel>
                                 </StackPanel>
                             </Border>
@@ -767,7 +767,7 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,10">
                                             <TextBlock Text="Thông tin NCC" FontSize="16" FontWeight="SemiBold"/>
-                                            <Button Content="➕ Thêm mới" Command="{Binding AddNewCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                            <Button Content="➕ Thêm mới" Command="{Binding AddNewCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Foreground="White"/>
                                         </Grid>
                                         <TextBlock Text="Tên *"/>
                                         <TextBox Text="{Binding Name, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
@@ -783,8 +783,8 @@
                                         <TextBox Text="{Binding Notes, Mode=TwoWay}" Padding="6" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,8"/>
                                         <CheckBox Content="Đang hoạt động" IsChecked="{Binding IsActive, Mode=TwoWay}"/>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
-                                            <Button Content="💾 Lưu" Command="{Binding SaveSupplierCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteSupplierCommand}" Style="{StaticResource DangerButton}"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveSupplierCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,6,0" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteSupplierCommand}" Style="{StaticResource DangerButton}" Foreground="White"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -824,7 +824,7 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,10">
                                             <TextBlock Text="Thông tin nguyên liệu" FontSize="16" FontWeight="SemiBold"/>
-                                            <Button Content="➕ Thêm mới" Command="{Binding AddNewCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right"/>
+                                            <Button Content="➕ Thêm mới" Command="{Binding AddNewCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Foreground="White"/>
                                         </Grid>
                                         <TextBlock Text="Tên *"/>
                                         <TextBox Text="{Binding Name, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
@@ -840,8 +840,8 @@
                                         <ComboBox ItemsSource="{Binding Suppliers}" SelectedValue="{Binding SupplierId, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="Name" Padding="6" Margin="0,0,0,8"/>
                                         <CheckBox Content="Đang hoạt động" IsChecked="{Binding IsActive, Mode=TwoWay}"/>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
-                                            <Button Content="💾 Lưu" Command="{Binding SaveIngredientCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteIngredientCommand}" Style="{StaticResource DangerButton}"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveIngredientCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,6,0" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteIngredientCommand}" Style="{StaticResource DangerButton}" Foreground="White"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -882,7 +882,7 @@
                                             <TextBlock Text="Thông tin món" FontSize="16" FontWeight="SemiBold"/>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                                 <Button Content="🧮 Tính lại" Command="{Binding RecalculateCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,6,0"/>
-                                                <Button Content="➕ Thêm mới" Command="{Binding AddNewCommand}" Style="{StaticResource SecondaryButton}"/>
+                                                <Button Content="➕ Thêm mới" Command="{Binding AddNewCommand}" Style="{StaticResource PrimaryButton}" Foreground="White"/>
                                             </StackPanel>
                                         </Grid>
                                         <Grid>
@@ -905,8 +905,8 @@
                                         </Grid>
                                         <CheckBox Content="Đang hoạt động" IsChecked="{Binding IsActive, Mode=TwoWay}"/>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
-                                            <Button Content="💾 Lưu" Command="{Binding SaveDishCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteDishCommand}" Style="{StaticResource DangerButton}"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveDishCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,6,0" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteDishCommand}" Style="{StaticResource DangerButton}" Foreground="White"/>
                                         </StackPanel>
 
                                         <Border Background="#f7f7f7" CornerRadius="8" Padding="10" Margin="0,12,0,0">
@@ -989,7 +989,7 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,15">
                                             <TextBlock Text="Thông tin lớp học" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddClassCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập lớp học mới"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddClassCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập lớp học mới" Foreground="White"/>
                                         </Grid>
 
                                         <TextBlock Text="Tên lớp *" Margin="0,0,0,5" FontSize="12"/>
@@ -1005,8 +1005,8 @@
                                         <TextBox Text="{Binding SelectedClass.Capacity}" Padding="6" Margin="0,0,0,15" FontSize="12"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="💾 Lưu" Command="{Binding SaveClassCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin lớp học vào cơ sở dữ liệu"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteClassCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa lớp học đã chọn"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveClassCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin lớp học vào cơ sở dữ liệu" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteClassCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa lớp học đã chọn" Foreground="White"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -1397,9 +1397,9 @@
                                     <!-- Action Buttons -->
                                     <Border Grid.Row="0" Background="{StaticResource SurfaceColor}" CornerRadius="10" Padding="15" Margin="15">
                                         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                            <Button Content="➕ Tạo mới" Command="{Binding CreateInvoiceCommand}" Style="{StaticResource SecondaryButton}" Padding="10,4" FontSize="11" Margin="0,0,10,0"/>
-                                            <Button Content="💾 Lưu" Command="{Binding SaveInvoiceCommand}" Style="{StaticResource PrimaryButton}" Padding="10,4" FontSize="11" Margin="0,0,10,0"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteInvoiceCommand}" Style="{StaticResource DangerButton}" Padding="10,4" FontSize="11"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding CreateInvoiceCommand}" Style="{StaticResource PrimaryButton}" Padding="10,4" FontSize="11" Margin="0,0,10,0" Foreground="White"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveInvoiceCommand}" Style="{StaticResource SuccessButton}" Padding="10,4" FontSize="11" Margin="0,0,10,0" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteInvoiceCommand}" Style="{StaticResource DangerButton}" Padding="10,4" FontSize="11" Foreground="White"/>
                                         </StackPanel>
                                     </Border>
 
@@ -1523,9 +1523,9 @@
                                         <CheckBox Content="Kích hoạt tài khoản" IsChecked="{Binding SelectedAccount.IsActive, Mode=TwoWay}" Margin="0,0,0,20"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddAccountCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0" ToolTip="Tạo form trống để nhập tài khoản mới"/>
-                                            <Button Content="💾 Lưu" Command="{Binding SaveAccountCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" ToolTip="Lưu thông tin tài khoản vào cơ sở dữ liệu"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteAccountCommand}" Style="{StaticResource DangerButton}" ToolTip="Xóa tài khoản đã chọn"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddAccountCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" ToolTip="Tạo form trống để nhập tài khoản mới" Foreground="White"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveAccountCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,10,0" ToolTip="Lưu thông tin tài khoản vào cơ sở dữ liệu" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteAccountCommand}" Style="{StaticResource DangerButton}" ToolTip="Xóa tài khoản đã chọn" Foreground="White"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -1573,7 +1573,7 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,15">
                                             <TextBlock Text="Thông tin nhân viên" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddStaffCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập nhân viên mới"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddStaffCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập nhân viên mới" Foreground="White"/>
                                         </Grid>
 
                                         <TextBlock Text="Họ và tên *" Margin="0,0,0,5" FontSize="12"/>
@@ -1604,8 +1604,8 @@
                                         <TextBox Text="{Binding SelectedStaff.Specialization, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,15" FontSize="12"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="💾 Lưu" Command="{Binding SaveStaffCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin nhân viên vào cơ sở dữ liệu"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteStaffCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa nhân viên đã chọn"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveStaffCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin nhân viên vào cơ sở dữ liệu" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteStaffCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa nhân viên đã chọn" Foreground="White"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -1653,7 +1653,7 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,15">
                                             <TextBlock Text="Thông tin phụ huynh" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddParentCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập phụ huynh mới"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddParentCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập phụ huynh mới" Foreground="White"/>
                                         </Grid>
 
                                         <TextBlock Text="Họ và tên *" Margin="0,0,0,5" FontSize="12"/>
@@ -1672,8 +1672,8 @@
                                         <TextBox Text="{Binding SelectedParent.Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,15" Height="50" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="💾 Lưu" Command="{Binding SaveParentCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin phụ huynh vào cơ sở dữ liệu"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteParentCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa phụ huynh đã chọn"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveParentCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin phụ huynh vào cơ sở dữ liệu" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteParentCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa phụ huynh đã chọn" Foreground="White"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -1723,7 +1723,7 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,15">
                                             <TextBlock Text="Thông tin đơn nghỉ" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddLeaveCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập đơn nghỉ mới"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddLeaveCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" ToolTip="Tạo form trống để nhập đơn nghỉ mới" Foreground="White"/>
                                         </Grid>
 
                                         <TextBlock Text="Nhân viên *" Margin="0,0,0,5" FontSize="12"/>
@@ -1771,8 +1771,8 @@
                                                  IsReadOnly="{Binding CanEditApprovalNotes, Converter={StaticResource InverseBooleanConverter}}"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="💾 Lưu" Command="{Binding SaveLeaveCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin đơn nghỉ vào cơ sở dữ liệu"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteLeaveCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa đơn nghỉ đã chọn"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveLeaveCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin đơn nghỉ vào cơ sở dữ liệu" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteLeaveCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" ToolTip="Xóa đơn nghỉ đã chọn" Foreground="White"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -1820,7 +1820,7 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,15">
                                             <TextBlock Text="Thông tin Vaccine" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddVaccineCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddVaccineCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" Foreground="White"/>
                                         </Grid>
 
                                         <TextBlock Text="Tên Vaccine *" Margin="0,0,0,5" FontSize="12"/>
@@ -1838,8 +1838,8 @@
                                         <CheckBox Content="Vaccine bắt buộc" IsChecked="{Binding SelectedVaccine.IsMandatory, Mode=TwoWay}" Margin="0,0,0,15" FontSize="12"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="💾 Lưu" Command="{Binding SaveVaccineCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteVaccineCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveVaccineCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteVaccineCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" Foreground="White"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -1936,7 +1936,7 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,15">
                                             <TextBlock Text="Thông tin tiêm chủng" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddRecordCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddRecordCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" Foreground="White"/>
                                         </Grid>
 
                                         <TextBlock Text="Học sinh *" Margin="0,0,0,5" FontSize="12"/>
@@ -1965,8 +1965,8 @@
                                         <TextBox Text="{Binding SelectedRecord.Notes, Mode=TwoWay}" Padding="6" Margin="0,0,0,15" Height="60" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="💾 Lưu" Command="{Binding SaveRecordCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteRecordCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveRecordCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteRecordCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" Foreground="White"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -2060,7 +2060,7 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,15">
                                             <TextBlock Text="Thông tin sức khỏe" FontSize="18" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center"/>
-                                            <Button Content="➕ Tạo mới" Command="{Binding AddRecordCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12"/>
+                                            <Button Content="➕ Tạo mới" Command="{Binding AddRecordCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Padding="12,5" FontSize="12" Foreground="White"/>
                                         </Grid>
 
                                         <TextBlock Text="Học sinh *" Margin="0,0,0,5" FontSize="12"/>
@@ -2122,8 +2122,8 @@
                                         <TextBox Text="{Binding SelectedRecord.Notes, Mode=TwoWay}" Padding="6" Margin="0,0,0,15" Height="50" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="💾 Lưu" Command="{Binding SaveRecordCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteRecordCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveRecordCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteRecordCommand}" Style="{StaticResource DangerButton}" Padding="15,6" FontSize="12" Foreground="White"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -2436,9 +2436,9 @@
                                             <TextBlock Text="Danh sách khối lớp" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextPrimaryColor}" Margin="0,0,0,10"/>
                                         </StackPanel>
 
-                                        <Button Grid.Row="1" Content="➕ Thêm mới" Command="{Binding AddTuitionFeeCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,0,10"/>
+                                        <Button Grid.Row="1" Content="➕ Thêm mới" Command="{Binding AddTuitionFeeCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,0,10" Foreground="White"/>
 
-                                        <DataGrid Grid.Row="2" ItemsSource="{Binding TuitionFees}" SelectedItem="{Binding SelectedTuitionFee}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="11" CanUserAddRows="False">
+                                        <DataGrid Grid.Row="2" ItemsSource="{Binding TuitionFees}" SelectedItem="{Binding SelectedTuitionFee}" AutoGenerateColumns="False" IsReadOnly="True" FontSize="13" RowHeight="45" CanUserAddRows="False">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Header="Khối" Binding="{Binding GradeName}" Width="*"/>
                                                 <DataGridTextColumn Header="Học phí (đ)" Binding="{Binding MonthlyTuitionFee, StringFormat={}{0:N0}}" Width="*"/>
@@ -2496,8 +2496,8 @@
 
                                         <!-- Action Buttons -->
                                         <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button Content="💾 Lưu" Command="{Binding SaveTuitionFeeCommand}" Style="{StaticResource PrimaryButton}" MinWidth="100" Margin="0,0,10,0"/>
-                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteTuitionFeeCommand}" Background="{StaticResource DangerColor}" MinWidth="100"/>
+                                            <Button Content="💾 Lưu" Command="{Binding SaveTuitionFeeCommand}" Style="{StaticResource SuccessButton}" MinWidth="100" Margin="0,0,10,0" Foreground="White"/>
+                                            <Button Content="🗑️ Xóa" Command="{Binding DeleteTuitionFeeCommand}" Style="{StaticResource DangerButton}" MinWidth="100" Foreground="White"/>
                                         </StackPanel>
                                     </Grid>
                                 </Border>
