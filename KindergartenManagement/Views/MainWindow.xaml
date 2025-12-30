@@ -1643,7 +1643,7 @@
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" 
-                                                              Content="{Binding Permission.Name}" 
+                                                              Content="{Binding Permission.DisplayName}" 
                                                               Margin="0,5,0,5" FontSize="13"/>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>

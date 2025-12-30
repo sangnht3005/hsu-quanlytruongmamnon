@@ -49,19 +49,19 @@ namespace KindergartenManagement.Utilities
             // 3. Create Permissions
             var permissions = new[]
             {
-                new Permission { Name = "ViewDashboard", Description = "Xem bảng điều khiển" },
-                new Permission { Name = "ManageStudents", Description = "Quản lý học sinh" },
-                new Permission { Name = "ManageClasses", Description = "Quản lý lớp học" },
-                new Permission { Name = "ManageStaff", Description = "Quản lý nhân viên" },
-                new Permission { Name = "ManageParents", Description = "Quản lý phụ huynh" },
-                new Permission { Name = "ManageAccounts", Description = "Quản lý tài khoản" },
-                new Permission { Name = "ManageGrades", Description = "Quản lý khối lớp" },
-                new Permission { Name = "ManageAttendance", Description = "Quản lý điểm danh" },
-                new Permission { Name = "ManageHealth", Description = "Quản lý sức khỏe" },
-                new Permission { Name = "ManageFinance", Description = "Quản lý tài chính" },
-                new Permission { Name = "ManageMenu", Description = "Quản lý thực đơn" },
-                new Permission { Name = "ManageLeave", Description = "Quản lý nghỉ phép" },
-                new Permission { Name = "ViewReports", Description = "Xem báo cáo" }
+                new Permission { Name = "ViewDashboard", DisplayName = "Xem tổng quan", Description = "Xem bảng điều khiển" },
+                new Permission { Name = "ManageStudents", DisplayName = "Quản lý học sinh", Description = "Quản lý học sinh" },
+                new Permission { Name = "ManageClasses", DisplayName = "Quản lý lớp học", Description = "Quản lý lớp học" },
+                new Permission { Name = "ManageStaff", DisplayName = "Quản lý nhân viên", Description = "Quản lý nhân viên" },
+                new Permission { Name = "ManageParents", DisplayName = "Quản lý phụ huynh", Description = "Quản lý phụ huynh" },
+                new Permission { Name = "ManageAccounts", DisplayName = "Quản lý tài khoản", Description = "Quản lý tài khoản" },
+                new Permission { Name = "ManageGrades", DisplayName = "Quản lý khối lớp", Description = "Quản lý khối lớp" },
+                new Permission { Name = "ManageAttendance", DisplayName = "Quản lý điểm danh", Description = "Quản lý điểm danh" },
+                new Permission { Name = "ManageHealth", DisplayName = "Quản lý sức khỏe", Description = "Quản lý sức khỏe" },
+                new Permission { Name = "ManageFinance", DisplayName = "Quản lý tài chính", Description = "Quản lý tài chính" },
+                new Permission { Name = "ManageMenu", DisplayName = "Quản lý thực đơn", Description = "Quản lý thực đơn" },
+                new Permission { Name = "ManageLeave", DisplayName = "Quản lý nghỉ phép", Description = "Quản lý nghỉ phép" },
+                new Permission { Name = "ViewReports", DisplayName = "Xem báo cáo", Description = "Xem báo cáo" }
             };
 
             _context.Permissions.AddRange(permissions);

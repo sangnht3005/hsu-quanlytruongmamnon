@@ -12,6 +12,9 @@ public class Permission
     public string Name { get; set; } = string.Empty;
 
     [MaxLength(500)]
+    public string? DisplayName { get; set; }
+
+    [MaxLength(500)]
     public string? Description { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
