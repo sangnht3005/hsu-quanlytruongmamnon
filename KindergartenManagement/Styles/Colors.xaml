@@ -12,6 +12,8 @@
     <SolidColorBrush x:Key="BackgroundColor" Color="#F5F5F5"/>
     <SolidColorBrush x:Key="SurfaceColor" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="TextPrimaryColor" Color="#212121"/>
+    <!-- Alias for general text usage -->
+    <SolidColorBrush x:Key="TextColor" Color="#212121"/>
     <SolidColorBrush x:Key="TextSecondaryColor" Color="#757575"/>
     <SolidColorBrush x:Key="BorderColor" Color="#E0E0E0"/>
     

@@ -16,6 +16,12 @@ public class Class
 
     public int Capacity { get; set; }
 
+    // Monthly tuition fee for this class
+    public decimal TuitionFee { get; set; } = 0;
+
+    // Monthly meal fee for this class
+    public decimal MealFee { get; set; } = 0;
+
     public Guid? TeacherId { get; set; }
     public User? Teacher { get; set; }
 

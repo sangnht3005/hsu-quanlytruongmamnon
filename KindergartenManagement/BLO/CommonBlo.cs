@@ -35,7 +35,17 @@ public class StudentBlo : IStudentBlo
 
     public async Task<IEnumerable<Student>> GetAllAsync()
     {
-        return await _studentDao.GetAllAsync();
+        try
+        {
+            var result = await _studentDao.GetAllAsync();
+            System.Diagnostics.Debug.WriteLine($"StudentBlo.GetAllAsync: Loaded {result?.Count() ?? 0} students");
+            return result ?? new List<Student>();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"StudentBlo.GetAllAsync error: {ex.Message}");
+            throw;
+        }
     }
 
     public async Task<IEnumerable<Student>> GetByClassIdAsync(Guid classId)

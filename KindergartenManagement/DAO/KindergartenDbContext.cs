@@ -137,6 +137,11 @@ public class KindergartenDbContext : DbContext
             .HasIndex(hr => new { hr.StudentId, hr.Month, hr.Year })
             .IsUnique();
 
+        // Invoice: enforce unique invoice number
+        modelBuilder.Entity<Invoice>()
+            .HasIndex(i => i.InvoiceNumber)
+            .IsUnique();
+
         base.OnModelCreating(modelBuilder);
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Text.RegularExpressions;
 using KindergartenManagement.BLO;
 using KindergartenManagement.DTO;
 
@@ -858,10 +859,428 @@ public class MenuManagementViewModel : ViewModelBase
 public class InvoiceManagementViewModel : ViewModelBase
 {
     private readonly IInvoiceBlo _invoiceBlo;
+    private readonly IClassBlo _classBlo;
+    private readonly IStudentBlo _studentBlo;
+    private readonly IAttendanceBlo _attendanceBlo;
+    private readonly IUserBlo _userBlo;
 
-    public InvoiceManagementViewModel(IInvoiceBlo invoiceBlo)
+    private ObservableCollection<Invoice> _invoices = new();
+    private ObservableCollection<Invoice> _tuitionInvoices = new();
+    private ObservableCollection<Invoice> _salaryInvoices = new();
+    private ObservableCollection<Invoice> _otherInvoices = new();
+    private ObservableCollection<Class> _classes = new();
+    private ObservableCollection<User> _users = new();
+    private Invoice? _selectedInvoice;
+    private Class? _selectedClass;
+    private Class? _selectedClassFilter;
+    private DateTime _invoiceMonth = DateTime.Today;
+    private bool _isLoading;
+
+    public InvoiceManagementViewModel(IInvoiceBlo invoiceBlo, IClassBlo classBlo, IStudentBlo studentBlo, IAttendanceBlo attendanceBlo, IUserBlo userBlo)
     {
         _invoiceBlo = invoiceBlo;
+        _classBlo = classBlo;
+        _studentBlo = studentBlo;
+        _attendanceBlo = attendanceBlo;
+        _userBlo = userBlo;
+
+        LoadDataCommand = new AsyncRelayCommand(LoadDataAsync);
+        CreateInvoiceCommand = new AsyncRelayCommand(CreateInvoiceAsync);
+        SaveInvoiceCommand = new AsyncRelayCommand(SaveInvoiceAsync);
+        DeleteInvoiceCommand = new AsyncRelayCommand(DeleteInvoiceAsync);
+        CreateBatchTuitionInvoicesCommand = new AsyncRelayCommand(CreateBatchTuitionInvoicesAsync);
+        CreateBatchSalaryInvoicesCommand = new AsyncRelayCommand(CreateBatchSalaryInvoicesAsync);
+
+        // Auto load
+        _ = LoadDataAsync(null);
+    }
+
+    public ObservableCollection<Invoice> Invoices
+    {
+        get => _invoices;
+        set => SetProperty(ref _invoices, value);
+    }
+
+    public ObservableCollection<Invoice> TuitionInvoices
+    {
+        get => _tuitionInvoices;
+        set => SetProperty(ref _tuitionInvoices, value);
+    }
+
+    public ObservableCollection<Invoice> SalaryInvoices
+    {
+        get => _salaryInvoices;
+        set => SetProperty(ref _salaryInvoices, value);
+    }
+
+    public ObservableCollection<Invoice> OtherInvoices
+    {
+        get => _otherInvoices;
+        set => SetProperty(ref _otherInvoices, value);
+    }
+
+    public ObservableCollection<Class> Classes
+    {
+        get => _classes;
+        set => SetProperty(ref _classes, value);
+    }
+
+    public ObservableCollection<User> Users
+    {
+        get => _users;
+        set => SetProperty(ref _users, value);
+    }
+
+    public Invoice? SelectedInvoice
+    {
+        get => _selectedInvoice;
+        set => SetProperty(ref _selectedInvoice, value);
+    }
+
+    public Class? SelectedClass
+    {
+        get => _selectedClass;
+        set => SetProperty(ref _selectedClass, value);
+    }
+
+    public Class? SelectedClassFilter
+    {
+        get => _selectedClassFilter;
+        set
+        {
+            if (SetProperty(ref _selectedClassFilter, value))
+            {
+                FilterInvoicesByType();
+            }
+        }
+    }
+
+    public DateTime InvoiceMonth
+    {
+        get => _invoiceMonth;
+        set => SetProperty(ref _invoiceMonth, value);
+    }
+
+    public bool IsLoading
+    {
+        get => _isLoading;
+        set => SetProperty(ref _isLoading, value);
+    }
+
+    public List<string> InvoiceStatuses { get; } = new() { "Tất cả", "Chưa thanh toán", "Đã thanh toán", "Quá hạn", "Hủy" };
+    public List<string> InvoiceTypes { get; } = new() { "Tất cả", "Học phí", "Lương", "Sửa chữa", "Khác" };
+    public List<string> OtherInvoiceTypes { get; } = new() { "Sửa chữa", "Bảo trì", "Khác", "Đơn vị ngoài", "Phí dịch vụ" };
+
+    public ICommand LoadDataCommand { get; }
+    public ICommand CreateInvoiceCommand { get; }
+    public ICommand SaveInvoiceCommand { get; }
+    public ICommand DeleteInvoiceCommand { get; }
+    public ICommand CreateBatchTuitionInvoicesCommand { get; }
+    public ICommand CreateBatchSalaryInvoicesCommand { get; }
+
+    private async Task LoadDataAsync(object? parameter)
+    {
+        try
+        {
+            IsLoading = true;
+            var all = await _invoiceBlo.GetAllAsync();
+            Invoices = new ObservableCollection<Invoice>(all ?? Enumerable.Empty<Invoice>());
+
+            var classes = await _classBlo.GetAllAsync();
+            Classes = new ObservableCollection<Class>(classes ?? Enumerable.Empty<Class>());
+
+            var users = await _userBlo.GetAllAsync();
+            Users = new ObservableCollection<User>(users ?? Enumerable.Empty<User>());
+
+            FilterInvoicesByType();
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi tải hóa đơn: {ex.Message}", "Lỗi", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private Task CreateInvoiceAsync(object? parameter)
+    {
+        SelectedInvoice = new Invoice
+        {
+            InvoiceNumber = GenerateInvoiceNumber("HD"),
+            Type = "Học phí",
+            Amount = 0,
+            IssueDate = DateTime.Today,
+            DueDate = DateTime.Today.AddDays(7),
+            Status = "Chưa thanh toán",
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
+        };
+        System.Windows.MessageBox.Show("Hãy điền thông tin và bấm Lưu để lưu hóa đơn", "Thông báo", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+        return Task.CompletedTask;
+    }
+
+    private async Task SaveInvoiceAsync(object? parameter)
+    {
+        if (SelectedInvoice == null)
+        {
+            System.Windows.MessageBox.Show("Vui lòng chọn hóa đơn!", "Thông báo", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+            return;
+        }
+
+        if (SelectedInvoice.Amount <= 0)
+        {
+            System.Windows.MessageBox.Show("Số tiền phải lớn hơn 0", "Thông báo", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+            return;
+        }
+
+        try
+        {
+            IsLoading = true;
+            if (SelectedInvoice.Id == Guid.Empty)
+            {
+                var created = await _invoiceBlo.CreateAsync(SelectedInvoice);
+                Invoices.Insert(0, created);
+                SelectedInvoice = created;
+                System.Windows.MessageBox.Show("Tạo hóa đơn thành công", "Thành công", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+            }
+            else
+            {
+                await _invoiceBlo.UpdateAsync(SelectedInvoice);
+                System.Windows.MessageBox.Show("Cập nhật hóa đơn thành công", "Thành công", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi lưu hóa đơn: {ex.Message}", "Lỗi", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+        finally
+        {
+            FilterInvoicesByType();
+            IsLoading = false;
+        }
+    }
+
+    private async Task DeleteInvoiceAsync(object? parameter)
+    {
+        if (SelectedInvoice == null)
+        {
+            System.Windows.MessageBox.Show("Vui lòng chọn hóa đơn để xóa", "Thông báo", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+            return;
+        }
+
+        var confirm = System.Windows.MessageBox.Show($"Bạn có chắc chắn xóa hóa đơn {SelectedInvoice.InvoiceNumber}?", "Xác nhận", System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Question);
+        if (confirm != System.Windows.MessageBoxResult.Yes) return;
+
+        try
+        {
+            IsLoading = true;
+            await _invoiceBlo.DeleteAsync(SelectedInvoice.Id);
+            Invoices.Remove(SelectedInvoice);
+            SelectedInvoice = null;
+            System.Windows.MessageBox.Show("Đã xóa hóa đơn", "Thành công", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi xóa hóa đơn: {ex.Message}", "Lỗi", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+        finally
+        {
+            FilterInvoicesByType();
+            IsLoading = false;
+        }
+    }
+
+    private void FilterInvoicesByType()
+    {
+        try
+        {
+            var tuitionInvoices = Invoices.Where(i => i.Type == "Học phí");
+            
+            // Apply class filter if selected
+            if (SelectedClassFilter != null)
+            {
+                tuitionInvoices = tuitionInvoices.Where(i => i.ClassId == SelectedClassFilter.Id);
+            }
+            
+            TuitionInvoices = new ObservableCollection<Invoice>(tuitionInvoices);
+            SalaryInvoices = new ObservableCollection<Invoice>(Invoices.Where(i => i.Type == "Lương"));
+            OtherInvoices = new ObservableCollection<Invoice>(Invoices.Where(i => i.Type != "Học phí" && i.Type != "Lương"));
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"FilterInvoicesByType error: {ex}");
+        }
+    }
+
+    private async Task CreateBatchTuitionInvoicesAsync(object? parameter)
+    {
+        try
+        {
+            IsLoading = true;
+
+            var allClasses = await _classBlo.GetAllAsync();
+            if (allClasses == null || !allClasses.Any())
+            {
+                System.Windows.MessageBox.Show("Không có lớp nào trong hệ thống.", "Thông báo", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                return;
+            }
+
+            int totalCreatedCount = 0;
+
+            foreach (var selectedClass in allClasses)
+            {
+                var students = await _studentBlo.GetByClassIdAsync(selectedClass.Id);
+                if (students == null || !students.Any())
+                {
+                    continue; // Skip classes with no students
+                }
+
+                int createdCount = 0;
+
+                foreach (var student in students)
+                {
+                    // Bỏ qua nếu đã có hóa đơn học phí trong tháng này cho học sinh
+                    bool exists = Invoices.Any(i => i.Type == "Học phí"
+                        && i.StudentId == student.Id
+                        && i.IssueDate.Year == InvoiceMonth.Year
+                        && i.IssueDate.Month == InvoiceMonth.Month);
+                    if (exists) continue;
+
+                    var absences = await _attendanceBlo.GetByStudentIdAsync(student.Id);
+                    var monthAbsences = absences
+                        .Where(a => a.Date.Year == InvoiceMonth.Year && a.Date.Month == InvoiceMonth.Month && a.IsExcusedAbsence)
+                        .ToList();
+
+                    var prevMonth = InvoiceMonth.AddMonths(-1);
+                    var prevMonthAbsences = absences
+                        .Where(a => a.Date.Year == prevMonth.Year && a.Date.Month == prevMonth.Month && a.IsExcusedAbsence)
+                        .ToList();
+
+                    decimal totalMealRefund = monthAbsences.Sum(a => a.DailyMealRefund);
+                    decimal previousBalance = prevMonthAbsences.Sum(a => a.DailyMealRefund);
+                    decimal baseTuition = selectedClass.TuitionFee;
+                    decimal mealFee = selectedClass.MealFee;
+
+                    decimal totalAmount = baseTuition + mealFee - totalMealRefund - previousBalance;
+
+                    var invoice = new Invoice
+                    {
+                        InvoiceNumber = GenerateInvoiceNumber($"HP-{SanitizeCode(selectedClass.Name)}-{InvoiceMonth:yyyyMM}"),
+                        Type = "Học phí",
+                        Amount = Math.Max(totalAmount, 0),
+                        MonthlyTuitionFee = baseTuition,
+                        MealBalanceFromPreviousMonth = previousBalance,
+                    FinalAmount = totalAmount,
+                    IssueDate = InvoiceMonth,
+                    DueDate = InvoiceMonth.AddDays(7),
+                    Status = "Chưa thanh toán",
+                    StudentId = student.Id,
+                    ClassId = selectedClass.Id,
+                    Description = $"Học phí tháng {InvoiceMonth:MM/yyyy} - Trừ {monthAbsences.Count} ngày nghỉ có phép"
+                    };
+
+                    var created = await _invoiceBlo.CreateAsync(invoice);
+                    Invoices.Insert(0, created);
+                    createdCount++;
+                }
+
+                totalCreatedCount += createdCount;
+            }
+
+            FilterInvoicesByType();
+
+            System.Windows.MessageBox.Show($"Đã tạo {totalCreatedCount} hóa đơn học phí cho tất cả các lớp trong tháng {InvoiceMonth:MM/yyyy}.", "Thành công", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi tạo hóa đơn hàng loạt: {ex.Message}", "Lỗi", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private string GenerateInvoiceNumber(string prefix)
+    {
+        string number;
+        do
+        {
+            number = $"{prefix}-{DateTime.Now:yyyyMMddHHmmssfff}-{Guid.NewGuid():N}";
+        } while (Invoices.Any(i => i.InvoiceNumber == number));
+
+        return number;
+    }
+
+    private async Task CreateBatchSalaryInvoicesAsync(object? parameter)
+    {
+        try
+        {
+            IsLoading = true;
+
+            var staffMembers = Users.Where(u => u.Salary.HasValue || u.Allowance.HasValue).ToList();
+            if (!staffMembers.Any())
+            {
+                System.Windows.MessageBox.Show("Không có nhân viên nào có lương hoặc phụ cấp.", "Thông báo", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                return;
+            }
+
+            int createdCount = 0;
+
+            foreach (var staff in staffMembers)
+            {
+                // Bỏ qua nếu đã có phiếu lương trong tháng này
+                bool exists = Invoices.Any(i => i.Type == "Lương"
+                    && i.UserId == staff.Id
+                    && i.IssueDate.Year == InvoiceMonth.Year
+                    && i.IssueDate.Month == InvoiceMonth.Month);
+                if (exists) continue;
+
+                decimal baseSalary = staff.Salary ?? 0;
+                decimal allowance = staff.Allowance ?? 0;
+                decimal totalAmount = baseSalary + allowance;
+
+                var invoice = new Invoice
+                {
+                    InvoiceNumber = GenerateInvoiceNumber($"PS-{SanitizeCode(staff.FullName)}-{InvoiceMonth:yyyyMM}"),
+                    Type = "Lương",
+                    Amount = totalAmount,
+                    MonthlyTuitionFee = baseSalary,
+                    MealBalanceFromPreviousMonth = allowance,
+                    FinalAmount = totalAmount,
+                    IssueDate = InvoiceMonth,
+                    DueDate = InvoiceMonth.AddDays(0), // Same day
+                    Status = "Chưa thanh toán",
+                    UserId = staff.Id,
+                    Description = $"Phiếu lương tháng {InvoiceMonth:MM/yyyy} - {staff.Position} - Lương: {baseSalary:N0} + Phụ cấp: {allowance:N0}"
+                };
+
+                var created = await _invoiceBlo.CreateAsync(invoice);
+                Invoices.Insert(0, created);
+                createdCount++;
+            }
+
+            FilterInvoicesByType();
+
+            System.Windows.MessageBox.Show($"Đã tạo {createdCount} phiếu lương cho tháng {InvoiceMonth:MM/yyyy}.", "Thành công", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Lỗi tạo phiếu lương hàng loạt: {ex.Message}", "Lỗi", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private static string SanitizeCode(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return "UNK";
+        var cleaned = Regex.Replace(input, "[^A-Za-z0-9]", "");
+        return string.IsNullOrWhiteSpace(cleaned) ? "UNK" : cleaned.ToUpperInvariant();
     }
 }
 

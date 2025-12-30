@@ -187,10 +187,10 @@ public class DatabaseSeeder
         // Seed sample classes with teachers
         var classes = new List<Class>
         {
-            new Class { Name = "Lớp Hoa Mai", GradeId = grades[0].Id, Capacity = 20, TeacherId = users[1].Id },
-            new Class { Name = "Lớp Hoa Hồng", GradeId = grades[1].Id, Capacity = 25, TeacherId = users[2].Id },
-            new Class { Name = "Lớp Hoa Lan", GradeId = grades[2].Id, Capacity = 25, TeacherId = users[1].Id },
-            new Class { Name = "Lớp Hoa Cúc", GradeId = grades[3].Id, Capacity = 30, TeacherId = users[2].Id }
+            new Class { Name = "Lớp Hoa Mai", GradeId = grades[0].Id, Capacity = 20, TeacherId = users[1].Id, TuitionFee = 2500000, MealFee = 800000 },
+            new Class { Name = "Lớp Hoa Hồng", GradeId = grades[1].Id, Capacity = 25, TeacherId = users[2].Id, TuitionFee = 2700000, MealFee = 850000 },
+            new Class { Name = "Lớp Hoa Lan", GradeId = grades[2].Id, Capacity = 25, TeacherId = users[1].Id, TuitionFee = 2900000, MealFee = 900000 },
+            new Class { Name = "Lớp Hoa Cúc", GradeId = grades[3].Id, Capacity = 30, TeacherId = users[2].Id, TuitionFee = 3100000, MealFee = 950000 }
         };
         _context.Classes.AddRange(classes);
         await _context.SaveChangesAsync();
@@ -343,6 +343,104 @@ public class DatabaseSeeder
             }
         };
         _context.StaffLeaves.AddRange(staffLeaves);
+        await _context.SaveChangesAsync();
+
+        // Seed sample invoices (10 records: 5 học phí, 3 sửa chữa, 2 lương)
+        var invoices = new List<Invoice>();
+
+        var tuitionTemplates = new[]
+        {
+            (studentIndex: 0, cls: classes[0], monthOffset: -1),
+            (studentIndex: 1, cls: classes[1], monthOffset: -1),
+            (studentIndex: 2, cls: classes[2], monthOffset: 0),
+            (studentIndex: 3, cls: classes[2], monthOffset: 0),
+            (studentIndex: 4, cls: classes[3], monthOffset: 0)
+        };
+
+        foreach (var tpl in tuitionTemplates)
+        {
+            var issue = DateTime.Today.AddMonths(tpl.monthOffset);
+            var amount = tpl.cls.TuitionFee + tpl.cls.MealFee;
+            invoices.Add(new Invoice
+            {
+                InvoiceNumber = $"HP-{tpl.cls.Name.Replace(" ", "").ToUpperInvariant()}-{issue:yyyyMM}-{Guid.NewGuid():N}" ,
+                Type = "Học phí",
+                Amount = amount,
+                MonthlyTuitionFee = tpl.cls.TuitionFee,
+                MealBalanceFromPreviousMonth = 0,
+                FinalAmount = amount,
+                IssueDate = issue,
+                DueDate = issue.AddDays(7),
+                Status = "Chưa thanh toán",
+                StudentId = students[tpl.studentIndex].Id,
+                ClassId = tpl.cls.Id,
+                Description = $"Học phí tháng {issue:MM/yyyy}"
+            });
+        }
+
+        invoices.AddRange(new[]
+        {
+            new Invoice
+            {
+                InvoiceNumber = $"SC-SAN-CHINH-{Guid.NewGuid():N}",
+                Type = "Sửa chữa",
+                Amount = 3500000,
+                IssueDate = DateTime.Today.AddDays(-15),
+                DueDate = DateTime.Today.AddDays(-8),
+                Status = "Đã thanh toán",
+                Description = "Sửa sân chơi và thay cát"
+            },
+            new Invoice
+            {
+                InvoiceNumber = $"SC-DIEN-{Guid.NewGuid():N}",
+                Type = "Sửa chữa",
+                Amount = 2200000,
+                IssueDate = DateTime.Today.AddDays(-5),
+                DueDate = DateTime.Today.AddDays(2),
+                Status = "Chưa thanh toán",
+                Description = "Sửa hệ thống đèn lớp Hoa Lan"
+            },
+            new Invoice
+            {
+                InvoiceNumber = $"SC-NUOC-{Guid.NewGuid():N}",
+                Type = "Sửa chữa",
+                Amount = 1800000,
+                IssueDate = DateTime.Today.AddDays(-3),
+                DueDate = DateTime.Today.AddDays(4),
+                Status = "Chưa thanh toán",
+                Description = "Bảo trì đường ống nước khu bếp"
+            }
+        });
+
+        invoices.AddRange(new[]
+        {
+            new Invoice
+            {
+                InvoiceNumber = $"LG-{users[1].FullName.Replace(" ", "").ToUpperInvariant()}-{Guid.NewGuid():N}",
+                Type = "Lương",
+                Amount = (users[1].Salary ?? 0) + (users[1].Allowance ?? 0),
+                FinalAmount = (users[1].Salary ?? 0) + (users[1].Allowance ?? 0),
+                IssueDate = DateTime.Today.AddDays(-2),
+                DueDate = DateTime.Today.AddDays(1),
+                Status = "Chưa thanh toán",
+                UserId = users[1].Id,
+                Description = "Phiếu lương tháng này cho giáo viên"
+            },
+            new Invoice
+            {
+                InvoiceNumber = $"LG-{users[3].FullName.Replace(" ", "").ToUpperInvariant()}-{Guid.NewGuid():N}",
+                Type = "Lương",
+                Amount = (users[3].Salary ?? 0) + (users[3].Allowance ?? 0),
+                FinalAmount = (users[3].Salary ?? 0) + (users[3].Allowance ?? 0),
+                IssueDate = DateTime.Today.AddDays(-2),
+                DueDate = DateTime.Today.AddDays(1),
+                Status = "Chưa thanh toán",
+                UserId = users[3].Id,
+                Description = "Phiếu lương tháng này cho kế toán"
+            }
+        });
+
+        _context.Invoices.AddRange(invoices);
         await _context.SaveChangesAsync();
 
         // Seed Vaccines (Phase 4)

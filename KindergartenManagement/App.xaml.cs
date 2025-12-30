@@ -94,6 +94,22 @@ public partial class App : Application
 
     protected override async void OnStartup(StartupEventArgs e)
     {
+        // Add global exception handlers
+        AppDomain.CurrentDomain.UnhandledException += (s, ex) =>
+        {
+            System.Diagnostics.Debug.WriteLine($"AppDomain UnhandledException: {ex.ExceptionObject}");
+            MessageBox.Show($"Lỗi không mong muốn:\n\n{ex.ExceptionObject}", 
+                "Lỗi ứng dụng", MessageBoxButton.OK, MessageBoxImage.Error);
+        };
+
+        Application.Current.DispatcherUnhandledException += (s, ex) =>
+        {
+            System.Diagnostics.Debug.WriteLine($"DispatcherUnhandledException: {ex.Exception}");
+            MessageBox.Show($"Lỗi không mong muốn:\n\n{ex.Exception.Message}", 
+                "Lỗi ứng dụng", MessageBoxButton.OK, MessageBoxImage.Error);
+            ex.Handled = true;
+        };
+
         try
         {
             await _host.StartAsync();
@@ -114,8 +130,9 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Error starting application:\n\n{ex.Message}\n\nStack Trace:\n{ex.StackTrace}", 
-                "Application Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Diagnostics.Debug.WriteLine($"OnStartup Exception: {ex}");
+            MessageBox.Show($"Lỗi khởi động ứng dụng:\n\n{ex.Message}\n\nStack Trace:\n{ex.StackTrace}", 
+                "Lỗi ứng dụng", MessageBoxButton.OK, MessageBoxImage.Error);
             Shutdown();
         }
     }

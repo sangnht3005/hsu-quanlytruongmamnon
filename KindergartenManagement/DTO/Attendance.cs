@@ -18,7 +18,13 @@ public class Attendance
 
     [Required]
     [MaxLength(20)]
-    public string Status { get; set; } = string.Empty; // Present, Absent, Late, Sick
+    public string Status { get; set; } = string.Empty; // Present, Absent, Late, Sick, Excused
+
+    // Track if this is an excused absence (nghỉ có phép - entitled to meal refund)
+    public bool IsExcusedAbsence { get; set; } = false;
+
+    // Daily meal fee to be refunded (if excused)
+    public decimal DailyMealRefund { get; set; } = 0;
 
     [MaxLength(500)]
     public string? Notes { get; set; }

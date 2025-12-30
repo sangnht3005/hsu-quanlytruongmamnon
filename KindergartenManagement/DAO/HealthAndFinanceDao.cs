@@ -310,11 +310,21 @@ public class InvoiceDao : IInvoiceDao
 
     public async Task<IEnumerable<Invoice>> GetAllAsync()
     {
-        return await _context.Invoices
-            .Include(i => i.Student)
-            .Include(i => i.User)
-            .OrderByDescending(i => i.IssueDate)
-            .ToListAsync();
+        try
+        {
+            var result = await _context.Invoices
+                .Include(i => i.Student)
+                .Include(i => i.User)
+                .OrderByDescending(i => i.IssueDate)
+                .ToListAsync();
+            System.Diagnostics.Debug.WriteLine($"InvoiceDao.GetAllAsync: Loaded {result?.Count ?? 0} invoices");
+            return result ?? new List<Invoice>();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"InvoiceDao.GetAllAsync error: {ex.Message}");
+            throw;
+        }
     }
 
     public async Task<IEnumerable<Invoice>> GetByStudentIdAsync(Guid studentId)
