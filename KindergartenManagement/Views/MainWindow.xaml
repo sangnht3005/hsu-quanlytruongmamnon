@@ -446,7 +446,7 @@
                                         </Grid>
 
                                         <TextBlock Text="Họ và tên *" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedStudent.FullName, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStudent.FullName, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: Nguyễn Văn A" FontSize="12"/>
 
                                         <TextBlock Text="Ngày sinh *" Margin="0,0,0,5" FontSize="12"/>
                                         <DatePicker SelectedDate="{Binding SelectedStudent.DateOfBirth}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
@@ -458,13 +458,13 @@
                                         </ComboBox>
 
                                         <TextBlock Text="Địa chỉ" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedStudent.Address}" Padding="6" Margin="0,0,0,12" Height="50" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStudent.Address}" Padding="6" Margin="0,0,0,12" Height="50" TextWrapping="Wrap" AcceptsReturn="True" Tag="VD: 123 Đường ABC, Phường XYZ" FontSize="12"/>
 
                                         <TextBlock Text="Ghi chú y tế" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedStudent.MedicalNotes, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="50" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStudent.MedicalNotes, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="50" TextWrapping="Wrap" AcceptsReturn="True" Tag="VD: Tiền sử bệnh, tình trạng sức khỏe..." FontSize="12"/>
 
                                         <TextBlock Text="Mã thực phẩm dị ứng" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedStudent.AllergyIngredientCodes, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" ToolTip="Nhập các mã thực phẩm gây dị ứng, phân cách bằng dấu phẩy" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStudent.AllergyIngredientCodes, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: F01,F02,F03" ToolTip="Nhập các mã thực phẩm gây dị ứng, phân cách bằng dấu phẩy" FontSize="12"/>
 
                                         <TextBlock Text="Phụ huynh *" Margin="0,0,0,5" FontSize="12"/>
                                         <ComboBox ItemsSource="{Binding Parents}" SelectedValue="{Binding SelectedStudent.ParentId}" SelectedValuePath="Id" DisplayMemberPath="FullName" Padding="6" Margin="0,0,0,12" FontSize="12"/>
@@ -524,16 +524,16 @@
                                         <TextBlock Text="Thông tin khối lớp" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" Margin="0,0,0,20"/>
 
                                         <TextBlock Text="Tên khối *" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedGrade.Name, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBox Text="{Binding SelectedGrade.Name, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15" Height="40" Tag="VD: Lớp Mầm"/>
 
                                         <TextBlock Text="Độ tuổi tối thiểu *" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedGrade.MinAge, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBox Text="{Binding SelectedGrade.MinAge, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15" Height="40" Tag="VD: 18"/>
 
                                         <TextBlock Text="Độ tuổi tối đa *" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedGrade.MaxAge, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBox Text="{Binding SelectedGrade.MaxAge, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15" Height="40" Tag="VD: 36"/>
 
                                         <TextBlock Text="Mô tả" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedGrade.Description, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,20" Height="80" TextWrapping="Wrap" AcceptsReturn="True"/>
+                                        <TextBox Text="{Binding SelectedGrade.Description, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,20" Height="80" TextWrapping="Wrap" AcceptsReturn="True" Tag="VD: Nhóm trẻ dành cho em bé từ 18-36 tháng tuổi"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                             <Button Content="➕ Tạo mới" Command="{Binding AddGradeCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" ToolTip="Tạo form trống để nhập khối lớp mới" Foreground="White"/>
@@ -616,7 +616,7 @@
                                             </Grid.ColumnDefinitions>
                                             <StackPanel Grid.Column="0" Margin="0,0,6,0">
                                                 <TextBlock Text="Tên *"/>
-                                                <TextBox Text="{Binding Name, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                                <TextBox Text="{Binding Name, Mode=TwoWay}" Padding="6" Margin="0,0,0,8" Height="40" Tag="VD: Cơm tấm"/>
                                                 <TextBlock Text="Ngày trong tuần *"/>
                                                 <ComboBox SelectedValue="{Binding DayOfWeek, Mode=TwoWay}" SelectedValuePath="Tag" Padding="6" Margin="0,0,0,8">
                                                     <ComboBoxItem Content="Chủ nhật" Tag="0"/>
@@ -637,7 +637,7 @@
                                                     <ComboBoxItem Content="Dinner"/>
                                                 </ComboBox>
                                                 <TextBlock Text="Mô tả"/>
-                                                <TextBox Text="{Binding Description, Mode=TwoWay}" Padding="6" Height="50" TextWrapping="Wrap"/>
+                                                <TextBox Text="{Binding Description, Mode=TwoWay}" Padding="6" Height="50" TextWrapping="Wrap" Tag="VD: Mỏi nhân vão tuần..."/>
                                             </StackPanel>
                                         </Grid>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
@@ -770,17 +770,17 @@
                                             <Button Content="➕ Thêm mới" Command="{Binding AddNewCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Foreground="White"/>
                                         </Grid>
                                         <TextBlock Text="Tên *"/>
-                                        <TextBox Text="{Binding Name, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBox Text="{Binding Name, Mode=TwoWay}" Padding="6" Margin="0,0,0,8" Height="40" Tag="VD: Công ty XYZ"/>
                                         <TextBlock Text="Người liên hệ"/>
-                                        <TextBox Text="{Binding ContactPerson, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBox Text="{Binding ContactPerson, Mode=TwoWay}" Padding="6" Margin="0,0,0,8" Height="40" Tag="VD: Nguyễn Văn A"/>
                                         <TextBlock Text="Điện thoại"/>
-                                        <TextBox Text="{Binding Phone, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBox Text="{Binding Phone, Mode=TwoWay}" Padding="6" Margin="0,0,0,8" Height="40" Tag="VD: 0901234567"/>
                                         <TextBlock Text="Email"/>
-                                        <TextBox Text="{Binding Email, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBox Text="{Binding Email, Mode=TwoWay}" Padding="6" Margin="0,0,0,8" Height="40" Tag="VD: contact@company.com"/>
                                         <TextBlock Text="Địa chỉ"/>
-                                        <TextBox Text="{Binding Address, Mode=TwoWay}" Padding="6" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,8"/>
+                                        <TextBox Text="{Binding Address, Mode=TwoWay}" Padding="6" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,8" Tag="VD: 789 Đường ABC"/>
                                         <TextBlock Text="Ghi chú"/>
-                                        <TextBox Text="{Binding Notes, Mode=TwoWay}" Padding="6" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,8"/>
+                                        <TextBox Text="{Binding Notes, Mode=TwoWay}" Padding="6" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,8" Tag="VD: Ghi chú thêm..."/>
                                         <CheckBox Content="Đang hoạt động" IsChecked="{Binding IsActive, Mode=TwoWay}"/>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
                                             <Button Content="💾 Lưu" Command="{Binding SaveSupplierCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,6,0" Foreground="White"/>
@@ -829,13 +829,13 @@
                                         <TextBlock Text="Tên *"/>
                                         <TextBox Text="{Binding Name, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
                                         <TextBlock Text="Loại"/>
-                                        <TextBox Text="{Binding Category, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBox Text="{Binding Category, Mode=TwoWay}" Padding="6" Margin="0,0,0,8" Height="40" Tag="VD: Rau cổ"/>
                                         <TextBlock Text="Đơn vị *"/>
-                                        <TextBox Text="{Binding Unit, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBox Text="{Binding Unit, Mode=TwoWay}" Padding="6" Margin="0,0,0,8" Height="40" Tag="VD: kg"/>
                                         <TextBlock Text="Calo/100g *"/>
-                                        <TextBox Text="{Binding CaloriesPer100g, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBox Text="{Binding CaloriesPer100g, Mode=TwoWay}" Padding="6" Margin="0,0,0,8" Height="40" Tag="VD: 52"/>
                                         <TextBlock Text="Đơn giá *"/>
-                                        <TextBox Text="{Binding UnitPrice, Mode=TwoWay}" Padding="6" Margin="0,0,0,8"/>
+                                        <TextBox Text="{Binding UnitPrice, Mode=TwoWay}" Padding="6" Margin="0,0,0,8" Height="40" Tag="VD: 15000"/>
                                         <TextBlock Text="Nhà cung cấp"/>
                                         <ComboBox ItemsSource="{Binding Suppliers}" SelectedValue="{Binding SupplierId, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="Name" Padding="6" Margin="0,0,0,8"/>
                                         <CheckBox Content="Đang hoạt động" IsChecked="{Binding IsActive, Mode=TwoWay}"/>
@@ -993,7 +993,7 @@
                                         </Grid>
 
                                         <TextBlock Text="Tên lớp *" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedClass.Name, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedClass.Name, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: Lớp Mầm A" FontSize="12"/>
 
                                         <TextBlock Text="Khối *" Margin="0,0,0,5" FontSize="12"/>
                                         <ComboBox ItemsSource="{Binding Grades}" SelectedValue="{Binding SelectedClass.GradeId}" SelectedValuePath="Id" DisplayMemberPath="Name" Padding="6" Margin="0,0,0,12" FontSize="12"/>
@@ -1002,7 +1002,7 @@
                                         <ComboBox ItemsSource="{Binding Teachers}" SelectedValue="{Binding SelectedClass.TeacherId}" SelectedValuePath="Id" DisplayMemberPath="FullName" Padding="6" Margin="0,0,0,12" FontSize="12"/>
 
                                         <TextBlock Text="Số học sinh tối đa *" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedClass.Capacity}" Padding="6" Margin="0,0,0,15" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedClass.Capacity}" Padding="6" Margin="0,0,0,15" Height="40" Tag="VD: 30" FontSize="12"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                             <Button Content="💾 Lưu" Command="{Binding SaveClassCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin lớp học vào cơ sở dữ liệu" Foreground="White"/>
@@ -1487,10 +1487,10 @@
                                         <TextBlock Text="Thông tin tài khoản" FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryColor}" Margin="0,0,0,20"/>
 
                                         <TextBlock Text="Tên đăng nhập *" Margin="0,0,0,5"/>
-                                        <TextBox Text="{Binding SelectedAccount.Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15"/>
+                                        <TextBox Text="{Binding SelectedAccount.Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="8" Margin="0,0,0,15" Height="40" Tag="VD: admin01"/>
 
                                         <TextBlock Text="Mật khẩu *" Margin="0,0,0,5"/>
-                                        <PasswordBox Padding="8" Margin="0,0,0,15"
+                                        <PasswordBox Padding="8" Margin="0,0,0,15" Height="40" Tag="VD: Password@123"
                                                      util:PasswordBoxHelper.BindPassword="True"
                                                      util:PasswordBoxHelper.BoundPassword="{Binding NewPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
@@ -1577,13 +1577,13 @@
                                         </Grid>
 
                                         <TextBlock Text="Họ và tên *" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedStaff.FullName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStaff.FullName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: Nguyễn Thị Mạnh" FontSize="12"/>
 
                                         <TextBlock Text="Email *" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedStaff.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStaff.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: email@example.com" FontSize="12"/>
 
                                         <TextBlock Text="Số điện thoại" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedStaff.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStaff.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: 0912345678" FontSize="12"/>
 
                                         <TextBlock Text="Chức vụ *" Margin="0,0,0,5" FontSize="12"/>
                                         <ComboBox Text="{Binding SelectedStaff.Position, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" Padding="6" Margin="0,0,0,12" FontSize="12">
@@ -1595,13 +1595,13 @@
                                         </ComboBox>
 
                                         <TextBlock Text="Lương cơ bản" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedStaff.Salary, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStaff.Salary, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: 5000000" FontSize="12"/>
 
                                         <TextBlock Text="Phụ cấp" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedStaff.Allowance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStaff.Allowance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: 500000" FontSize="12"/>
 
                                         <TextBlock Text="Chuyên môn" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedStaff.Specialization, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,15" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedStaff.Specialization, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,15" Height="40" Tag="VD: Giáo dục thểm hủa" FontSize="12"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                             <Button Content="💾 Lưu" Command="{Binding SaveStaffCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin nhân viên vào cơ sở dữ liệu" Foreground="White"/>
@@ -1657,19 +1657,19 @@
                                         </Grid>
 
                                         <TextBlock Text="Họ và tên *" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedParent.FullName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedParent.FullName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: Trần Thị B" FontSize="12"/>
 
                                         <TextBlock Text="Email *" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedParent.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedParent.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: parent@example.com" FontSize="12"/>
 
                                         <TextBlock Text="Số điện thoại *" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedParent.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedParent.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: 0987654321" FontSize="12"/>
 
                                         <TextBlock Text="Nghề nghiệp" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedParent.Occupation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedParent.Occupation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: Bác sĩ" FontSize="12"/>
 
                                         <TextBlock Text="Địa chỉ" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedParent.Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,15" Height="50" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedParent.Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,15" Height="50" TextWrapping="Wrap" AcceptsReturn="True" Tag="VD: 456 Đường XYZ" FontSize="12"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                             <Button Content="💾 Lưu" Command="{Binding SaveParentCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,8,0" Padding="15,6" FontSize="12" ToolTip="Lưu thông tin phụ huynh vào cơ sở dữ liệu" Foreground="White"/>
@@ -1824,16 +1824,16 @@
                                         </Grid>
 
                                         <TextBlock Text="Tên Vaccine *" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedVaccine.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedVaccine.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: Vacxin 5 in 1" FontSize="12"/>
 
                                         <TextBlock Text="Mô tả" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedVaccine.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="60" TextWrapping="Wrap" AcceptsReturn="True" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedVaccine.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Tag="VD: Vaccine phòng bệnh..." FontSize="12"/>
 
                                         <TextBlock Text="Tuổi yêu cầu (tháng) *" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedVaccine.RequiredAgeMonths, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedVaccine.RequiredAgeMonths, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: 18" FontSize="12"/>
 
                                         <TextBlock Text="Bệnh phòng ngừa" Margin="0,0,0,5" FontSize="12"/>
-                                        <TextBox Text="{Binding SelectedVaccine.DiseasesPrevented, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" FontSize="12"/>
+                                        <TextBox Text="{Binding SelectedVaccine.DiseasesPrevented, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" Height="40" Tag="VD: Cũm, sởi, rubella" FontSize="12"/>
 
                                         <CheckBox Content="Vaccine bắt buộc" IsChecked="{Binding SelectedVaccine.IsMandatory, Mode=TwoWay}" Margin="0,0,0,15" FontSize="12"/>
 
